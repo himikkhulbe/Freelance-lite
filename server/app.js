@@ -5,12 +5,12 @@ import cookieParser from "cookie-parser";
 import connectDb from "./config/dbConnection.js";
 import userRoutes from "./routes/userRoutes.js";
 import ratingRoutes from "./routes/ratingRoutes.js";
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 
 dotenv.config();
 
 const app = express();
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 app.use(cookieParser());
 // Allow credentials and allow requests from your frontend's origin
