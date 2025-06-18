@@ -1,37 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { IoMdLogIn } from "react-icons/io";
+import { AuthContext } from "../../../../contexts/AuthContext";
+
 
 const Login = () => {
 
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+    const { setUser } = useContext(AuthContext);
+  const navigate = useNavigate()
 
-    const navigate = useNavigate()
-
-    const handleLogin = async(e) => {
-        e.preventDefault()
-
-        const user = {
-          email,
-          password
-        }
-
-        console.log(user)
-        // const res = await fetch('http://localhost:8000/api/user/login', {
-        //     method: 'POST',
-        //     credentials: 'include',
-        //     headers: { 'Content-Type': 'application/json' },
-        //     body: JSON.stringify({ email, password }),
-        // });
-
-    //     const data = await res.json();
- 
-    //     if(res.ok){
-    //         navigate('/profile')
-    //     }
-
+  const handleLogin = async (e) => {
+    e.preventDefault()
+    const res = await fetch('http://localhost:8000/api/user/login', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    console.log(data)
+    if (res.ok) {
+      setUser(data?.user)
+      navigate('/profile')
     }
+
+  }
 
   return (
     <div className="w-full h-screen bg-gradient-to-b from-blue-100 to-blue-600 md:bg-gradient-to-r overflow-hidden md:flex md:p-10">
@@ -54,7 +49,7 @@ const Login = () => {
             <input
               type="text"
               className="rounded-full border border-zinc-400 px-3 py-2 text-zinc-500"
-              onChange={(e)=> setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               value={email}
             />
           </div>
@@ -63,8 +58,8 @@ const Login = () => {
             <input
               type="password"
               className="rounded-full border border-zinc-400 px-3 py-2 text-zinc-500"
-              onChange={(e)=> setPassword(e.target.value)}
-              value={password}             
+              onChange={(e) => setPassword(e.target.value)}
+              value={password}
             />
           </div>
 

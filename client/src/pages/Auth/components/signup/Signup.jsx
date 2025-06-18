@@ -41,7 +41,24 @@ const Login = () => {
       alert("Password must be 6-15 characters long and contain at least 1 letter, 1 number, and 1 special character.")
       return
     }
-    console.log(user);
+    try {
+      const res = await fetch('http://localhost:8000/api/user/register', {
+        method: 'POST',
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ name, username, email, password, role })
+      });
+
+      if (res.ok) {
+        // Signup successful
+        navigate("/login");
+      } else {
+        const error = await res.json();
+        console.error(error?.message);
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
