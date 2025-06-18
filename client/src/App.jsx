@@ -12,7 +12,7 @@ function Navbar() {
   const { user } = useAuth();
 
   return (
-    <nav style={{ marginBottom: '20px' }}>
+    <nav className="bg-blue-200" style={{ marginBottom: '20px' }}>
       <Link to="/">Home</Link>{" | "}
       {user ? (
         <>
@@ -63,3 +63,5 @@ function App() {
 }
 
 export default App;
+
+
