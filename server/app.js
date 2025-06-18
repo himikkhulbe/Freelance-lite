@@ -3,7 +3,9 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import connectDb from "./config/dbConnection.js";
-import userRouter from "./routes/userRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import ratingRoutes from "./routes/ratingRoutes.js";
+
 
 dotenv.config();
 
@@ -17,7 +19,9 @@ app.use(express.json());
 
 connectDb();
 
-app.use("/api/user", userRouter);
+app.use("/api/user", userRoutes);
+app.use("/api/rating", ratingRoutes);
+
 
 app.get("/ping", (req, res) => res.json({ message: "Server is up!" }));
 

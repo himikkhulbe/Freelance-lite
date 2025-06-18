@@ -3,13 +3,17 @@ import User from "../models/userModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 export const registerUser = async (req, res) => {
-    const { name, email, password, role } = req.body;
-
+    const { name, username, email, password, role } = req.body;
+    if(!name || !username || !email || !password || !role){
+        return res.status(400).json({ message: "Please enter all fields" });
+    }
     try {
         // Check if user already exists
         const existingUser = await User.findOne({ email });
-        if (existingUser) {
-            return res.status(400).json({ message: "User already exists" });
+        const existingUsername = await User.findOne({ username });
+
+        if (existingUser || existingUsername) {
+            return res.status(409).json({ message: "User already exists" });
         }
 
         // Hash the password
@@ -17,6 +21,7 @@ export const registerUser = async (req, res) => {
 
         const user = await User.create({
             name,
+            username,
             email,
             password: hashedPassword,
             role: role || "freelancer", // Default role to 'user' if not provided
@@ -94,10 +99,18 @@ export const getUserProfile = async (req, res) => {
     }
 }
 export const logoutUser = (req, res) => {
+    if (!req.cookies?.token) {
+        return res.status(204).json({ message: "No user logged in" });
+    }
+    try{
     res.clearCookie("token", {
         httpOnly: true,
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
     });
     res.status(200).json({ message: "Logged out successfully" });
+    } catch (error) {
+        console.error("Error logging out:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
 };
