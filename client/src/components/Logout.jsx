@@ -8,7 +8,7 @@ function Logout() {
 
     const handleLogout = async () => {
         try {
-            const res = await fetch('http://localhost:8000/api/user/logout', {
+            const res = await fetch('https://freelance-lite.onrender.com/api/user/logout', {
                 method: 'POST',
                 credentials: 'include',
             });
