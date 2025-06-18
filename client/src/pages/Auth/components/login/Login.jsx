@@ -13,7 +13,7 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault()
-    const res = await fetch('http://localhost:8000/api/user/login', {
+    const res = await fetch('https://freelance-lite.onrender.com/api/user/login', {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },

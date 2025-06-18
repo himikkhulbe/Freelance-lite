@@ -12,7 +12,8 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch('http://localhost:8000/api/user/profile', {
+        const res = await fetch('https://freelance-lite.onrender.com/api/user/profile', {
+          mode: "cors",
           credentials: 'include',
         });
 

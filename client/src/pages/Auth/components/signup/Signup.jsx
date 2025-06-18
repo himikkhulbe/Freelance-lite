@@ -42,7 +42,7 @@ const Login = () => {
       return
     }
     try {
-      const res = await fetch('http://localhost:8000/api/user/register', {
+      const res = await fetch('https://freelance-lite.onrender.com/api/user/register', {
         method: 'POST',
         headers: { "Content-Type": "application/json" },
         credentials: "include",
