@@ -1,6 +1,8 @@
 import React, { useState, useContext } from "react";
 import { AuthContext } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { IoMdLogIn } from "react-icons/io";
+
 
 function Login() {
     const [email, setEmail] = useState('');
@@ -29,7 +31,7 @@ function Login() {
     }
     return (
         <form onSubmit={handleLogin}>
-            <input
+            <input className="text-blue-500"
                 type="email"
                 placeholder="Email"
                 value={email}
@@ -41,9 +43,11 @@ function Login() {
                 value={password}
                 onChange={(e) => setPass(e.target.value)}
             />
-            <button type="submit">Login</button>
+            <button className="bg-red-500" type="submit">Login</button>
+            <IoMdLogIn />
         </form>
     )
 }
 
 export default Login;
+
