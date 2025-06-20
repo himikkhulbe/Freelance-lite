@@ -1,83 +1,13 @@
 import React from 'react';
+import { useAuth } from "../contexts/AuthContext.jsx";
+
 import { Star, MapPin, Calendar, Clock, DollarSign, MessageSquare, CheckCircle, User, Mail, Phone, Github, Linkedin, Globe } from 'lucide-react';
 
 const Profile = () => {
-    const userData = {
-        user: {
-            socialMedia: { Linkedin: "kalsdjflk", Github: "asdfaf", Twitter: "safsdafdfds", Portfolio: "dsafasf" },
-            contactInfo: { phone: "+91 7488378668", email: "mdalkamadad@gmail.com" },
-            location: "India",
-            isVerified: true,
-            _id: "68553bb96f6cb78c100cb03e",
-            name: "admin",
-            username: "admin",
-            email: "mdalkamadad@gmail.com",
-            role: "freelancer",
-            averageRating: 4.5,
-            skills: [],
-            Languages: [],
-            profilePicture: "https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cHJvZmlsZXxlbnwwfHwwfHx8MA%3D%3D",
-            createdAt: "2025-06-20T10:45:13.288Z",
-            updatedAt: "2025-06-20T10:45:13.288Z",
-            __v: 0
-        },
-        services: [
-            {
-                _id: "685565990647b17380dde19a",
-                user: "68553bb96f6cb78c100cb03e",
-                title: "I will build your MERN website",
-                description: "Professional full-stack web app in React, Node, MongoDB.",
-                category: "Web Development",
-                subcategory: "Full Stack",
-                tags: [],
-                deliveryTime: 5,
-                revisions: 2,
-                price: 250,
-                images: [],
-                faqs: [],
-                requirements: [],
-                isActive: true,
-                rating: 0,
-                reviewCount: 0,
-                createdAt: "2025-06-20T13:43:53.030Z",
-                updatedAt: "2025-06-20T13:43:53.030Z",
-                __v: 0
-            },
-            {
-                _id: "685565e20647b17380dde19e",
-                user: "68553bb96f6cb78c100cb03e",
-                title: "I will build your MERN website",
-                description: "Professional full-stack web app in React, Node, MongoDB.",
-                category: "Web Development",
-                subcategory: "Full Stack",
-                tags: ["React", "Node", "MongoDB"],
-                deliveryTime: 5,
-                revisions: 2,
-                price: 250,
-                images: ["https://cdn.cloudinary.com/sample-image.png"],
-                faqs: [{ question: "Will it be mobile-friendly?", answer: "Yes, 100% responsive.", _id: "685565e20647b17380dde19f" }],
-                requirements: ["Content", "Hosting info"],
-                isActive: true,
-                rating: 0,
-                reviewCount: 0,
-                createdAt: "2025-06-20T13:45:06.801Z",
-                updatedAt: "2025-06-20T13:45:06.801Z",
-                __v: 0
-            }
-        ],
-        ratings: [
-            {
-                _id: "68557103c3539063d1170b75",
-                raterId: "68556abd64c4b90cbdd176ef",
-                ratedId: "68553bb96f6cb78c100cb03e",
-                rating: 4.5,
-                comment: "nice guy",
-                createdAt: "2025-06-20T14:32:35.727Z",
-                updatedAt: "2025-06-20T14:32:35.727Z",
-                __v: 0
-            }
-        ]
-    };
+    const { user } = useAuth();
+    console.log(user);
+    const userData = user;
+   
 
     const renderStars = (rating) => {
         return Array.from({ length: 5 }, (_, i) => (
