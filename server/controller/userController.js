@@ -1,5 +1,6 @@
-import mongoose from "mongoose";
 import User from "../models/userModel.js";
+import Service from "../models/serviceModel.js";
+import Rating from "../models/ratingModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 export const registerUser = async (req, res) => {
@@ -92,7 +93,11 @@ export const getUserProfile = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        res.status(200).json(user);
+        const services = await Service.find({ user: userId });
+        const ratings = await Rating.find({ ratedId: userId });
+        const data = {user,services,ratings}
+
+        res.status(200).json(data);
     } catch (error) {
         console.error("Error fetching user profile:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -114,3 +119,36 @@ export const logoutUser = (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+export const getOtherUserProfile = async (req, res) => {
+    const userId = req.params.id; // Assuming you have middleware to set req.user
+
+    try {
+        const user = await User.findOne(userId).select("-password"); // Exclude password from response
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        const services = await Service.find({ user: userId });
+        user.services = services;
+        console.log(user);
+        res.status(200).json(user);
+    } catch (error) {
+        console.error("Error fetching user profile:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const getServices = async (req, res) => {
+    const userId = req.params.id;
+    console.log(userId);
+    try {
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(404).json({ message: "User not found" });        
+        }
+        const services = await Service.find({ user: userId });
+        res.status(200).json(services);
+    }catch(error){
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
