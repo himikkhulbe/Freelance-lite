@@ -1,7 +1,7 @@
 import userModel from "../models/userModel.js";
-import serviceModel from "../models/serviceModel.js";
+import serviceModel from "../models/freelancerModels.js";
 
-const uploadServices = async (req, res) => {
+export const uploadServices = async (req, res) => {
     try {
         const {
             title,
@@ -19,18 +19,15 @@ const uploadServices = async (req, res) => {
 
         const userId = req.user._id;
 
-        // ✅ Check if user exists
         const user = await userModel.findById(userId);
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // ✅ Role check: Only freelancers allowed to post services
         if (user.role !== 'freelancer') {
             return res.status(403).json({ message: "Only freelancers can upload services." });
         }
 
-        // ✅ Create new service
         const service = await serviceModel.create({
             user: userId,
             title,
@@ -55,4 +52,18 @@ const uploadServices = async (req, res) => {
     }
 };
 
-export default uploadServices;
+export const getServices = async (req, res) => {
+    const userId = req.params.id;
+    console.log(userId);
+    try {
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(404).json({ message: "User not found" });        
+        }
+        const services = await Service.find({ user: userId });
+        res.status(200).json(services);
+    }catch(error){
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
