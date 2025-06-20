@@ -5,6 +5,8 @@ import cookieParser from "cookie-parser";
 import connectDb from "./config/dbConnection.js";
 import userRoutes from "./routes/userRoutes.js";
 import ratingRoutes from "./routes/ratingRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
+
 
 
 dotenv.config();
@@ -21,6 +23,7 @@ connectDb();
 
 app.use("/api/user", userRoutes);
 app.use("/api/rating", ratingRoutes);
+app.use("/api/upload", uploadRoutes);
 
 
 app.get("/ping", (req, res) => res.json({ message: "Server is up!" }));
