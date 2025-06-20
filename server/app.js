@@ -5,7 +5,9 @@ import cookieParser from "cookie-parser";
 import connectDb from "./config/dbConnection.js";
 import userRoutes from "./routes/userRoutes.js";
 import ratingRoutes from "./routes/ratingRoutes.js";
-import uploadRoutes from "./routes/uploadRoutes.js";
+import freelancerRoutes from "./routes/freelancerRoutes.js";
+import clientRoutes from "./routes/clientRoutes.js";
+
 
 
 
@@ -23,7 +25,9 @@ connectDb();
 
 app.use("/api/user", userRoutes);
 app.use("/api/rating", ratingRoutes);
-app.use("/api/upload", uploadRoutes);
+app.use("/api/freelancer", freelancerRoutes);
+app.use("/api/client", clientRoutes);
+
 
 
 app.get("/ping", (req, res) => res.json({ message: "Server is up!" }));

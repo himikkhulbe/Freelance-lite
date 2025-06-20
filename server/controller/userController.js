@@ -1,11 +1,12 @@
 import User from "../models/userModel.js";
-import Service from "../models/serviceModel.js";
+import Service from "../models/freelancerModels.js";
+import Job from "../models/clientModels.js";
 import Rating from "../models/ratingModel.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 export const registerUser = async (req, res) => {
     const { name, username, email, password, role } = req.body;
-    if(!name || !username || !email || !password || !role){
+    if (!name || !username || !email || !password || !role) {
         return res.status(400).json({ message: "Please enter all fields" });
     }
     try {
@@ -87,17 +88,25 @@ export const loginUser = async (req, res) => {
 
 export const getUserProfile = async (req, res) => {
     const userId = req.user.id; // Assuming you have middleware to set req.user
-
+    let data;
     try {
         const user = await User.findById(userId).select("-password"); // Exclude password from response
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        const services = await Service.find({ user: userId });
         const ratings = await Rating.find({ ratedId: userId });
-        const data = {user,services,ratings}
-
-        res.status(200).json(data);
+        if (user.role === "freelancer") {
+            const services = await Service.find({ user: userId });
+            data = { user, services, ratings };
+            return res.status(200).json(data);
+        }
+        if (user.role === "client") {
+            const jobs = await Job.find({ client: userId });
+            const ratings = await Rating.find({ ratedId: userId });
+            data = { user, jobs, ratings };
+            return res.status(200).json(data);
+        }
+        return res.status(200).json(user);
     } catch (error) {
         console.error("Error fetching user profile:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -107,13 +116,13 @@ export const logoutUser = (req, res) => {
     if (!req.cookies?.token) {
         return res.status(204).json({ message: "No user logged in" });
     }
-    try{
-    res.clearCookie("token", {
-        httpOnly: true,
-        sameSite: "none",
-        secure: process.env.NODE_ENV === "production",
-    });
-    res.status(200).json({ message: "Logged out successfully" });
+    try {
+        res.clearCookie("token", {
+            httpOnly: true,
+            sameSite: "none",
+            secure: process.env.NODE_ENV === "production",
+        });
+        res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         console.error("Error logging out:", error);
         res.status(500).json({ message: "Internal server error" });
@@ -121,34 +130,28 @@ export const logoutUser = (req, res) => {
 };
 
 export const getOtherUserProfile = async (req, res) => {
-    const userId = req.params.id; // Assuming you have middleware to set req.user
-
+    const userId = req.params.id;
+    let data;
     try {
-        const user = await User.findOne(userId).select("-password"); // Exclude password from response
+        const user = await User.findById(userId).select("-password");
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        const services = await Service.find({ user: userId });
-        user.services = services;
-        console.log(user);
-        res.status(200).json(user);
+        const ratings = await Rating.find({ ratedId: userId });
+        if (user.role === "freelancer") {
+            const services = await Service.find({ user: userId });
+            data = { user, services, ratings };
+            return res.status(200).json(data);
+        }
+        if (user.role === "client") {
+            const jobs = await Job.find({ client: userId });
+            const ratings = await Rating.find({ ratedId: userId });
+            data = { user, jobs, ratings};
+            return res.status(200).json(data);
+        }
+        return res.status(200).json(user);
     } catch (error) {
         console.error("Error fetching user profile:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
-}
-
-export const getServices = async (req, res) => {
-    const userId = req.params.id;
-    console.log(userId);
-    try {
-        const user = await User.findById(userId);
-        if(!user){
-            return res.status(404).json({ message: "User not found" });        
-        }
-        const services = await Service.find({ user: userId });
-        res.status(200).json(services);
-    }catch(error){
         res.status(500).json({ message: "Internal server error" });
     }
 }
