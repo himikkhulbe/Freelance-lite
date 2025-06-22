@@ -1,6 +1,7 @@
 import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Star, Edit, Mail, Phone, Github, Linkedin, Globe, Twitter } from "lucide-react";
+import { Star, Edit, Mail, Phone, Github, Linkedin, Globe, Twitter , Calendar} from "lucide-react";
+import IconWithtext from "./components/IconWithtext/IconWithtext.jsx"
 
 function Profile() {
     const { user } = useAuth();
@@ -27,8 +28,8 @@ function Profile() {
     return (
         <div className="min-h-screen flex flex-col pt-[60px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
             {/* Profile Section */}
-            <div className="xl:w-[80%] w-[90%] min-h-[250px] border-[0.5px] border-slate-500 bg-slate-50 rounded-xl flex md:flex-row flex-col justify-start md:gap-[30px] gap-[20px] md:items-end items-start pb-[30px] px-[30px] pt-[50px] relative">
-                <div className="w-full h-[125px] bg-blue-600 absolute top-0 left-0 rounded-tl-xl rounded-tr-xl"></div>
+            <div className="xl:w-[80%] w-[90%] min-h-[250px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg flex md:flex-row flex-col justify-start md:gap-[30px] gap-[20px] md:items-end items-start pb-[30px] px-[30px] pt-[50px] relative">
+                <div className="w-full h-[125px] bg-blue-600 absolute top-0 left-0 rounded-tl-lg rounded-tr-lg"></div>
                 <div className="md:w-[150px] w-[120px] aspect-[1/1] bg-slate-300 rounded-full shadow-md relative z-20">
                     <img
                         className="w-full h-full object-cover rounded-full"
@@ -61,7 +62,7 @@ function Profile() {
                 {/* left side */}
                 <div className="lg:w-[35%] w-full flex flex-col xl:gap-[30px] gap-[20px]">
                     {/* contact info */}
-                    <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-xl">
+                    <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
                         <div className="w-full flex justify-between items-center">
                             <p className="text-black text-xl font-semibold">
                                 Contact Information
@@ -70,68 +71,59 @@ function Profile() {
                         </div>
                         <div className="mt-[20px]">
                             {user?.user?.contactInfo?.email && (
-                                <div className="flex justify-start items-center gap-[8px] mt-[10px]">
-                                    <Mail className="text-blue-600 w-4 h-4 cursor-pointer" />
-                                    <p>{user?.user?.contactInfo?.email}</p>
-                                </div>
+                                <IconWithtext Icon={Mail} text={user?.user?.contactInfo?.email} />
+
                             )}
                             {user?.user?.contactInfo?.phone && (
-                                <div className="flex justify-start items-center gap-[8px] mt-[10px]">
-                                    <Phone className="text-blue-600 w-4 h-4 cursor-pointer" />
-                                    <p>{user?.user?.contactInfo?.phone}</p>
-                                </div>
+                                <IconWithtext Icon={Phone} text={user?.user?.contactInfo?.phone} />
+
                             )}
                         </div>
                     </div>
                     {/* Member since */}
-                    <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-xl">
+                    <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
                         <div>
                             <p className="text-black text-xl font-semibold">Member Since</p>
                         </div>
-                        <div className="mt-[20px]"> 
-                            <p>{formatDate(user?.user?.createdAt)}</p>
+                        <div className="mt-[20px]">
+                            <IconWithtext Icon={Calendar} text={formatDate(user?.user?.createdAt)} />
+
                         </div>
                     </div>
                     {/* Social Links */}
-                    <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-xl">
+                    <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
                         <div className="w-full flex justify-between items-center">
                             <p className="text-black text-xl font-semibold">Social Links</p>
                             <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
                         </div>
-                        <div className="mt-[20px]"> 
+                        <div className="mt-[20px]">
                             {/* github render */}
                             {user?.user?.socialMedia?.Github && (
-                                <div className="flex justify-start items-center gap-[8px] mt-[10px]">
-                                    <Github className="text-blue-600 w-4 h-4 cursor-pointer" />
-                                    <a href={user?.user?.socialMedia?.Github} target="_blank" rel="noreferrer" className="text-blue-600" >Github</a>
-                                </div>
+                                <IconWithtext Icon={Github} link={user?.user?.socialMedia?.Github} text="Github" />
+
                             )}
                             {/* linkedin render */}
                             {user?.user?.socialMedia?.Linkedin && (
-                                <div className="flex justify-start items-center gap-[8px] mt-[10px]">
-                                    <Linkedin className="text-blue-600 w-4 h-4 cursor-pointer" />
-                                    <a href={user?.user?.socialMedia?.Linkedin} target="_blank" rel="noreferrer" className="text-blue-600" >Linkedin</a>
-                                </div>
+                                <IconWithtext Icon={Linkedin} link={user?.user?.socialMedia?.Linkedin} text="Linkedin" />
+
                             )}
                             {/* Twitter render */}
                             {user?.user?.socialMedia?.Twitter && (
-                                <div className="flex justify-start items-center gap-[8px] mt-[10px]">
-                                    <Twitter className="text-blue-600 w-4 h-4 cursor-pointer" />
-                                    <a href={user?.user?.socialMedia?.Twitter} target="_blank" rel="noreferrer" className="text-blue-600" >Twitter</a>
-                                </div>
+                                <IconWithtext Icon={Twitter} link={user?.user?.socialMedia?.Twitter} text="Twitter" />
+
                             )}
                             {/* portfolio render */}
                             {user?.user?.socialMedia?.Portfolio && (
-                                <div className="flex justify-start items-center gap-[8px] mt-[10px]">
-                                    <Globe className="text-blue-600 w-4 h-4 cursor-pointer" />
-                                    <a href={user?.user?.socialMedia?.Portfolio} target="_blank" rel="noreferrer" className="text-blue-600" >Portfolio</a>
-                                </div>
+                                <IconWithtext Icon={Globe} link={user?.user?.socialMedia?.Portfolio} text="Portfolio" />
+
                             )}
                         </div>
                     </div>
                 </div>
                 {/* right side */}
-                <div className="lg:w-[65%] w-full min-h-[120px] border-[0.5px] border-slate-500 bg-slate-50 rounded-xl"></div>
+                <div className="lg:w-[65%] w-full min-h-[120px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
+
+                </div>
             </div>
         </div>
     );
