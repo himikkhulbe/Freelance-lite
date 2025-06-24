@@ -87,31 +87,37 @@ export const loginUser = async (req, res) => {
 
 
 export const getUserProfile = async (req, res) => {
-    const userId = req.user.id; // Assuming you have middleware to set req.user
+    const userId = req.user.id;
     let data;
+
     try {
-        const user = await User.findById(userId).select("-password"); // Exclude password from response
+        const user = await User.findById(userId).select("-password");
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        const ratings = await Rating.find({ ratedId: userId });
+
+        // Sort ratings by newest first
+        const ratings = await Rating.find({ ratedId: userId }).sort({ createdAt: -1 });
+        console.log("Ratings:", ratings);
         if (user.role === "freelancer") {
-            const services = await Service.find({ user: userId });
+            const services = await Service.find({ user: userId }).sort({ createdAt: -1 });
             data = { user, services, ratings };
             return res.status(200).json(data);
         }
+
         if (user.role === "client") {
-            const jobs = await Job.find({ client: userId });
-            const ratings = await Rating.find({ ratedId: userId });
-            data = { user, jobs, ratings };
+            const jobs = await Job.find({ client: userId }).sort({ createdAt: -1 });
+            data = { user, jobs, ratings };  // ratings already sorted
             return res.status(200).json(data);
         }
+
         return res.status(200).json(user);
     } catch (error) {
         console.error("Error fetching user profile:", error);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
+
 export const logoutUser = (req, res) => {
     if (!req.cookies?.token) {
         return res.status(204).json({ message: "No user logged in" });
