@@ -84,7 +84,16 @@ const Login = () => {
 
       if (res.ok) {
         setSuccess('Login successful! Redirecting...');
-        setUser(data?.user);
+        const res = await fetch('https://freelance-lite.onrender.com/api/user/profile', {
+          mode: "cors",
+          credentials: 'include',
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setUser(data);
+        }
+        console.log('User data:', data?.user);
         navigate('/profile');
       } else {
         setError(data?.message || 'Login failed. Please check your credentials.');

@@ -5,6 +5,8 @@ import User from "../models/userModel.js";
 const ratingUser = async (req, res) => {
     const {
         ratedId,
+        raterName,
+        raterProfile,
         rating,
         comment
     } = req.body;
@@ -45,6 +47,8 @@ const ratingUser = async (req, res) => {
         const newRating = await Rating.create({
             raterId: userId,
             ratedId,
+            raterName,
+            raterProfile,
             rating,
             comment
         })

@@ -1,11 +1,22 @@
-import React from "react";
 import { useAuth } from "../../contexts/AuthContext";
-import { Star, Edit, Mail, Phone, Github, Linkedin, Globe, Twitter , Calendar} from "lucide-react";
+import { Star, Edit, Mail, Phone, Github, Linkedin, Globe, Twitter, Calendar, Eye } from "lucide-react";
 import IconWithtext from "./components/IconWithtext/IconWithtext.jsx"
+import ProfileMain from "./components/ProfileMain/ProfileMain.jsx";
+import RatingSection from "./components/RatingSection/RatingSection.jsx";
+import ContactSection from "./components/ContactSection/ContactSection.jsx";
 
 function Profile() {
     const { user } = useAuth();
-    console.log(user);
+
+    if(!user?.user?.email){
+        return (
+            <div className="min-h-screen flex items-center justify-center">
+                <p className="text-gray-500 text-lg">Loading...</p>
+            </div>
+        );
+    }
+
+
 
     const renderStars = (rating) => {
         return Array.from({ length: 5 }, (_, i) => (
@@ -28,43 +39,15 @@ function Profile() {
     return (
         <div className="min-h-screen flex flex-col pt-[60px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
             {/* Profile Section */}
-            <div className="xl:w-[80%] w-[90%] min-h-[250px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg flex md:flex-row flex-col justify-start md:gap-[30px] gap-[20px] md:items-end items-start pb-[30px] px-[30px] pt-[50px] relative">
-                <div className="w-full h-[125px] bg-blue-600 absolute top-0 left-0 rounded-tl-lg rounded-tr-lg"></div>
-                <div className="md:w-[150px] w-[120px] aspect-[1/1] bg-slate-300 rounded-full shadow-md relative z-20">
-                    <img
-                        className="w-full h-full object-cover rounded-full"
-                        src={user?.user?.profilePicture}
-                        alt={`${user?.user?.name} profile`}
-                    />
-                </div>
-                <div className="flex md:flex-row flex-col justify-between md:items-center md:gap-[30px] gap-[20px] grow h-full">
-                    <div>
-                        <div className="flex justify-start items-center gap-[8px]">
-                            <p className="text-black text-4xl font-bold">{user?.user?.name}</p>
-                            <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
-                        </div>
-                        <p className="text-black text-md">{`@${user?.user?.username}`}</p>
-                        <p className="text-lg font-semibold text-blue-600">
-                            {user?.user?.role}
-                        </p>
-                    </div>
-                    <div className="flex flex-wrap items-center gap-[7px]">
-                        <div className="flex items-center">
-                            {renderStars(user?.user?.averageRating)}
-                        </div>
-                        <p>{user?.user?.averageRating}.0</p>
-                        <p className="text-gray-500">{`(5 reviews)`}</p>
-                    </div>
-                </div>
-            </div>
+            <ProfileMain renderStars={renderStars} user={user} loggedInUser={user}/>
             {/* bottom Section */}
             <div className="xl:w-[80%] w-[90%] min-h-[250px] flex lg:flex-row flex-col md:gap-[30px] gap-[20px]">
                 {/* left side */}
-                <div className="lg:w-[35%] w-full flex flex-col xl:gap-[30px] gap-[20px]">
+                <div className="lg:w-[32%] w-full flex flex-col xl:gap-[30px] gap-[20px]">
                     {/* contact info */}
                     <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
                         <div className="w-full flex justify-between items-center">
-                            <p className="text-black text-xl font-semibold">
+                            <p className="text-black text-lg font-semibold">
                                 Contact Information
                             </p>
                             <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
@@ -83,7 +66,7 @@ function Profile() {
                     {/* Member since */}
                     <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
                         <div>
-                            <p className="text-black text-xl font-semibold">Member Since</p>
+                            <p className="text-black text-lg font-semibold">Member Since</p>
                         </div>
                         <div className="mt-[20px]">
                             <IconWithtext Icon={Calendar} text={formatDate(user?.user?.createdAt)} />
@@ -93,7 +76,7 @@ function Profile() {
                     {/* Social Links */}
                     <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
                         <div className="w-full flex justify-between items-center">
-                            <p className="text-black text-xl font-semibold">Social Links</p>
+                            <p className="text-black text-lg font-semibold">Social Links</p>
                             <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
                         </div>
                         <div className="mt-[20px]">
@@ -119,10 +102,42 @@ function Profile() {
                             )}
                         </div>
                     </div>
+                    {/* new */}
+                    <ContactSection title="Contact Information" data={[{
+                        Icon: Mail,
+                        text: user?.user?.contactInfo?.email,
+                    },
+                    {
+                        Icon: Phone,
+                        text: user?.user?.contactInfo?.phone,
+                    }
+                    ]}/>
                 </div>
                 {/* right side */}
-                <div className="lg:w-[65%] w-full min-h-[120px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
-
+                <div className="lg:w-[68%] w-full min-h-[120px] flex flex-col xl:gap-[30px] gap-[20px]">
+                    {/* services or jobs */}
+                    <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
+                        <div className="flex justify-between items-center grow">
+                            {user?.user?.role === "freelancer" && <p className="text-black text-lg font-semibold">Services Offered</p>}
+                            {user?.user?.role === "client" && <p className="text-black text-lg font-semibold">Jobs Offered</p>}
+                            <div className="flex gap-[10px]">
+                                <button className="bg-blue-600 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-white">
+                                    <span className=" text-2xl">+</span> Add Services
+                                </button>
+                                <button className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-gray-600">
+                                    <Eye className="text-gray-600 w-4 h-4" /> View All
+                                </button>
+                            </div>
+                        </div>
+                        <div className="mt-[20px]">
+                            {1 ? <p className="text-gray-500 text-sm font-semibold">
+                                Click on "Add Service" to create your first one.
+                            </p> :
+                                null}
+                        </div>
+                    </div>
+                    {/* rating */}
+                    <RatingSection user={user} renderStars={renderStars} formatDate={formatDate} />
                 </div>
             </div>
         </div>
