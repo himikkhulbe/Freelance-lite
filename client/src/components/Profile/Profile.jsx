@@ -1,6 +1,5 @@
 import { useAuth } from "../../contexts/AuthContext";
-import { Star, Edit, Mail, Phone, Github, Linkedin, Globe, Twitter, Calendar, Eye } from "lucide-react";
-import IconWithtext from "./components/IconWithtext/IconWithtext.jsx"
+import { Star, Eye } from "lucide-react";
 import ProfileMain from "./components/ProfileMain/ProfileMain.jsx";
 import RatingSection from "./components/RatingSection/RatingSection.jsx";
 import DetailsSection from "./components/DetailsSection/DetailsSection.jsx";
@@ -44,52 +43,7 @@ function Profile() {
             {/* bottom Section */}
             <div className="xl:w-[80%] w-[90%] min-h-[250px] flex lg:flex-row flex-col md:gap-[30px] gap-[20px]">
                 {/* left side */}
-                <div className="lg:w-[32%] w-full flex flex-col xl:gap-[30px] gap-[20px]">
-
-                    
-                    {/* contact info */}
-                    <DetailsSection title="Contact Information" edit={true} user={user} loggedInUser={user} data={[{
-                        Icon: Mail,
-                        text: user?.user?.contactInfo?.email,
-                    },
-                    {
-                        Icon: Phone,
-                        text: user?.user?.contactInfo?.phone,
-                    }
-                    ]} />
-
-
-                    {/* Member since */}
-                    <DetailsSection title="Member Since" user={user} loggedInUser={user} data={[{
-                        Icon: Calendar,
-                        text: formatDate(user?.user?.createdAt),
-                    }
-                    ]} />
-
-
-                    {/* Social Links */}
-                    <DetailsSection title="Social Links" edit={true} user={user} loggedInUser={user} data={[{
-                        Icon: Github,
-                        link: user?.user?.socialMedia?.Github,
-                        text: "Github",
-                    },
-                    {
-                        Icon: Linkedin,
-                        link: user?.user?.socialMedia?.Linkedin,
-                        text: "Linkedin",
-                    },
-                    {
-                        Icon: Twitter,
-                        link: user?.user?.socialMedia?.Twitter,
-                        text: "Twitter",
-                    },
-                    {
-                        Icon: Globe,
-                        link: user?.user?.socialMedia?.Portfolio,
-                        text: "Portfolio",
-                    }
-                    ]} />
-                </div>
+                <DetailsSection user={user} loggedInUser={user} formatDate={formatDate}/>
                 {/* right side */}
                 <div className="lg:w-[68%] w-full min-h-[120px] flex flex-col xl:gap-[30px] gap-[20px]">
                     {/* services or jobs */}

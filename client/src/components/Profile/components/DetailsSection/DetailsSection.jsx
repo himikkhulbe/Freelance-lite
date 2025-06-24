@@ -1,32 +1,56 @@
-import React from 'react'
-import { Edit } from 'lucide-react'
-import IconWithtext from '../IconWithtext/IconWithtext'
+import DetailCard from './components/Detailcard/DetailCard'
+import { Mail, Phone, Github, Linkedin, Globe, Twitter, Calendar, Eye } from 'lucide-react'
 
-function DetailsSection({title, data, edit, user, loggedInUser}) {
-  return (
-                        <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
-                            <div className="w-full flex justify-between items-center">
-                                <p className="text-black text-lg font-semibold">
-                                    {title}
-                                </p>
-                                {edit && loggedInUser?.user?._id === user?.user?._id &&
-                                    <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
-                                }                            </div>
-                            <div className="mt-[20px]">
-                                {data?.map((item, index) => (
-                                    <div key={index} >
-                                        {item.text && <IconWithtext
-                                            key={index}
-                                            Icon={item.Icon}
-                                            text={item.text}
-                                            link={item.link}
-                                        />}
-                                        
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-)
+
+function DetailsSection({ user, loggedInUser, formatDate }) {
+    return (
+        <div className="lg:w-[32%] w-full flex flex-col xl:gap-[30px] gap-[20px]">
+
+
+            {/* contact info */}
+            <DetailCard title="Contact Information" edit={true} user={user} loggedInUser={loggedInUser} data={[{
+                Icon: Mail,
+                text: user?.user?.contactInfo?.email,
+            },
+            {
+                Icon: Phone,
+                text: user?.user?.contactInfo?.phone,
+            }
+            ]} />
+
+
+            {/* Member since */}
+            <DetailCard title="Member Since" user={user} loggedInUser={loggedInUser} data={[{
+                Icon: Calendar,
+                text: formatDate(user?.user?.createdAt),
+            }
+            ]} />
+
+
+            {/* Social Links */}
+            <DetailCard title="Social Links" edit={true} user={user} loggedInUser={loggedInUser} data={[{
+                Icon: Github,
+                link: user?.user?.socialMedia?.Github,
+                text: "Github",
+            },
+            {
+                Icon: Linkedin,
+                link: user?.user?.socialMedia?.Linkedin,
+                text: "Linkedin",
+            },
+            {
+                Icon: Twitter,
+                link: user?.user?.socialMedia?.Twitter,
+                text: "Twitter",
+            },
+            {
+                Icon: Globe,
+                link: user?.user?.socialMedia?.Portfolio,
+                text: "Portfolio",
+            }
+            ]} />
+        </div>
+    )
 }
 
 export default DetailsSection

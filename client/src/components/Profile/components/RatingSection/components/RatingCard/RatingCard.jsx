@@ -1,7 +1,7 @@
 import React from 'react'
 import {User} from 'lucide-react'
 
-function RatingCard({ profile, name, rating, comment, date, service, renderStars }) {
+function RatingCard({ profile, name, rating, comment, date, renderStars }) {
     return (
         <div className="flex flex-col gap-[10px] w-full border-b-[0.5px] border-gray-300 pb-[5px] mb-[20px]">
             <div className="flex justify-between items-center w-full">
@@ -29,8 +29,8 @@ function RatingCard({ profile, name, rating, comment, date, service, renderStars
                 </div>
             </div>
             <div className="w-full">
-                <p className="">{comment}</p>
-                <a className="text-sm text-blue-600" href="">{`Service: ${service}`}</a>
+                <p className="">{`"${comment}"`}</p>
+                {/* <a className="text-sm text-blue-600" href="">{`Service: ${service}`}</a> */}
             </div>
         </div>
     )

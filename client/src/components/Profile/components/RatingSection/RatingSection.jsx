@@ -17,7 +17,7 @@ function RatingSection({user, renderStars, formatDate}) {
                 {user?.ratings?.length === 0 ? (
                     <p className="text-gray-500 text-sm font-semibold">No rating found</p>
                 ) : (
-                        user?.ratings?.slice(user?.ratings?.length - 3, user?.ratings?.length).map((rating) => (
+                        user?.ratings?.slice(0, user?.ratings?.length).map((rating) => (
                         <RatingCard
                             key={rating._id}
                             profile={rating.raterProfile}
@@ -25,7 +25,7 @@ function RatingSection({user, renderStars, formatDate}) {
                             rating={rating.rating}
                             comment={rating.comment}
                             date={formatDate(rating.createdAt)}
-                            service={rating.service}
+                            // service={rating.service}
                             renderStars={renderStars}
                         />
                     ))
