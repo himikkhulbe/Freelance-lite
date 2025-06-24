@@ -19,8 +19,8 @@ function RatingSection({user, renderStars, formatDate, open}) {
                         user?.ratings?.slice(0, 3).map((rating) => (
                         <RatingCard
                             key={rating._id}
-                            profile={rating.raterProfile}
-                            name={rating.raterName}
+                            profile={rating.raterId.profilePicture}
+                            name={rating.raterId.name}
                             rating={rating.rating}
                             comment={rating.comment}
                             date={formatDate(rating.createdAt)}

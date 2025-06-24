@@ -13,7 +13,6 @@ function Profile() {
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [showProfileEditModal, setShowProfileEditModal] = useState(false);
 
-
     const renderStars = (rating) => {
         return Array.from({ length: 5 }, (_, i) => (
             <Star
@@ -33,6 +32,7 @@ function Profile() {
     };
 
     useEffect(() => {
+
         if (!showRatingModal && !showProfileEditModal) {
             document.body.style.overflow = 'auto';
         }else{

@@ -48,7 +48,6 @@ function ProfileEditPopup({ loggedInUser, close }) {
             });
         }
     };
-      
 
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
@@ -69,22 +68,21 @@ function ProfileEditPopup({ loggedInUser, close }) {
 
         try {
             console.log("Submitting form data:", formData);
-            const res = await fetch("http://localhost:8000/api/user/profile/update", {
+            const res = await fetch("https://freelance-lite.onrender.com/api/user/profile/update", {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                credentials: "include", // very important for cookie-based auth
+                credentials: "include", // this is correct!
                 body: JSON.stringify(formData)
             });
 
             const result = await res.json();
+            console.log("Response from server:", result);
 
             if (res.ok) {
-                alert("Profile updated successfully");
                 console.log("Updated user:", result.user);
-            } else {
-                alert(result.message || "Update failed");
+                close(false);
             }
         } catch (error) {
             console.error("Update failed:", error);

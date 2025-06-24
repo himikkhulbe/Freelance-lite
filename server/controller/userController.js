@@ -97,7 +97,10 @@ export const getUserProfile = async (req, res) => {
         }
 
         // Sort ratings by newest first
-        const ratings = await Rating.find({ ratedId: userId }).sort({ createdAt: -1 });
+        const ratings = await Rating.find({ ratedId: userId })
+            .populate("raterId", "name profilePicture username")
+            .sort({ createdAt: -1 });
+            
         console.log("Ratings:", ratings);
         if (user.role === "freelancer") {
             const services = await Service.find({ user: userId }).sort({ createdAt: -1 });

@@ -31,22 +31,22 @@ function DetailsSection({ user, loggedInUser, formatDate ,profileOpen }) {
             <DetailCard title="Social Links" open={profileOpen} edit={true} user={user} loggedInUser={loggedInUser} data={[{
                 Icon: Github,
                 link: user?.user?.socialMedia?.Github,
-                text: "Github",
+                text: user?.user?.socialMedia?.Github ? "Github" : "",
             },
             {
                 Icon: Linkedin,
                 link: user?.user?.socialMedia?.Linkedin,
-                text: "Linkedin",
+                text: user?.user?.socialMedia?.Linkedin ? "Linkedin" : "",
             },
             {
                 Icon: Twitter,
                 link: user?.user?.socialMedia?.Twitter,
-                text: "Twitter",
+                text: user?.user?.socialMedia?.Twitter ? "Twitter" : "",
             },
             {
                 Icon: Globe,
                 link: user?.user?.socialMedia?.Portfolio,
-                text: "Portfolio",
+                text: user?.user?.socialMedia?.Portfolio ? "Portfolio" : "",
             }
             ]} />
         </div>

@@ -11,13 +11,6 @@ const ratingModel = new mongoose.Schema({
         required: true,
         ref: 'User'
     },
-    raterName: {
-        type: String,
-        required: true
-    },
-    raterProfile: {
-        type: String,
-    },
     rating: {
         type: Number,
         required: true,
