@@ -1,5 +1,6 @@
 import Rating from "../models/ratingModel.js";
 import User from "../models/userModel.js";
+import mongoose from "mongoose";
 
 
 const ratingUser = async (req, res) => {
@@ -48,6 +49,20 @@ const ratingUser = async (req, res) => {
             rating,
             comment
         })
+        const avgResult = await Rating.aggregate([
+            { $match: { ratedId: new mongoose.Types.ObjectId(ratedId) } },
+            {
+                $group: {
+                    _id: "$ratedId",
+                    averageRating: { $avg: "$rating" }
+                }
+            }
+        ]);
+
+        const avgRating = avgResult.length > 0 ? avgResult[0].averageRating : 0;
+
+        // 📝 Update user model with new average
+        await User.findByIdAndUpdate(ratedId, { averageRating: avgRating });
         res.status(201).json(newRating);
     } catch (error) {
         res.status(500).json({

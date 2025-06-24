@@ -33,7 +33,7 @@ function ProfileMain({ renderStars, user, loggedInUser, openEdit }) {
                     <div className="flex items-center">
                         {renderStars(user?.user?.averageRating)}
                     </div>
-                    <p>{user?.user?.averageRating}.0</p>
+                    <p>{user?.user?.averageRating.toFixed(1)}</p>
                     <p className="text-gray-500">{`(${user?.ratings?.length} reviews)`}</p>
                 </div>
             </div>

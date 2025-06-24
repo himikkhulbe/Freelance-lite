@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema({
     },
     averageRating: {
         type: Number,
-        default: 5
+        default: 0
     },
     skills: [{
         type: String,
