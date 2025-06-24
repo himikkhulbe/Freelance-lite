@@ -3,7 +3,7 @@ import { Star, Edit, Mail, Phone, Github, Linkedin, Globe, Twitter, Calendar, Ey
 import IconWithtext from "./components/IconWithtext/IconWithtext.jsx"
 import ProfileMain from "./components/ProfileMain/ProfileMain.jsx";
 import RatingSection from "./components/RatingSection/RatingSection.jsx";
-import ContactSection from "./components/ContactSection/ContactSection.jsx";
+import DetailsSection from "./components/DetailsSection/DetailsSection.jsx";
 
 function Profile() {
     const { user } = useAuth();
@@ -45,66 +45,10 @@ function Profile() {
             <div className="xl:w-[80%] w-[90%] min-h-[250px] flex lg:flex-row flex-col md:gap-[30px] gap-[20px]">
                 {/* left side */}
                 <div className="lg:w-[32%] w-full flex flex-col xl:gap-[30px] gap-[20px]">
+
+                    
                     {/* contact info */}
-                    <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
-                        <div className="w-full flex justify-between items-center">
-                            <p className="text-black text-lg font-semibold">
-                                Contact Information
-                            </p>
-                            <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
-                        </div>
-                        <div className="mt-[20px]">
-                            {user?.user?.contactInfo?.email && (
-                                <IconWithtext Icon={Mail} text={user?.user?.contactInfo?.email} />
-
-                            )}
-                            {user?.user?.contactInfo?.phone && (
-                                <IconWithtext Icon={Phone} text={user?.user?.contactInfo?.phone} />
-
-                            )}
-                        </div>
-                    </div>
-                    {/* Member since */}
-                    <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
-                        <div>
-                            <p className="text-black text-lg font-semibold">Member Since</p>
-                        </div>
-                        <div className="mt-[20px]">
-                            <IconWithtext Icon={Calendar} text={formatDate(user?.user?.createdAt)} />
-
-                        </div>
-                    </div>
-                    {/* Social Links */}
-                    <div className="w-full min-h-[120px] p-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
-                        <div className="w-full flex justify-between items-center">
-                            <p className="text-black text-lg font-semibold">Social Links</p>
-                            <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
-                        </div>
-                        <div className="mt-[20px]">
-                            {/* github render */}
-                            {user?.user?.socialMedia?.Github && (
-                                <IconWithtext Icon={Github} link={user?.user?.socialMedia?.Github} text="Github" />
-
-                            )}
-                            {/* linkedin render */}
-                            {user?.user?.socialMedia?.Linkedin && (
-                                <IconWithtext Icon={Linkedin} link={user?.user?.socialMedia?.Linkedin} text="Linkedin" />
-
-                            )}
-                            {/* Twitter render */}
-                            {user?.user?.socialMedia?.Twitter && (
-                                <IconWithtext Icon={Twitter} link={user?.user?.socialMedia?.Twitter} text="Twitter" />
-
-                            )}
-                            {/* portfolio render */}
-                            {user?.user?.socialMedia?.Portfolio && (
-                                <IconWithtext Icon={Globe} link={user?.user?.socialMedia?.Portfolio} text="Portfolio" />
-
-                            )}
-                        </div>
-                    </div>
-                    {/* new */}
-                    <ContactSection title="Contact Information" data={[{
+                    <DetailsSection title="Contact Information" edit={true} user={user} loggedInUser={user} data={[{
                         Icon: Mail,
                         text: user?.user?.contactInfo?.email,
                     },
@@ -112,7 +56,39 @@ function Profile() {
                         Icon: Phone,
                         text: user?.user?.contactInfo?.phone,
                     }
-                    ]}/>
+                    ]} />
+
+
+                    {/* Member since */}
+                    <DetailsSection title="Member Since" user={user} loggedInUser={user} data={[{
+                        Icon: Calendar,
+                        text: formatDate(user?.user?.createdAt),
+                    }
+                    ]} />
+
+
+                    {/* Social Links */}
+                    <DetailsSection title="Social Links" edit={true} user={user} loggedInUser={user} data={[{
+                        Icon: Github,
+                        link: user?.user?.socialMedia?.Github,
+                        text: "Github",
+                    },
+                    {
+                        Icon: Linkedin,
+                        link: user?.user?.socialMedia?.Linkedin,
+                        text: "Linkedin",
+                    },
+                    {
+                        Icon: Twitter,
+                        link: user?.user?.socialMedia?.Twitter,
+                        text: "Twitter",
+                    },
+                    {
+                        Icon: Globe,
+                        link: user?.user?.socialMedia?.Portfolio,
+                        text: "Portfolio",
+                    }
+                    ]} />
                 </div>
                 {/* right side */}
                 <div className="lg:w-[68%] w-full min-h-[120px] flex flex-col xl:gap-[30px] gap-[20px]">
