@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
 import { 
   Search, 
   Bell, 
@@ -37,6 +39,10 @@ const FreelanceNavbar = () => {
   // Refs for dropdown management
   const profileDropdownRef = useRef(null);
   const searchModalRef = useRef(null);
+  const navigate = useNavigate();
+
+  // Context for authentication
+  const { user, setUser } = useAuth();
 
   // Demo user data
   const userData = {
@@ -45,6 +51,23 @@ const FreelanceNavbar = () => {
     avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face&facepad=2&rounded-full',
     rating: 4.8,
     completedJobs: 127
+  };
+  const handleLogout = async () => {
+    try {
+      const res = await fetch('https://freelance-lite.onrender.com/api/user/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (res.ok) {
+        setUser(null);
+        navigate('/login'); // Redirect back to login
+      } else {
+        console.error('Failed to logout');
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   // Close dropdowns when clicking outside
@@ -229,7 +252,7 @@ const FreelanceNavbar = () => {
                         
                         <div className="border-t border-gray-100">
                           <button
-                            onClick={() => setIsLoggedIn(false)}
+                            onClick={handleLogout}
                             className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
                           >
                             <LogOut className="w-4 h-4 mr-3" />
