@@ -1,6 +1,6 @@
 import { Edit, User } from 'lucide-react'
 
-function ProfileMain({ renderStars, user, loggedInUser }) {
+function ProfileMain({ renderStars, user, loggedInUser, openEdit }) {
 
 
     return (
@@ -24,7 +24,7 @@ function ProfileMain({ renderStars, user, loggedInUser }) {
                     <div className="flex justify-start items-center gap-[8px]">
                         <p className="text-black text-4xl font-bold">{user?.user?.name}</p>
                         {loggedInUser?.user?._id === user?.user?._id &&
-                                <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
+                                <Edit onClick={() => openEdit(true)} className="text-blue-600 w-4 h-4 cursor-pointer" />
                         }
                     </div>
                     <p className="text-black text-md">{`@${user?.user?.username}`}</p>
