@@ -14,12 +14,13 @@ function ContactSection({title , data}) {
                             </div>
                             <div className="mt-[20px]">
                                 {data?.map((item, index) => (
-                                    <div key={index} className="flex items-center gap-[10px] mb-[10px]">
-                                        <IconWithtext
+                                    <div key={index} >
+                                        {item.text && <IconWithtext
                                             key={index}
                                             Icon={item.Icon}
                                             text={item.text}
-                                        />
+                                        />}
+                                        
                                     </div>
                                 ))}
                             </div>

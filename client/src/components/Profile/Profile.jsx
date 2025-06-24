@@ -7,6 +7,7 @@ import ContactSection from "./components/ContactSection/ContactSection.jsx";
 
 function Profile() {
     const { user } = useAuth();
+    console.log(user)
 
     if(!user?.user?.email){
         return (
