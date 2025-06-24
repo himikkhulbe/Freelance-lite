@@ -152,7 +152,7 @@ export const getOtherUserProfile = async (req, res) => {
         if (user.role === "client") {
             const jobs = await Job.find({ client: userId });
             const ratings = await Rating.find({ ratedId: userId });
-            data = { user, jobs, ratings};
+            data = { user, jobs, ratings };
             return res.status(200).json(data);
         }
         return res.status(200).json(user);
@@ -161,3 +161,53 @@ export const getOtherUserProfile = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
+export const updateUserProfile = async (req, res) => {
+    const userId = req.user.id;
+
+    try {
+        const {
+            name,
+            profilePicture,
+            contactInfo,
+            socialMedia,
+        } = req.body;
+
+        // Construct update object only with allowed fields
+        const updates = {};
+
+        if (name) updates.name = name;
+        if (profilePicture) updates.profilePicture = profilePicture;
+
+        if (contactInfo) {
+            updates.contactInfo = {};
+            if (contactInfo.email) updates.contactInfo.email = contactInfo.email;
+            if (contactInfo.phone) updates.contactInfo.phone = contactInfo.phone;
+        }
+
+        if (socialMedia) {
+            updates.socialMedia = {};
+            if (socialMedia.Github) updates.socialMedia.Github = socialMedia.Github;
+            if (socialMedia.Linkedin) updates.socialMedia.Linkedin = socialMedia.Linkedin;
+            if (socialMedia.Twitter) updates.socialMedia.Twitter = socialMedia.Twitter;
+            if (socialMedia.Portfolio) updates.socialMedia.Portfolio = socialMedia.Portfolio;
+        }
+
+        const updatedUser = await User.findByIdAndUpdate(userId, updates, {
+            new: true,
+            runValidators: true,
+        }).select("-password");
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        return res.status(200).json({
+            message: "User profile updated successfully",
+            user: updatedUser,
+        });
+    } catch (error) {
+        console.error("Update User Profile Error:", error);
+        return res.status(500).json({ message: "Internal server error" });
+    }
+};

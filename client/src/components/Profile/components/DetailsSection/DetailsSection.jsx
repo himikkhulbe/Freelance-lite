@@ -2,7 +2,7 @@ import DetailCard from './components/Detailcard/DetailCard'
 import { Mail, Phone, Github, Linkedin, Globe, Twitter, Calendar, Eye } from 'lucide-react'
 
 
-function DetailsSection({ user, loggedInUser, formatDate ,profileOpen, socialOpen }) {
+function DetailsSection({ user, loggedInUser, formatDate ,profileOpen }) {
     return (
         <div className="lg:w-[32%] w-full flex flex-col xl:gap-[30px] gap-[20px]">
 
@@ -28,7 +28,7 @@ function DetailsSection({ user, loggedInUser, formatDate ,profileOpen, socialOpe
 
 
             {/* Social Links */}
-            <DetailCard title="Social Links" open={socialOpen} edit={true} user={user} loggedInUser={loggedInUser} data={[{
+            <DetailCard title="Social Links" open={profileOpen} edit={true} user={user} loggedInUser={loggedInUser} data={[{
                 Icon: Github,
                 link: user?.user?.socialMedia?.Github,
                 text: "Github",

@@ -4,7 +4,7 @@ import { Star, Eye } from "lucide-react";
 import ProfileMain from "./components/ProfileMain/ProfileMain.jsx";
 import RatingSection from "./components/RatingSection/RatingSection.jsx";
 import DetailsSection from "./components/DetailsSection/DetailsSection.jsx";
-import Popup from "./components/Popup/RatingPopup.jsx";
+import RatingPopup from "./components/Popup/RatingPopup.jsx";
 import ProfileEditPopup from "./components/Popup/ProfileEditPopup.jsx";
 
 function Profile() {
@@ -12,7 +12,6 @@ function Profile() {
     console.log(user)
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [showProfileEditModal, setShowProfileEditModal] = useState(false);
-    const [showSocialModal, setShowSocialModal] = useState(false);
 
 
     const renderStars = (rating) => {
@@ -34,14 +33,14 @@ function Profile() {
     };
 
     useEffect(() => {
-        if (!showRatingModal && !showProfileEditModal && !showSocialModal) {
+        if (!showRatingModal && !showProfileEditModal) {
             document.body.style.overflow = 'auto';
         }else{
             document.body.style.overflow = 'hidden';
 
         }
         return () => (document.body.style.overflow = 'auto');
-    }, [showRatingModal, showProfileEditModal, showSocialModal]);
+    }, [showRatingModal, showProfileEditModal]);
 
     if (!user) {
         return (
@@ -57,13 +56,13 @@ function Profile() {
     return (
         <div className="min-h-screen flex flex-col pt-[60px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
             {/* Profile Section */}
-            {showRatingModal && <Popup renderStars={renderStars} formatDate={formatDate} user={user} close={setShowRatingModal} />        }
-            {showProfileEditModal && <ProfileEditPopup user={user} close={setShowProfileEditModal} />}
+            {showRatingModal && <RatingPopup renderStars={renderStars} formatDate={formatDate} user={user} close={setShowRatingModal} />        }
+            {showProfileEditModal && <ProfileEditPopup loggedInUser={user} close={setShowProfileEditModal} />}
             <ProfileMain renderStars={renderStars} user={user} loggedInUser={user} openEdit={setShowProfileEditModal}/>
             {/* bottom Section */}
             <div className="xl:w-[80%] w-[90%] min-h-[250px] flex lg:flex-row flex-col md:gap-[30px] gap-[20px]">
                 {/* left side */}
-                <DetailsSection user={user} loggedInUser={user} formatDate={formatDate} socialOpen={setShowSocialModal} profileOpen={setShowProfileEditModal} />
+                <DetailsSection user={user} loggedInUser={user} formatDate={formatDate} profileOpen={setShowProfileEditModal} />
                 {/* right side */}
                 <div className="lg:w-[68%] w-full min-h-[120px] flex flex-col xl:gap-[30px] gap-[20px]">
                     {/* services or jobs */}
