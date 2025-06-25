@@ -83,7 +83,7 @@ function ProfileEditPopup({ loggedInUser, close }) {
                 body: formDataToSend,
                 credentials: "include",
             });
-
+            console.log("Response status:", res);
             const result = await res.json();
             if (res.ok) {
                 console.log("Updated user:", result.user);

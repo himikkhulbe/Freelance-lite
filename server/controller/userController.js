@@ -169,7 +169,9 @@ export const updateUserProfile = async (req, res) => {
     const userId = req.user.id;
 
     try {
-        // 🔽 Grab flat multipart fields
+        console.log("➡️ Body:", req.body);
+        console.log("➡️ File:", req.file);
+
         const {
             name,
             "contactInfo[email]": email,
@@ -183,20 +185,16 @@ export const updateUserProfile = async (req, res) => {
         const updates = {};
 
         if (name) updates.name = name;
-
-        // ✅ Cloudinary image file if uploaded
         if (req.file && req.file.path) {
             updates.profilePicture = req.file.path;
         }
 
-        // ✅ Nested contact info
         if (email || phone) {
             updates.contactInfo = {};
             if (email) updates.contactInfo.email = email;
             if (phone) updates.contactInfo.phone = phone;
         }
 
-        // ✅ Nested social media
         if (github || linkedin || twitter || portfolio) {
             updates.socialMedia = {};
             if (github) updates.socialMedia.Github = github;
@@ -219,7 +217,7 @@ export const updateUserProfile = async (req, res) => {
             user: updatedUser,
         });
     } catch (error) {
-        console.error("Update User Profile Error:", error);
-        return res.status(500).json({ message: "Internal server error" });
+        console.error("🔥 Update User Profile Error:", error);
+        return res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
