@@ -26,6 +26,7 @@ function RatingSection({user, renderStars, formatDate, open}) {
                             date={formatDate(rating.createdAt)}
                             // service={rating.service}
                             renderStars={renderStars}
+                            profileId={rating.raterId._id}
                         />
                     ))
                 )}

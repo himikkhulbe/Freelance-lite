@@ -1,6 +1,7 @@
 import{ useEffect, useState } from "react"; 
 import { useAuth } from "../../contexts/AuthContext";
 import { Star, Eye } from "lucide-react";
+import { useParams } from "react-router-dom";
 import ProfileMain from "./components/ProfileMain/ProfileMain.jsx";
 import RatingSection from "./components/RatingSection/RatingSection.jsx";
 import DetailsSection from "./components/DetailsSection/DetailsSection.jsx";
@@ -12,7 +13,30 @@ function Profile() {
     console.log(user)
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [showProfileEditModal, setShowProfileEditModal] = useState(false);
+    const { id } = useParams();
+    const [profileData, setProfileData] = useState(null);
 
+
+    useEffect(() => {
+        const fetchProfile = async () => {
+            try {
+                const endpoint = id
+                    ? `https://freelance-lite.onrender.com/api/user/profile/${id}` // other user
+                    : `https://freelance-lite.onrender.com/api/user/profile`;       // self
+
+                const res = await fetch(endpoint, {
+                    credentials: "include"
+                });
+                const data = await res.json();
+                setProfileData(data);
+            } catch (error) {
+                console.error("Error fetching profile:", error);
+            }
+        };
+        fetchProfile();
+    }, [id, showProfileEditModal]);
+    console.log("Fetching profile for ID:", id);
+    console.log("Profile data:", profileData);
     const renderStars = (rating) => {
         return Array.from({ length: 5 }, (_, i) => (
             <Star
@@ -42,7 +66,7 @@ function Profile() {
         return () => (document.body.style.overflow = 'auto');
     }, [showRatingModal, showProfileEditModal]);
 
-    if (!user) {
+    if (!profileData) {
         return (
             <div className="min-h-screen flex items-center justify-center">
                 <p className="text-gray-500 text-lg">Loading...</p>
@@ -56,13 +80,13 @@ function Profile() {
     return (
         <div className="min-h-screen flex flex-col pt-[60px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
             {/* Profile Section */}
-            {showRatingModal && <RatingPopup renderStars={renderStars} formatDate={formatDate} user={user} close={setShowRatingModal} />        }
-            {showProfileEditModal && <ProfileEditPopup loggedInUser={user} close={setShowProfileEditModal} />}
-            <ProfileMain renderStars={renderStars} user={user} loggedInUser={user} openEdit={setShowProfileEditModal}/>
+            {showRatingModal && <RatingPopup renderStars={renderStars} formatDate={formatDate} user={profileData} close={setShowRatingModal} />        }
+            {showProfileEditModal && <ProfileEditPopup loggedInUser={profileData} close={setShowProfileEditModal} />}
+            <ProfileMain renderStars={renderStars} user={profileData} loggedInUser={user} openEdit={setShowProfileEditModal}/>
             {/* bottom Section */}
             <div className="xl:w-[80%] w-[90%] min-h-[250px] flex lg:flex-row flex-col md:gap-[30px] gap-[20px]">
                 {/* left side */}
-                <DetailsSection user={user} loggedInUser={user} formatDate={formatDate} profileOpen={setShowProfileEditModal} />
+                <DetailsSection user={profileData} loggedInUser={user} formatDate={formatDate} profileOpen={setShowProfileEditModal} />
                 {/* right side */}
                 <div className="lg:w-[68%] w-full min-h-[120px] flex flex-col xl:gap-[30px] gap-[20px]">
                     {/* services or jobs */}
@@ -87,7 +111,7 @@ function Profile() {
                         </div>
                     </div>
                     {/* rating */}
-                    <RatingSection user={user} renderStars={renderStars} formatDate={formatDate} open={setShowRatingModal} setShowRatingModal={setShowRatingModal}/>
+                    <RatingSection user={profileData} renderStars={renderStars} formatDate={formatDate} open={setShowRatingModal} setShowRatingModal={setShowRatingModal}/>
                 </div>
             </div>
         </div>

@@ -46,10 +46,10 @@ const FreelanceNavbar = () => {
 
   // Demo user data
   const userData = {
-    name: 'John Doe',
-    email: 'john@example.com',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face&facepad=2&rounded-full',
-    rating: 4.8,
+    name: user?.user?.name,
+    email: user?.user?.email,
+    avatar: user?.user?.profilePicture,
+    rating: user?.user?.averageRating,
     completedJobs: 127
   };
   const handleLogout = async () => {

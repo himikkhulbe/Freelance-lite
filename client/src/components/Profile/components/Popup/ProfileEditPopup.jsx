@@ -88,7 +88,7 @@ function ProfileEditPopup({ loggedInUser, close }) {
             console.error("Update failed:", error);
             alert("Something went wrong");
         }
-      };
+    };
 
     return (
         <div className='fixed inset-0 bg-black/30 backdrop-blur-sm top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] h-full w-full flex md:items-center items-start justify-center z-[100]'>

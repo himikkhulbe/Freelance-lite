@@ -1,7 +1,13 @@
 import React from 'react'
-import {User} from 'lucide-react'
+import {Key, User} from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
-function RatingCard({ profile, name, rating, comment, date, renderStars }) {
+function RatingCard({ profile, name, rating, comment, date, renderStars , profileId }) {
+    const navigate = useNavigate();
+
+    const handleProfileClick = () => {
+        navigate(`/profile/${profileId}`);
+    }
     return (
         <div className="flex flex-col gap-[10px] w-full border-b-[0.5px] border-gray-300 pb-[5px] mb-[20px]">
             <div className="flex justify-between items-center w-full">
@@ -15,7 +21,7 @@ function RatingCard({ profile, name, rating, comment, date, renderStars }) {
                         </div>
                     }
                     <div className="flex flex-col justify-center items-start">
-                        <p className="text-black text-md font-semibold">{name}</p>
+                        <p onClick={handleProfileClick} className="text-black text-md font-semibold cursor-pointer">{name}</p>
                         <div className="flex items-center gap-[5px]">
                             <div className='flex items-center'>
                                 {renderStars(rating)}

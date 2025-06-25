@@ -26,6 +26,7 @@ function RatingPopup({ user, renderStars, formatDate ,close}) {
                                     comment={rating.comment}
                                     date={formatDate(rating.createdAt)}
                                     renderStars={renderStars}
+                                    profileId={rating.raterId._id}
                                 />
                             ))
                         )}

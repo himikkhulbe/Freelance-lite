@@ -8,15 +8,20 @@ function DetailsSection({ user, loggedInUser, formatDate ,profileOpen }) {
 
 
             {/* contact info */}
-            <DetailCard title="Contact Information" open={profileOpen} edit={true} user={user} loggedInUser={loggedInUser} data={[{
-                Icon: Mail,
-                text: user?.user?.contactInfo?.email,
-            },
-            {
-                Icon: Phone,
-                text: user?.user?.contactInfo?.phone,
+            {user?.user?.contactInfo?.email || user?.user?.contactInfo?.phone ?
+                <DetailCard title="Contact Information" open={profileOpen} edit={true} user={user} loggedInUser={loggedInUser} data={[{
+                    Icon: Mail,
+                    text: user?.user?.contactInfo?.email,
+                },
+                {
+                    Icon: Phone,
+                    text: user?.user?.contactInfo?.phone,
+                }
+                ]} />
+            :
+            null
             }
-            ]} />
+            
 
 
             {/* Member since */}
@@ -28,27 +33,31 @@ function DetailsSection({ user, loggedInUser, formatDate ,profileOpen }) {
 
 
             {/* Social Links */}
-            <DetailCard title="Social Links" open={profileOpen} edit={true} user={user} loggedInUser={loggedInUser} data={[{
-                Icon: Github,
-                link: user?.user?.socialMedia?.Github,
-                text: user?.user?.socialMedia?.Github ? "Github" : "",
-            },
-            {
-                Icon: Linkedin,
-                link: user?.user?.socialMedia?.Linkedin,
-                text: user?.user?.socialMedia?.Linkedin ? "Linkedin" : "",
-            },
-            {
-                Icon: Twitter,
-                link: user?.user?.socialMedia?.Twitter,
-                text: user?.user?.socialMedia?.Twitter ? "Twitter" : "",
-            },
-            {
-                Icon: Globe,
-                link: user?.user?.socialMedia?.Portfolio,
-                text: user?.user?.socialMedia?.Portfolio ? "Portfolio" : "",
-            }
-            ]} />
+            {user?.user?.socialMedia?.Github || user?.user?.socialMedia?.Linkedin || user?.user?.socialMedia?.Twitter || user?.user?.socialMedia?.Portfolio ? 
+                <DetailCard title="Social Links" open={profileOpen} edit={true} user={user} loggedInUser={loggedInUser} data={[{
+                    Icon: Github,
+                    link: user?.user?.socialMedia?.Github,
+                    text: user?.user?.socialMedia?.Github ? "Github" : "",
+                },
+                {
+                    Icon: Linkedin,
+                    link: user?.user?.socialMedia?.Linkedin,
+                    text: user?.user?.socialMedia?.Linkedin ? "Linkedin" : "",
+                },
+                {
+                    Icon: Twitter,
+                    link: user?.user?.socialMedia?.Twitter,
+                    text: user?.user?.socialMedia?.Twitter ? "Twitter" : "",
+                },
+                {
+                    Icon: Globe,
+                    link: user?.user?.socialMedia?.Portfolio,
+                    text: user?.user?.socialMedia?.Portfolio ? "Portfolio" : "",
+                }
+                ]} />
+            :
+            null}
+            
         </div>
     )
 }
