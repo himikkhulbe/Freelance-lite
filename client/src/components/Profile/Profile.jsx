@@ -78,7 +78,7 @@ function Profile() {
 
 
     return (
-        <div className="min-h-screen flex flex-col pt-[60px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
+        <div className="min-h-screen flex flex-col pt-[20px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
             {/* Profile Section */}
             {showRatingModal && <RatingPopup renderStars={renderStars} formatDate={formatDate} user={profileData} close={setShowRatingModal} />}
             {showProfileEditModal && <ProfileEditPopup loggedInUser={profileData} close={setShowProfileEditModal} />}
