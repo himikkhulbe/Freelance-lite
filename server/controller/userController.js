@@ -169,38 +169,31 @@ export const updateUserProfile = async (req, res) => {
     const userId = req.user.id;
 
     try {
-        console.log("➡️ Body:", req.body);
-        console.log("➡️ File:", req.file);
-
         const {
             name,
-            "contactInfo[email]": email,
-            "contactInfo[phone]": phone,
-            "socialMedia[Github]": github,
-            "socialMedia[Linkedin]": linkedin,
-            "socialMedia[Twitter]": twitter,
-            "socialMedia[Portfolio]": portfolio
+            profilePicture,
+            contactInfo,
+            socialMedia,
         } = req.body;
 
+        // Construct update object only with allowed fields
         const updates = {};
 
         if (name) updates.name = name;
-        if (req.file && req.file.path) {
-            updates.profilePicture = req.file.path;
-        }
+        if (profilePicture) updates.profilePicture = profilePicture;
 
-        if (email || phone) {
+        if (contactInfo) {
             updates.contactInfo = {};
-            if (email) updates.contactInfo.email = email;
-            if (phone) updates.contactInfo.phone = phone;
+            if (contactInfo.email) updates.contactInfo.email = contactInfo.email;
+            if (contactInfo.phone) updates.contactInfo.phone = contactInfo.phone;
         }
 
-        if (github || linkedin || twitter || portfolio) {
+        if (socialMedia) {
             updates.socialMedia = {};
-            if (github) updates.socialMedia.Github = github;
-            if (linkedin) updates.socialMedia.Linkedin = linkedin;
-            if (twitter) updates.socialMedia.Twitter = twitter;
-            if (portfolio) updates.socialMedia.Portfolio = portfolio;
+            if (socialMedia.Github) updates.socialMedia.Github = socialMedia.Github;
+            if (socialMedia.Linkedin) updates.socialMedia.Linkedin = socialMedia.Linkedin;
+            if (socialMedia.Twitter) updates.socialMedia.Twitter = socialMedia.Twitter;
+            if (socialMedia.Portfolio) updates.socialMedia.Portfolio = socialMedia.Portfolio;
         }
 
         const updatedUser = await User.findByIdAndUpdate(userId, updates, {
@@ -217,7 +210,7 @@ export const updateUserProfile = async (req, res) => {
             user: updatedUser,
         });
     } catch (error) {
-        console.error("🔥 Update User Profile Error:", error);
-        return res.status(500).json({ message: "Internal server error", error: error.message });
+        console.error("Update User Profile Error:", error);
+        return res.status(500).json({ message: "Internal server error" });
     }
 };
