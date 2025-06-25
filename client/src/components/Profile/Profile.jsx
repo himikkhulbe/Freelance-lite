@@ -1,4 +1,4 @@
-import{ useEffect, useState } from "react"; 
+import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { Star, Eye } from "lucide-react";
 import { useParams } from "react-router-dom";
@@ -59,7 +59,7 @@ function Profile() {
 
         if (!showRatingModal && !showProfileEditModal) {
             document.body.style.overflow = 'auto';
-        }else{
+        } else {
             document.body.style.overflow = 'hidden';
 
         }
@@ -80,9 +80,9 @@ function Profile() {
     return (
         <div className="min-h-screen flex flex-col pt-[60px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
             {/* Profile Section */}
-            {showRatingModal && <RatingPopup renderStars={renderStars} formatDate={formatDate} user={profileData} close={setShowRatingModal} />        }
+            {showRatingModal && <RatingPopup renderStars={renderStars} formatDate={formatDate} user={profileData} close={setShowRatingModal} />}
             {showProfileEditModal && <ProfileEditPopup loggedInUser={profileData} close={setShowProfileEditModal} />}
-            <ProfileMain renderStars={renderStars} user={profileData} loggedInUser={user} openEdit={setShowProfileEditModal}/>
+            <ProfileMain renderStars={renderStars} user={profileData} loggedInUser={user} openEdit={setShowProfileEditModal} />
             {/* bottom Section */}
             <div className="xl:w-[80%] w-[90%] min-h-[250px] flex lg:flex-row flex-col md:gap-[30px] gap-[20px]">
                 {/* left side */}
@@ -111,7 +111,7 @@ function Profile() {
                         </div>
                     </div>
                     {/* rating */}
-                    <RatingSection user={profileData} renderStars={renderStars} formatDate={formatDate} open={setShowRatingModal} setShowRatingModal={setShowRatingModal}/>
+                    <RatingSection user={profileData} renderStars={renderStars} formatDate={formatDate} open={setShowRatingModal} setShowRatingModal={setShowRatingModal} />
                 </div>
             </div>
         </div>

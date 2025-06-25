@@ -2,7 +2,7 @@ import DetailCard from './components/Detailcard/DetailCard'
 import { Mail, Phone, Github, Linkedin, Globe, Twitter, Calendar, Eye } from 'lucide-react'
 
 
-function DetailsSection({ user, loggedInUser, formatDate ,profileOpen }) {
+function DetailsSection({ user, loggedInUser, formatDate, profileOpen }) {
     return (
         <div className="lg:w-[32%] w-full flex flex-col xl:gap-[30px] gap-[20px]">
 
@@ -18,10 +18,10 @@ function DetailsSection({ user, loggedInUser, formatDate ,profileOpen }) {
                     text: user?.user?.contactInfo?.phone,
                 }
                 ]} />
-            :
-            null
+                :
+                null
             }
-            
+
 
 
             {/* Member since */}
@@ -33,7 +33,7 @@ function DetailsSection({ user, loggedInUser, formatDate ,profileOpen }) {
 
 
             {/* Social Links */}
-            {user?.user?.socialMedia?.Github || user?.user?.socialMedia?.Linkedin || user?.user?.socialMedia?.Twitter || user?.user?.socialMedia?.Portfolio ? 
+            {user?.user?.socialMedia?.Github || user?.user?.socialMedia?.Linkedin || user?.user?.socialMedia?.Twitter || user?.user?.socialMedia?.Portfolio ?
                 <DetailCard title="Social Links" open={profileOpen} edit={true} user={user} loggedInUser={loggedInUser} data={[{
                     Icon: Github,
                     link: user?.user?.socialMedia?.Github,
@@ -55,9 +55,9 @@ function DetailsSection({ user, loggedInUser, formatDate ,profileOpen }) {
                     text: user?.user?.socialMedia?.Portfolio ? "Portfolio" : "",
                 }
                 ]} />
-            :
-            null}
-            
+                :
+                null}
+
         </div>
     )
 }

@@ -1,16 +1,16 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { 
-  Search, 
-  Bell, 
-  MessageCircle, 
-  User, 
-  LogOut, 
-  Settings, 
-  Briefcase, 
-  PlusCircle, 
-  Menu, 
+import {
+  Search,
+  Bell,
+  MessageCircle,
+  User,
+  LogOut,
+  Settings,
+  Briefcase,
+  PlusCircle,
+  Menu,
   X,
   ChevronDown,
   Filter,
@@ -28,7 +28,7 @@ const FreelanceNavbar = () => {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [notifications] = useState(3);
   const [messages] = useState(5);
-  
+
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
   const [searchCategory, setSearchCategory] = useState('all');
@@ -135,7 +135,7 @@ const FreelanceNavbar = () => {
       <nav className="bg-white shadow-lg border-b border-blue-100 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
-            
+
             {/* Logo */}
             <div className="flex items-center">
               <a href="/" className="flex items-center space-x-2">
@@ -162,7 +162,7 @@ const FreelanceNavbar = () => {
 
             {/* Right Side Actions */}
             <div className="flex items-center space-x-4">
-              
+
               {/* Search Button */}
               <button
                 onClick={() => setIsSearchModalOpen(true)}
@@ -231,17 +231,17 @@ const FreelanceNavbar = () => {
                             </div>
                           </div>
                         </div>
-                        
+
                         <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <User className="w-4 h-4 mr-3" />
                           View Profile
                         </a>
-                        
+
                         <a href="/settings" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <Settings className="w-4 h-4 mr-3" />
                           Settings
                         </a>
-                        
+
                         <button
                           onClick={toggleUserType}
                           className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -249,7 +249,7 @@ const FreelanceNavbar = () => {
                           <Briefcase className="w-4 h-4 mr-3" />
                           Switch to {userType === 'freelancer' ? 'Client' : 'Freelancer'}
                         </button>
-                        
+
                         <div className="border-t border-gray-100">
                           <button
                             onClick={handleLogout}
@@ -334,11 +334,10 @@ const FreelanceNavbar = () => {
                   <button
                     type="button"
                     onClick={() => setSearchType('jobs')}
-                    className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 ${
-                      searchType === 'jobs'
+                    className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 ${searchType === 'jobs'
                         ? 'bg-white text-gray-900 shadow'
                         : 'text-gray-600 hover:text-gray-900'
-                    }`}
+                      }`}
                   >
                     <Briefcase className="w-4 h-4 inline mr-2" />
                     Search Jobs
@@ -346,11 +345,10 @@ const FreelanceNavbar = () => {
                   <button
                     type="button"
                     onClick={() => setSearchType('services')}
-                    className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 ${
-                      searchType === 'services'
+                    className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors duration-200 ${searchType === 'services'
                         ? 'bg-white text-gray-900 shadow'
                         : 'text-gray-600 hover:text-gray-900'
-                    }`}
+                      }`}
                   >
                     <Star className="w-4 h-4 inline mr-2" />
                     Search Services

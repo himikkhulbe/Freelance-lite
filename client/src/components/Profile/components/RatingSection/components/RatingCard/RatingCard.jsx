@@ -1,8 +1,8 @@
 import React from 'react'
-import {Key, User} from 'lucide-react'
+import { Key, User } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-function RatingCard({ profile, name, rating, comment, date, renderStars , profileId }) {
+function RatingCard({ profile, name, rating, comment, date, renderStars, profileId }) {
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
@@ -14,10 +14,10 @@ function RatingCard({ profile, name, rating, comment, date, renderStars , profil
                 <div className="flex gap-[8px] items-center">
                     {profile ? <div className="h-[40px] rounded-full aspect-[1/1] bg-gray-300"
                         style={{ backgroundImage: `url(${profile})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
-                    </div> 
-                    : 
+                    </div>
+                        :
                         <div className="h-[40px] rounded-full aspect-[1/1] bg-gray-300 flex justify-center items-center">
-                        <User className="h-6 w-6 text-gray-500" h-full w-full />
+                            <User className="h-6 w-6 text-gray-500" h-full w-full />
                         </div>
                     }
                     <div className="flex flex-col justify-center items-start">
@@ -25,8 +25,8 @@ function RatingCard({ profile, name, rating, comment, date, renderStars , profil
                         <div className="flex items-center gap-[5px]">
                             <div className='flex items-center'>
                                 {renderStars(rating)}
-                            </div> 
-                                <p>{Number(rating).toFixed(1)}</p>
+                            </div>
+                            <p>{Number(rating).toFixed(1)}</p>
                         </div>
                     </div>
                 </div>

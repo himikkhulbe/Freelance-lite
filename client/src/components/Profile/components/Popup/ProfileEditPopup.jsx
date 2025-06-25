@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, Phone, Github, Linkedin, Twitter, Globe, Camera ,X } from 'lucide-react';
+import { User, Mail, Phone, Github, Linkedin, Twitter, Globe, Camera, X } from 'lucide-react';
 
 
 function ProfileEditPopup({ loggedInUser, close }) {
@@ -17,7 +17,7 @@ function ProfileEditPopup({ loggedInUser, close }) {
             Portfolio: loggedInUser?.user?.socialMedia?.Portfolio || ""
         }
     }
-        );
+    );
 
     const [previewImage, setPreviewImage] = useState(loggedInUser?.user?.profilePicture);
 
@@ -49,54 +49,46 @@ function ProfileEditPopup({ loggedInUser, close }) {
         }
     };
 
-    const [selectedFile, setSelectedFile] = useState(null); // add this state
-
     const handleImageUpload = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setSelectedFile(file); // store file for FormData
             const reader = new FileReader();
-            reader.onload = (e) => setPreviewImage(e.target.result);
+            reader.onload = (e) => {
+                setPreviewImage(e.target.result);
+                setFormData(prev => ({
+                    ...prev,
+                    profilePicture: e.target.result
+                }));
+            };
             reader.readAsDataURL(file);
         }
     };
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        const formDataToSend = new FormData();
-
-        formDataToSend.append("name", formData.name);
-        formDataToSend.append("contactInfo[email]", formData.contactInfo.email);
-        formDataToSend.append("contactInfo[phone]", formData.contactInfo.phone);
-        formDataToSend.append("socialMedia[Github]", formData.socialMedia.Github);
-        formDataToSend.append("socialMedia[Linkedin]", formData.socialMedia.Linkedin);
-        formDataToSend.append("socialMedia[Twitter]", formData.socialMedia.Twitter);
-        formDataToSend.append("socialMedia[Portfolio]", formData.socialMedia.Portfolio);
-
-        if (selectedFile) {
-            formDataToSend.append("file", selectedFile); // 📷 actual file to be uploaded
-        }
-        console.log("Form data to send:", formDataToSend);
         try {
+            console.log("Submitting form data:", formData);
             const res = await fetch("https://freelance-lite.onrender.com/api/user/profile/update", {
                 method: "PATCH",
-                body: formDataToSend,
-                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include", // this is correct!
+                body: JSON.stringify(formData)
             });
-            console.log("Response status:", res);
+
             const result = await res.json();
+            console.log("Response from server:", result);
+
             if (res.ok) {
                 console.log("Updated user:", result.user);
-                close(false); // optional modal close
-            } else {
-                console.error("Update failed:", result.message);
+                close(false);
             }
-        } catch (err) {
-            console.error("Update failed:", err);
+        } catch (error) {
+            console.error("Update failed:", error);
             alert("Something went wrong");
         }
     };
-      
 
     return (
         <div className='fixed inset-0 bg-black/30 backdrop-blur-sm top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] h-full w-full flex md:items-center items-start justify-center z-[100]'>
