@@ -169,31 +169,40 @@ export const updateUserProfile = async (req, res) => {
     const userId = req.user.id;
 
     try {
+        // 🔽 Grab flat multipart fields
         const {
             name,
-            profilePicture,
-            contactInfo,
-            socialMedia,
+            "contactInfo[email]": email,
+            "contactInfo[phone]": phone,
+            "socialMedia[Github]": github,
+            "socialMedia[Linkedin]": linkedin,
+            "socialMedia[Twitter]": twitter,
+            "socialMedia[Portfolio]": portfolio
         } = req.body;
 
-        // Construct update object only with allowed fields
         const updates = {};
 
         if (name) updates.name = name;
-        if (profilePicture) updates.profilePicture = profilePicture;
 
-        if (contactInfo) {
-            updates.contactInfo = {};
-            if (contactInfo.email) updates.contactInfo.email = contactInfo.email;
-            if (contactInfo.phone) updates.contactInfo.phone = contactInfo.phone;
+        // ✅ Cloudinary image file if uploaded
+        if (req.file && req.file.path) {
+            updates.profilePicture = req.file.path;
         }
 
-        if (socialMedia) {
+        // ✅ Nested contact info
+        if (email || phone) {
+            updates.contactInfo = {};
+            if (email) updates.contactInfo.email = email;
+            if (phone) updates.contactInfo.phone = phone;
+        }
+
+        // ✅ Nested social media
+        if (github || linkedin || twitter || portfolio) {
             updates.socialMedia = {};
-            if (socialMedia.Github) updates.socialMedia.Github = socialMedia.Github;
-            if (socialMedia.Linkedin) updates.socialMedia.Linkedin = socialMedia.Linkedin;
-            if (socialMedia.Twitter) updates.socialMedia.Twitter = socialMedia.Twitter;
-            if (socialMedia.Portfolio) updates.socialMedia.Portfolio = socialMedia.Portfolio;
+            if (github) updates.socialMedia.Github = github;
+            if (linkedin) updates.socialMedia.Linkedin = linkedin;
+            if (twitter) updates.socialMedia.Twitter = twitter;
+            if (portfolio) updates.socialMedia.Portfolio = portfolio;
         }
 
         const updatedUser = await User.findByIdAndUpdate(userId, updates, {

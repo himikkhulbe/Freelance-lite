@@ -8,7 +8,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/profile", protect,  getUserProfile);
 router.post("/logout", protect, logoutUser);
-router.patch("/profile/update", protect, updateUserProfile);
+router.patch("/profile/update", protect, upload.single("file"), updateUserProfile);
 router.get("/profile/:id", getOtherUserProfile);
 
 export default router;
