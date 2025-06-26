@@ -10,7 +10,6 @@ export const registerUser = async (req, res) => {
         return res.status(400).json({ message: "Please enter all fields" });
     }
     try {
-        // Check if user already exists
         const existingUser = await User.findOne({ email });
         const existingUsername = await User.findOne({ username });
 
@@ -18,7 +17,6 @@ export const registerUser = async (req, res) => {
             return res.status(409).json({ message: "User already exists" });
         }
 
-        // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 
         const user = await User.create({
@@ -26,7 +24,7 @@ export const registerUser = async (req, res) => {
             username,
             email,
             password: hashedPassword,
-            role: role || "freelancer", // Default role to 'user' if not provided
+            role: role || "freelancer",
         });
         res.status(201).json({ message: "User registered successfully" });
     } catch (error) {
@@ -39,37 +37,31 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // 1. Validate input
         if (!email || !password) {
             return res.status(400).json({ message: "Please enter both email and password." });
         }
 
-        // 2. Check if user exists
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
 
-        // 3. Validate password
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid credentials." });
         }
 
-        // 4. Generate JWT
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
             expiresIn: "7d",
         });
 
-        // 5. Set token in HTTP-only cookie
         res.cookie("token", token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === "production", // HTTPS only in production
+            secure: process.env.NODE_ENV === "production", 
             sameSite: "none",
-            maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+            maxAge: 7 * 24 * 60 * 60 * 1000, 
         });
 
-        // 6. Respond with user data (without password)
         res.status(200).json({
             message: "Login successful",
             user: {
@@ -96,19 +88,18 @@ export const getUserProfile = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
 
-        // Sort ratings by newest first
         const ratings = await Rating.find({ ratedId: userId })
-            .populate("raterId", "name profilePicture username")
+        .populate("raterId", "name profilePicture username")
             .sort({ createdAt: -1 });
         if (user.role === "freelancer") {
-            const services = await Service.find({ user: userId }).sort({ createdAt: -1 });
+            const services = await Service.find({ user: userId }).populate("user", "name profilePicture username").sort({ createdAt: -1 });
             data = { user, services, ratings };
             return res.status(200).json(data);
         }
 
         if (user.role === "client") {
-            const jobs = await Job.find({ client: userId }).sort({ createdAt: -1 });
-            data = { user, jobs, ratings };  // ratings already sorted
+            const jobs = await Job.find({ client: userId }).populate("user", "name profilePicture username").sort({ createdAt: -1 });
+            data = { user, jobs, ratings };  
             return res.status(200).json(data);
         }
 
@@ -148,13 +139,12 @@ export const getOtherUserProfile = async (req, res) => {
         .populate("raterId", "name profilePicture username")
         .sort({ createdAt: -1 });
         if (user.role === "freelancer") {
-            const services = await Service.find({ user: userId });
+            const services = await Service.find({ user: userId }).populate("user", "name profilePicture username").sort({ createdAt: -1 });
             data = { user, services, ratings };
             return res.status(200).json(data);
         }
         if (user.role === "client") {
-            const jobs = await Job.find({ client: userId });
-            const ratings = await Rating.find({ ratedId: userId });
+            const jobs = await Job.find({ client: userId }).populate("user", "name profilePicture username").sort({ createdAt: -1 });
             data = { user, jobs, ratings };
             return res.status(200).json(data);
         }
@@ -171,16 +161,19 @@ export const updateUserProfile = async (req, res) => {
     try {
         const {
             name,
+            location,
             profilePicture,
             contactInfo,
             socialMedia,
         } = req.body;
 
-        // Construct update object only with allowed fields
         const updates = {};
 
         if (name) updates.name = name;
         if (profilePicture) updates.profilePicture = profilePicture;
+        if (location) updates.location = location;
+
+
 
         if (contactInfo) {
             updates.contactInfo = {};

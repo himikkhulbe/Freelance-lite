@@ -1,5 +1,5 @@
 import DetailCard from './components/Detailcard/DetailCard'
-import { Mail, Phone, Github, Linkedin, Globe, Twitter, Calendar, Eye } from 'lucide-react'
+import { Mail, Phone, Github, Linkedin, Globe, Twitter, Calendar, Eye, MapPin } from 'lucide-react'
 
 
 function DetailsSection({ user, loggedInUser, formatDate, profileOpen }) {
@@ -28,6 +28,10 @@ function DetailsSection({ user, loggedInUser, formatDate, profileOpen }) {
             <DetailCard title="Member Since" user={user} loggedInUser={loggedInUser} data={[{
                 Icon: Calendar,
                 text: formatDate(user?.user?.createdAt),
+            },
+            {
+                Icon: MapPin,
+                text: user?.user?.location
             }
             ]} />
 

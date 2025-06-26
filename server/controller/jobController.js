@@ -50,7 +50,7 @@ export const getMyJobs = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found" });
         }
-        const jobs = await Job.find({ client: userId });
+        const jobs = await Job.find({ client: userId }).populate("user", "name profilePicture username").sort({ createdAt: -1 });
         res.status(200).json(jobs);
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });

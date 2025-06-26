@@ -1,4 +1,4 @@
-import { Edit, User } from 'lucide-react'
+import { Edit, User, BadgeCheck} from 'lucide-react'
 
 function ProfileMain({ renderStars, user, loggedInUser, openEdit }) {
 
@@ -15,6 +15,9 @@ function ProfileMain({ renderStars, user, loggedInUser, openEdit }) {
                 : 
                 <User className="w-16 h-16 object-cover rounded-full" />
                 }
+                {loggedInUser?.user?.isVerified &&
+                <BadgeCheck className="absolute bottom-0 right-0  w-8 h-8 bg-white text-blue-600 rounded-full p-1" />
+            }
             </div>
             <div className="flex md:flex-row flex-col justify-between md:items-center md:gap-[30px] gap-[20px] grow h-full">
                 <div>

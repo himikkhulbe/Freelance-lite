@@ -1,20 +1,15 @@
 import express from "express";
 import { protect } from "../middlewares/authMiddleware.js";
-import {uploadServices, getMyServices, getServices, getservice, deleteService} from "../controller/serviceController.js";
+import {uploadServices, getMyServices, getServices, getservice, deleteService, updateService, getAllServices} from "../controller/serviceController.js";
 
 const router = express.Router();
 
-router.post("/service", protect, uploadServices);
-router.get("/services/my", protect, getMyServices);
-router.get("/services/:id", getServices);
-router.get("/service/:id", getservice);
-// router.put("/service/:id", protect, updateService);
-router.delete("/service/:id", protect, deleteService);
-
-
-
-
-
-
+router.post("/service", protect, uploadServices); // Endpoint to create a new service
+router.get("/services/my", protect, getMyServices); // Endpoint to get services of the logged-in user
+router.get("/services/:id", getServices); // Endpoint to get services of a specific user by ID
+router.get("/service/:id", getservice); // Endpoint to get a specific service by ID
+router.put("/service/:id", protect, updateService); // Endpoint to update a specific service by ID
+router.delete("/service/:id", protect, deleteService); // Endpoint to delete a specific service by ID
+router.get("/services", getAllServices); // Endpoint to get all services
 
 export default router;

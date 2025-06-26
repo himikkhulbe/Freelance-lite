@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { User, Mail, Phone, Github, Linkedin, Twitter, Globe, Camera, X } from 'lucide-react';
+import { User, Mail, Phone, Github, Linkedin, Twitter, Globe, Camera, X, MapPin } from 'lucide-react';
 
 
 function ProfileEditPopup({ loggedInUser, close }) {
     const [formData, setFormData] = useState({
         name: loggedInUser?.user?.name || "",
+        location: loggedInUser?.user?.location || "",
         profilePicture: loggedInUser?.user?.profilePicture || "",
         contactInfo: {
             email: loggedInUser?.user?.contactInfo?.email || "",
@@ -180,15 +181,15 @@ function ProfileEditPopup({ loggedInUser, close }) {
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                                     <Globe className="w-4 h-4 inline mr-2 text-blue-600" />
-                                    Portfolio Website
+                                    Location
                                 </label>
                                 <input
-                                    type="url"
-                                    name="socialMedia.Portfolio"
-                                    value={formData.socialMedia.Portfolio}
+                                    type="text"
+                                    name="location"
+                                    value={formData.location}
                                     onChange={handleInputChange}
                                     className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-                                    placeholder="https://yourportfolio.com"
+                                    placeholder="Enter Your Location"
                                 />
                             </div>
                         </div>
@@ -230,7 +231,7 @@ function ProfileEditPopup({ loggedInUser, close }) {
                                     />
                                 </div>
 
-                                <div className="md:col-span-2">
+                                <div>
                                     <label className="block text-sm font-semibold text-gray-700 mb-2">
                                         <Twitter className="w-4 h-4 inline mr-2 text-blue-600" />
                                         Twitter Profile
@@ -242,6 +243,21 @@ function ProfileEditPopup({ loggedInUser, close }) {
                                         onChange={handleInputChange}
                                         className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
                                         placeholder="https://twitter.com/username"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                        <Globe className="w-4 h-4 inline mr-2 text-blue-600" />
+                                        Portfolio Website
+                                    </label>
+                                    <input
+                                        type="url"
+                                        name="socialMedia.Portfolio"
+                                        value={formData.socialMedia.Portfolio}
+                                        onChange={handleInputChange}
+                                        className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                        placeholder="https://yourportfolio.com"
                                     />
                                 </div>
                             </div>
