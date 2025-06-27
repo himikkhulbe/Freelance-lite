@@ -15,7 +15,7 @@ function ProfileMain({ renderStars, user, loggedInUser, openEdit }) {
                 : 
                 <User className="w-16 h-16 object-cover rounded-full" />
                 }
-                {loggedInUser?.user?.isVerified &&
+                {user?.user?.isVerified &&
                 <BadgeCheck className="absolute bottom-0 right-0  w-8 h-8 bg-white text-blue-600 rounded-full p-1" />
             }
             </div>
