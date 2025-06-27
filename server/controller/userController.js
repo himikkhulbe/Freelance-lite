@@ -98,7 +98,7 @@ export const getUserProfile = async (req, res) => {
         }
 
         if (user.role === "client") {
-            const jobs = await Job.find({ client: userId }).populate("user", "name profilePicture username isVerified").sort({ createdAt: -1 });
+            const jobs = await Job.find({ client: userId }).populate("client", "name profilePicture username isVerified").sort({ createdAt: -1 });
             data = { user, jobs, ratings };  
             return res.status(200).json(data);
         }
@@ -144,7 +144,7 @@ export const getOtherUserProfile = async (req, res) => {
             return res.status(200).json(data);
         }
         if (user.role === "client") {
-            const jobs = await Job.find({ client: userId }).populate("user", "name profilePicture username isVerified").sort({ createdAt: -1 });
+            const jobs = await Job.find({ client: userId }).populate("client", "name profilePicture username isVerified").sort({ createdAt: -1 });
             data = { user, jobs, ratings };
             return res.status(200).json(data);
         }
