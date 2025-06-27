@@ -89,16 +89,16 @@ export const getUserProfile = async (req, res) => {
         }
 
         const ratings = await Rating.find({ ratedId: userId })
-        .populate("raterId", "name profilePicture username")
+        .populate("raterId", "name profilePicture username isVerified")
             .sort({ createdAt: -1 });
         if (user.role === "freelancer") {
-            const services = await Service.find({ user: userId }).populate("user", "name profilePicture username").sort({ createdAt: -1 });
+            const services = await Service.find({ user: userId }).populate("user", "name profilePicture username isVerified").sort({ createdAt: -1 });
             data = { user, services, ratings };
             return res.status(200).json(data);
         }
 
         if (user.role === "client") {
-            const jobs = await Job.find({ client: userId }).populate("user", "name profilePicture username").sort({ createdAt: -1 });
+            const jobs = await Job.find({ client: userId }).populate("user", "name profilePicture username isVerified").sort({ createdAt: -1 });
             data = { user, jobs, ratings };  
             return res.status(200).json(data);
         }
@@ -136,15 +136,15 @@ export const getOtherUserProfile = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
         const ratings = await Rating.find({ ratedId: userId })
-        .populate("raterId", "name profilePicture username")
+        .populate("raterId", "name profilePicture username isVerified")
         .sort({ createdAt: -1 });
         if (user.role === "freelancer") {
-            const services = await Service.find({ user: userId }).populate("user", "name profilePicture username").sort({ createdAt: -1 });
+            const services = await Service.find({ user: userId }).populate("user", "name profilePicture username isVerified").sort({ createdAt: -1 });
             data = { user, services, ratings };
             return res.status(200).json(data);
         }
         if (user.role === "client") {
-            const jobs = await Job.find({ client: userId }).populate("user", "name profilePicture username").sort({ createdAt: -1 });
+            const jobs = await Job.find({ client: userId }).populate("user", "name profilePicture username isVerified").sort({ createdAt: -1 });
             data = { user, jobs, ratings };
             return res.status(200).json(data);
         }

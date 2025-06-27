@@ -25,7 +25,7 @@ function DetailsSection({ user, loggedInUser, formatDate, profileOpen }) {
 
 
             {/* Member since */}
-            <DetailCard title="Member Since" user={user} loggedInUser={loggedInUser} data={[{
+            <DetailCard title="Additional Details" user={user} loggedInUser={loggedInUser} data={[{
                 Icon: Calendar,
                 text: formatDate(user?.user?.createdAt),
             },
