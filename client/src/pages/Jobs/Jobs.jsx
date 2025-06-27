@@ -170,6 +170,7 @@ const Jobs = () => {
   const [selectedBudget, setSelectedBudget] = useState("All Budgets");
   const [sortBy, setSortBy] = useState("newest");
   const [filteredJobs, setFilteredJobs] = useState(jobsData);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   useEffect(() => {
     let filtered = jobData;
@@ -230,19 +231,9 @@ const Jobs = () => {
   }, [searchTerm, selectedCategory, selectedBudget, sortBy, jobData]);
 
   return (
-    <div className="min-h-screen">
-      <div className="py-6 px-4 border border-gray-200 shadow-lg sm:px-6 lg:px-8">
-        <div className="lg:pl-24">
-          <h1 className="text-3xl font-bold mb-3">Find Your Next Project</h1>
-          <h4 className="text-gray-500">
-            Discover oppurtunities that match your skills and interests
-          </h4>
-        </div>
-      </div>
+    <div className="min-h-screen flex flex-col pt-[20px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
 
-      {/* Main */}
-
-      <div className="p-5 lg:px-32 md:px-5 min-h-screen flex gap-10 bg-gray-100">
+      <div className="p-5 xl:px-32 md:px-5 min-h-screen flex gap-10 bg-gray-100">
         {/* Sidebar */}
 
         <div className="hidden lg:block w-1/3 h-min py-3 rounded-md bg-white border border-gray-200 shadow-lg">
@@ -319,13 +310,22 @@ const Jobs = () => {
 
         <div className="w-full">
           <div className="px-4 py-4 lg:w-full rounded-md border border-gray-200 shadow-lg flex gap-3 justify-center bg-white">
-            <div className="p-2 border border-gray-300 rounded-md flex gap-4 w-full ">
+            <div
+              style={isSearchFocused ? { border: "2px solid #2463EB" } : {}}
+              className="p-2 border border-gray-300 rounded-md flex gap-4 w-full "
+            >
               <Search className="text-gray-500" />
               <input
-                className="px-2 w-full"
+                className="px-2 w-full border-collapse border-0 focus:ring-0 focus:border-transparent outline-none"
                 type="text"
                 placeholder="Search jobs by title, skills, or description..."
                 value={searchTerm}
+                onFocus={()=>{
+                  setIsSearchFocused(true);
+                }}
+                onBlur={()=>{
+                  setIsSearchFocused(false);
+                }}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
             </div>
