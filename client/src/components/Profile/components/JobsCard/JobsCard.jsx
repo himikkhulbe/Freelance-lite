@@ -1,15 +1,18 @@
-import React from 'react'
+import { Edit, IndianRupee, Clock } from 'lucide-react'
 
-function ServiceOrJobsCard({ job, user, logingedInUser }) {
+function ServiceOrJobsCard({ job, user, loggedInUser }) {
+    console.log("Job data:", job);
+    console.log("User data:", user);
+    console.log("Logged-in user data:", loggedInUser);
     return (
         <div
             key={job._id}
-            className="p-5 border border-gray-200 shadow-lg rounded-md mt-5 flex flex-col gap-3 overflow-x-hidden bg-white"
+            className="p-5 mb-5 border border-gray-200 shadow-lg rounded-md mt-5 flex flex-col gap-3 overflow-x-hidden bg-white "
         >
 
             <div className="flex gap-[20px] justify-between items-center ">
                 <h2 className="font-medium text-lg">{job.title}</h2>
-                {logingedInUser?.user?._id === user?.user?._id &&
+                {loggedInUser?.user?._id === user?.user?._id &&
                     <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
                 }
             </div>
@@ -48,7 +51,7 @@ function ServiceOrJobsCard({ job, user, logingedInUser }) {
                     </span>
                 )}
             </div>
-            {profileData?.user?._id !== user?.user?._id &&
+            {loggedInUser?.user?._id !== user?.user?._id &&
                 <div className="flex gap-4 pt-2 flex-wrap">
                     <button className="px-14 py-2 bg-blue-700 sm:w-fit w-full text-white text-lg font-light rounded-lg text-nowrap ">
                         Apply Now
