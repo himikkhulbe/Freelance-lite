@@ -8,7 +8,8 @@ import DetailsSection from "./components/DetailsSection/DetailsSection.jsx";
 import RatingPopup from "./components/Popup/RatingPopup.jsx";
 import ProfileEditPopup from "./components/Popup/ProfileEditPopup.jsx";
 import ServiceOrJobsPopup from "./components/Popup/JobsPopup.jsx";
-import ServiceOrJobsCard from "./components/JobsCard/JobsCard.jsx";
+import JobsCard from "./components/JobsCard/JobsCard.jsx";
+import ServiceCard from "./components/ServiceCard/ServiceCard.jsx";
 
 function Profile() {
     const { user } = useAuth();
@@ -103,15 +104,29 @@ function Profile() {
                                         <Eye className="text-gray-600 w-4 h-4" /> View All
                                     </button>
                                 }
+                                {profileData?.services?.length > 2 &&
+                                    <button onClick={() => null} className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-gray-600">
+                                        <Eye className="text-gray-600 w-4 h-4" /> View All
+                                    </button>
+                                }
                             </div>
                         </div>
                         <div className="mt-[20px]">
                             {profileData?.user?.role === "freelancer"
                                 ?
-                                (profileData?.services?.length === 0 ? (
-                                    <p className="text-gray-500 text-sm font-semibold mb-5">No services found</p>
-                                ) : null
-                                )
+                                (
+                                    profileData?.services?.length === 0 ? (
+                                    <p className="text-gray-500 text-sm font-semibold mb-5">No jobs found</p>
+                                ) : (
+                                    profileData?.services?.slice(0, 2).map((service) => (
+                                        <ServiceCard
+                                            key={service._id}
+                                            service={service}
+                                            user={profileData}
+                                            loggedInUser={user}
+                                        />
+                                    ))
+                                ))
                                 :
                                 null
                             }
@@ -122,7 +137,7 @@ function Profile() {
                                         <p className="text-gray-500 text-sm font-semibold mb-5">No jobs found</p>
                                     ) : (
                                         profileData?.jobs?.slice(0, 2).map((job) => (
-                                            <ServiceOrJobsCard
+                                            <JobsCard
                                                 key={job._id}
                                                 job={job}
                                                 user={profileData}

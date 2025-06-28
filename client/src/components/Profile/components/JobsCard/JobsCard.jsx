@@ -1,6 +1,6 @@
 import { Edit, IndianRupee, Clock } from 'lucide-react'
 
-function ServiceOrJobsCard({ job, user, loggedInUser }) {
+function JobsCard({ job, user, loggedInUser }) {
     console.log("Job data:", job);
     console.log("User data:", user);
     console.log("Logged-in user data:", loggedInUser);
@@ -66,4 +66,4 @@ function ServiceOrJobsCard({ job, user, loggedInUser }) {
     )
 }
 
-export default ServiceOrJobsCard
+export default JobsCard
