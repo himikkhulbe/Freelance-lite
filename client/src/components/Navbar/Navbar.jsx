@@ -200,11 +200,19 @@ const FreelanceNavbar = () => {
                       onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                       className="flex items-center space-x-2 bg-blue-50 hover:bg-blue-100 rounded-full p-1 pr-3 transition-colors duration-200"
                     >
-                      <img
-                        src={userData.avatar}
-                        alt="Profile"
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
+                      {userData.avatar ? 
+                        <img
+                          src={userData.avatar}
+                          alt="Profile"
+                          className="w-8 h-8 rounded-full object-cover"
+                        />
+                      : 
+                      <div className='w-8 h-8 rounded-full object-cover flex justify-center items-center bg-blue-200'>
+                        <User className="w-6 h-6 text-black" />
+                      </div>
+
+                      }
+                      
                       <span className="hidden sm:block text-sm font-medium text-gray-700">{userData.name}</span>
                       <ChevronDown className="w-4 h-4 text-gray-500" />
                     </button>
