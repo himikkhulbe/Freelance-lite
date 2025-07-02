@@ -222,11 +222,18 @@ const FreelanceNavbar = () => {
                       <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
                         <div className="px-4 py-3 border-b border-gray-100">
                           <div className="flex items-center space-x-3">
-                            <img
-                              src={userData.avatar}
-                              alt="Profile"
-                              className="w-10 h-10 rounded-full object-cover"
-                            />
+                            {userData.avatar 
+                            ? 
+                              <img
+                                src={userData.avatar}
+                                alt="Profile"
+                                className="w-10 h-10 rounded-full object-cover"
+                              />
+                            :
+                            <div className='w-10 h-10 rounded-full object-cover flex justify-center items-center bg-blue-200'>
+                              <User className="w-8 h-8 text-black" />
+                            </div>}
+                            
                             <div>
                               <p className="text-sm font-medium text-gray-900">{userData.name}</p>
                               <p className="text-xs text-gray-500">{userData.email}</p>
