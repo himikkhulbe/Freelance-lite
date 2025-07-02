@@ -20,13 +20,9 @@ function RatingPopup({ user, renderStars, formatDate, close }) {
                             user?.ratings?.map((rating) => (
                                 <RatingCard
                                     key={rating._id}
-                                    profile={rating.raterId.profilePicture}
-                                    name={rating.raterId.name}
-                                    rating={rating.rating}
-                                    comment={rating.comment}
+                                    data={rating}
                                     date={formatDate(rating.createdAt)}
                                     renderStars={renderStars}
-                                    profileId={rating.raterId._id}
                                 />
                             ))
                         )}

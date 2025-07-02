@@ -7,7 +7,7 @@ import RatingSection from "./components/RatingSection/RatingSection.jsx";
 import DetailsSection from "./components/DetailsSection/DetailsSection.jsx";
 import RatingPopup from "./components/Popup/RatingPopup.jsx";
 import ProfileEditPopup from "./components/Popup/ProfileEditPopup.jsx";
-import ServiceOrJobsPopup from "./components/Popup/JobsPopup.jsx";
+import JobsPopup from "./components/Popup/JobsPopup.jsx";
 import JobsCard from "./components/JobsCard/JobsCard.jsx";
 import ServiceCard from "./components/ServiceCard/ServiceCard.jsx";
 
@@ -16,7 +16,8 @@ function Profile() {
     console.log(user)
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [showProfileEditModal, setShowProfileEditModal] = useState(false);
-    const [showServiceOrJobsPopup, setShowServiceOrJobsPopup] = useState(false);
+    const [showJobsPopup, setShowJobsPopup] = useState(false);
+    const [showServicePopup, setShowServicePopup] = useState(false);
     const { id } = useParams();
     const [profileData, setProfileData] = useState(null);
 
@@ -60,13 +61,13 @@ function Profile() {
     };
 
     useEffect(() => {
-        if (!showRatingModal && !showProfileEditModal && !showServiceOrJobsPopup) {
+        if (!showRatingModal && !showProfileEditModal && !showJobsPopup && !showServicePopup) {
             document.body.style.overflow = 'auto';
         } else {
             document.body.style.overflow = 'hidden';
         }
         return () => (document.body.style.overflow = 'auto');
-    }, [showRatingModal, showProfileEditModal, showServiceOrJobsPopup]);
+    }, [showRatingModal, showProfileEditModal, showJobsPopup, showServicePopup]);
     if (!profileData) {
         return (
             <div className="min-h-screen flex items-center justify-center">
@@ -79,7 +80,8 @@ function Profile() {
             {/* Profile Section */}
             {showRatingModal && <RatingPopup renderStars={renderStars} formatDate={formatDate} user={profileData} close={setShowRatingModal} />}
             {showProfileEditModal && <ProfileEditPopup loggedInUser={profileData} close={setShowProfileEditModal} />}
-            {showServiceOrJobsPopup && <ServiceOrJobsPopup loggedInUser={user} user={profileData} close={setShowServiceOrJobsPopup} />}
+            {showJobsPopup && <JobsPopup Component={JobsCard} loggedInUser={user} user={profileData} data={profileData?.jobs} close={setShowJobsPopup} heading="Jobs Offered" />}
+            {showServicePopup && <JobsPopup Component={ServiceCard} loggedInUser={user} user={profileData} data={profileData?.services} close={setShowServicePopup} heading="Services Offered" />}
             <ProfileMain renderStars={renderStars} user={profileData} loggedInUser={user} openEdit={setShowProfileEditModal} />
             {/* bottom Section */}
             <div className="xl:w-[80%] w-[90%] min-h-[250px] flex lg:flex-row flex-col md:gap-[30px] gap-[20px]">
@@ -100,12 +102,12 @@ function Profile() {
                                 }
 
                                 {profileData?.jobs?.length > 2 &&
-                                    <button onClick={() => setShowServiceOrJobsPopup(true)} className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-gray-600">
+                                    <button onClick={() => setShowJobsPopup(true)} className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-gray-600">
                                         <Eye className="text-gray-600 w-4 h-4" /> View All
                                     </button>
                                 }
                                 {profileData?.services?.length > 2 &&
-                                    <button onClick={() => null} className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-gray-600">
+                                    <button onClick={() => setShowServicePopup(true)} className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-gray-600">
                                         <Eye className="text-gray-600 w-4 h-4" /> View All
                                     </button>
                                 }
@@ -118,10 +120,10 @@ function Profile() {
                                     profileData?.services?.length === 0 ? (
                                     <p className="text-gray-500 text-sm font-semibold mb-5">No jobs found</p>
                                 ) : (
-                                    profileData?.services?.slice(0, 2).map((service) => (
+                                    profileData?.services?.slice(0, 2).map((item) => (
                                         <ServiceCard
-                                            key={service._id}
-                                            service={service}
+                                            key={item._id}
+                                            data={item}
                                             user={profileData}
                                             loggedInUser={user}
                                         />
@@ -136,10 +138,10 @@ function Profile() {
                                     (profileData?.jobs?.length === 0 ? (
                                         <p className="text-gray-500 text-sm font-semibold mb-5">No jobs found</p>
                                     ) : (
-                                        profileData?.jobs?.slice(0, 2).map((job) => (
+                                        profileData?.jobs?.slice(0, 2).map((item) => (
                                             <JobsCard
-                                                key={job._id}
-                                                job={job}
+                                                key={item._id}
+                                                data={item}
                                                 user={profileData}
                                                 loggedInUser={user}
                                             />
