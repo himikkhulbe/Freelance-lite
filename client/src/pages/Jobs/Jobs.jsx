@@ -1,19 +1,8 @@
-import {
-  Search,
-  Filter,
-  MapPin,
-  Clock,
-  DollarSign,
-  IndianRupee,
-  User,
-  Star,
-  Bookmark,
-  BookmarkCheck,
-  Eye,
-  X,
-  Menu,
-} from "lucide-react";
 import { useEffect, useState } from "react";
+import SearchBar from "../Jobs/components/SearchBar";
+import Filters from "../Jobs/components/Filters";
+import JobCard from "../Jobs/components/JobCard";
+import Mobilefilter from "../Jobs/components/Mobilefilter";
 
 const jobsData = [
   {
@@ -170,7 +159,6 @@ const Jobs = () => {
   const [selectedBudget, setSelectedBudget] = useState("All Budgets");
   const [sortBy, setSortBy] = useState("newest");
   const [filteredJobs, setFilteredJobs] = useState(jobsData);
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
 
   useEffect(() => {
     let filtered = jobData;
@@ -230,247 +218,50 @@ const Jobs = () => {
     setFilteredJobs(filtered);
   }, [searchTerm, selectedCategory, selectedBudget, sortBy, jobData]);
 
+  const filterProps = {
+    selectedCategory,
+    setSelectedCategory,
+    selectedBudget,
+    setSelectedBudget,
+    sortBy,
+    setSortBy,
+    categories,
+    budgetRanges,
+  };
+
+  const mobileFilterProps = {
+    selectedCategory,
+    setSelectedCategory,
+    selectedBudget,
+    setSelectedBudget,
+    sortBy,
+    setSortBy,
+    categories,
+    budgetRanges,
+    showMobileFilters,
+    setShowMobileFilters,
+  };
+
   return (
-    <div className="min-h-screen flex flex-col pt-[20px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
-
-      <div className="p-5 xl:px-32 md:px-5 min-h-screen flex gap-10 bg-gray-100">
+    <div className="min-h-screen w-full flex flex-col pt-[20px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
+      <div className="p-5 xl:px-32 md:px-5 min-h-screen w-full flex gap-10 bg-gray-100">
+        
         {/* Sidebar */}
-
-        <div className="hidden lg:block w-1/3 h-min py-3 rounded-md bg-white border border-gray-200 shadow-lg">
-          <h3 className="font-semibold pt-2 px-3">Filters</h3>
-
-          {/* Category Filter */}
-          <div className="p-3 ">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Category
-            </label>
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              {categories.map((category) => (
-                <option key={category} value={category}>
-                  {category}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Budget Filter */}
-          <div className="p-3">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Budget Range
-            </label>
-            <select
-              value={selectedBudget}
-              onChange={(e) => setSelectedBudget(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              {budgetRanges.map((range) => (
-                <option key={range} value={range}>
-                  {range}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Sort Options */}
-          <div className="p-3">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Sort By
-            </label>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="newest">Newest First</option>
-              <option value="budget-high">Highest Budget</option>
-              <option value="budget-low">Lowest Budget</option>
-              <option value="deadline">Deadline (Urgent First)</option>
-            </select>
-          </div>
-
-          {/* Clear Filters */}
-          <div className="p-3">
-            <button
-              onClick={() => {
-                setSelectedCategory("All Categories");
-                setSelectedBudget("All Budgets");
-                // setSearchTerm('');
-                setSortBy("newest");
-              }}
-              className="w-full px-4 py-2  text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-            >
-              Clear All Filters
-            </button>
-          </div>
-        </div>
+        <Filters {...filterProps} />
 
         <div className="w-full">
-          <div className="px-4 py-4 lg:w-full rounded-md border border-gray-200 shadow-lg flex gap-3 justify-center bg-white">
-            <div
-              style={isSearchFocused ? { border: "2px solid #2463EB" } : {}}
-              className="p-2 border border-gray-300 rounded-md flex gap-4 w-full "
-            >
-              <Search className="text-gray-500" />
-              <input
-                className="px-2 w-full border-collapse border-0 focus:ring-0 focus:border-transparent outline-none"
-                type="text"
-                placeholder="Search jobs by title, skills, or description..."
-                value={searchTerm}
-                onFocus={()=>{
-                  setIsSearchFocused(true);
-                }}
-                onBlur={()=>{
-                  setIsSearchFocused(false);
-                }}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </div>
-            <button
-              onClick={() => setShowMobileFilters(true)}
-              className="lg:hidden flex border text-gray-600 border-gray-300 rounded-md items-center py-1 px-2 gap-2"
-            >
-              <Filter className="text-gray-500 text-sm w-5 h-5" />
-              Filters
-            </button>
-          </div>
+          {/* Search Bar */}
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            setShowMobileFilters={setShowMobileFilters}
+          />
 
-          {showMobileFilters && (
-            <div className="border rounded-md shadow-lg p-2 bg-white h-min mt-5">
-              <div className="flex justify-between pt-2 px-3 mb-4">
-                <h3 className="font-semibold text-xl">Filters</h3>
-                <X
-                  onClick={() => setShowMobileFilters(false)}
-                  className="w-6 h-6"
-                />
-              </div>
-              {/* Category Filter */}
-              <div className="p-3 ">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Category
-                </label>
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  {categories.map((category) => (
-                    <option key={category} value={category}>
-                      {category}
-                    </option>
-                  ))}
-                </select>
-              </div>
+          {/* Mobile Filters */}
+          <Mobilefilter {...mobileFilterProps} />
 
-              {/* Budget Filter */}
-              <div className="p-3">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Budget Range
-                </label>
-                <select
-                  value={selectedBudget}
-                  onChange={(e) => setSelectedBudget(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  {budgetRanges.map((range) => (
-                    <option key={range} value={range}>
-                      {range}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {/* Sort Options */}
-              <div className="p-3">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Sort By
-                </label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                  <option value="newest">Newest First</option>
-                  <option value="budget-high">Highest Budget</option>
-                  <option value="budget-low">Lowest Budget</option>
-                  <option value="deadline">Deadline (Urgent First)</option>
-                </select>
-              </div>
-
-              {/* Clear Filters */}
-              <div className="p-3">
-                <button
-                  onClick={() => {
-                    setSelectedCategory("All Categories");
-                    setSelectedBudget("All Budgets");
-                    // setSearchTerm('');
-                    setSortBy("newest");
-                  }}
-                  className="w-full px-4 py-2  text-sm text-blue-600 border border-blue-600 rounded-lg hover:bg-blue-50 transition-colors"
-                >
-                  Clear All Filters
-                </button>
-              </div>
-            </div>
-          )}
-
-          {filteredJobs.map((job) => {
-            return (
-              <div
-                key={job._id}
-                className="p-5 border border-gray-200 shadow-lg rounded-md mt-5 flex flex-col gap-3 overflow-x-hidden bg-white"
-              >
-                <div className="flex sm:flex-row flex-col gap-[20px] ">
-                  <h2 className="font-medium text-xl">{job.title}</h2>
-                  <span className="py-2 bg-blue-200 text-blue-800 w-fit rounded-full text-xs text-center flex justify-center items-center  px-5 ">
-                    {job.category}
-                  </span>
-                </div>
-                <p className="text-gray-500">{job.description}</p>
-                <div className="flex gap-10 justify-start items-center">
-                  <div className="flex items-center">
-                    <IndianRupee className="w-4 h-4 text-gray-500" />
-                    <span className="text-green-600">{job.budget}</span>
-                  </div>
-                  <span className="flex gap-1 justify-start items-center text-gray-500">
-                    <Clock className="w-4 h-4 text-gray-500" />
-                    {job.duration}
-                  </span>
-                </div>
-                <div className="flex gap-2 flex-wrap">
-                  {job.requiredSkills.slice(0, 3).map((skill) => {
-                    return (
-                      <span
-                        key={skill}
-                        className="bg-gray-200 p-1 rounded-full text-sm text-gray-600 px-4 text-nowrap"
-                      >
-                        {skill}
-                      </span>
-                    );
-                  })}
-                  {job.requiredSkills.length > 3 && (
-                    <span
-                      className="bg-gray-200 p-1 rounded-full text-sm text-gray-600 px-4 text-nowrap"
-                    >
-                      +{job.requiredSkills.length-3} more
-                    </span>
-                  )}
-                </div>
-                <div className="flex gap-4 pt-2 flex-wrap">
-                  <button className="px-14 py-2 bg-blue-700 sm:w-fit w-full text-white text-lg font-light rounded-lg text-nowrap">
-                    Apply Now
-                  </button>
-                  <button className="px-4 py-2 border text-gray-500 rounded-lg sm:w-fit w-full">
-                    {" "}
-                    View Details
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+          {/* Job Cards */}
+          <JobCard filteredJobs={filteredJobs} />
         </div>
       </div>
     </div>
