@@ -99,7 +99,7 @@ const FreelanceNavbar = () => {
       return [
         { label: 'Find Jobs', href: '/jobs', icon: React.createElement(Briefcase, { className: "w-4 h-4" }) },
         { label: 'My Services', href: '/my-services', icon: React.createElement(Star, { className: "w-4 h-4" }) },
-        { label: 'Post Service', href: '/post-service', icon: React.createElement(PlusCircle, { className: "w-4 h-4" }) },
+        { label: 'Post Service', href: '/addservice', icon: React.createElement(PlusCircle, { className: "w-4 h-4" }) },
       ];
     } else {
       return [

@@ -1,0 +1,589 @@
+import React, { useState, useEffect } from 'react';
+import {
+    Star,
+    Clock,
+    DollarSign,
+    Tag,
+    User,
+    MessageCircle,
+    Heart,
+    Share2,
+    Shield,
+    Award,
+    MapPin,
+    Calendar,
+    CheckCircle,
+    HelpCircle,
+    ArrowLeft,
+    Loader,
+    RefreshCw
+} from 'lucide-react';
+
+const Service = () => {
+    const [service, setService] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [activeTab, setActiveTab] = useState('overview');
+    const [showOrderModal, setShowOrderModal] = useState(false);
+
+    // Mock service data for demonstration
+    const mockService = {
+        _id: '1',
+        title: 'I will create a modern responsive website with React and Tailwind CSS',
+        description: `I will build you a professional, modern, and fully responsive website using the latest technologies including React.js, Tailwind CSS, and modern web development best practices.
+
+What you'll get:
+• Modern and clean design that reflects your brand
+• Fully responsive across all devices (mobile, tablet, desktop)
+• Fast loading times with optimized performance
+• SEO-friendly structure and meta tags
+• Cross-browser compatibility
+• Clean, maintainable code
+• Basic contact form integration
+• Social media integration
+
+Perfect for:
+- Small businesses looking to establish online presence
+- Startups needing professional websites
+- Personal portfolios and blogs
+- Landing pages for products or services
+
+I have over 5 years of experience in web development and have completed 200+ projects successfully. I focus on creating websites that not only look great but also perform excellently and help achieve your business goals.`,
+        category: 'Web Development',
+        subcategory: 'React',
+        tags: ['react', 'tailwind', 'responsive', 'modern', 'seo', 'fast'],
+        deliveryTime: 7,
+        price: 299,
+        revisions: 3,
+        rating: 4.9,
+        reviewCount: 47,
+        isActive: true,
+        user: {
+            _id: 'user1',
+            name: 'John Developer',
+            avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+            location: 'New York, USA',
+            memberSince: '2020-03-15',
+            totalOrders: 234,
+            rating: 4.8,
+            responseTime: '1 hour',
+            languages: ['English', 'Spanish']
+        },
+        faqs: [
+            {
+                question: 'Do you provide source code?',
+                answer: 'Yes, I provide complete source code with documentation and deployment instructions.'
+            },
+            {
+                question: 'Can you integrate with my existing backend?',
+                answer: 'Absolutely! I can integrate the frontend with your existing APIs and backend services.'
+            },
+            {
+                question: 'Do you offer post-delivery support?',
+                answer: 'Yes, I provide 30 days of free support after delivery for any bugs or minor adjustments.'
+            },
+            {
+                question: 'What if I need additional features?',
+                answer: 'We can discuss additional features as custom add-ons or separate projects based on your needs.'
+            }
+        ],
+        requirements: [
+            'Provide your business/brand information and content',
+            'Share any design preferences or inspiration websites',
+            'Provide logos, images, and other assets you want to include',
+            'Specify any specific functionality requirements',
+            'Provide domain and hosting details if you have them'
+        ],
+        reviews: [
+            {
+                _id: 'review1',
+                user: {
+                    name: 'Sarah Johnson',
+                    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b5bc?w=50&h=50&fit=crop&crop=face'
+                },
+                rating: 5,
+                comment: 'Excellent work! John delivered exactly what I needed. The website is beautiful, fast, and works perfectly on all devices. Great communication throughout the project.',
+                createdAt: '2025-01-20T10:30:00Z'
+            },
+            {
+                _id: 'review2',
+                user: {
+                    name: 'Mike Chen',
+                    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face'
+                },
+                rating: 5,
+                comment: 'Professional developer with great attention to detail. Delivered on time and the code quality is top-notch. Highly recommended!',
+                createdAt: '2025-01-18T14:15:00Z'
+            },
+            {
+                _id: 'review3',
+                user: {
+                    name: 'Emily Rodriguez',
+                    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face'
+                },
+                rating: 4,
+                comment: 'Great work overall. The website looks modern and professional. Minor delay in delivery but the final result was worth it.',
+                createdAt: '2025-01-15T09:45:00Z'
+            }
+        ],
+        createdAt: '2025-01-10T12:00:00Z'
+    };
+
+    useEffect(() => {
+        fetchService();
+    }, []);
+
+    const fetchService = async () => {
+        try {
+            setLoading(true);
+            // Try to fetch from API, fall back to mock data
+            try {
+                const serviceId = '1'; // In real app, get from URL params
+                const response = await fetch(`https://freelance-lite.onrender.com/api/services/${serviceId}`, {
+                    method: "GET",
+                    credentials: "include"
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    setService(data.service);
+                } else {
+                    throw new Error('API not available');
+                }
+            } catch (apiError) {
+                // Fall back to mock data for demonstration
+                console.log('Using mock data for demonstration');
+                setTimeout(() => {
+                    setService(mockService);
+                }, 1000);
+            }
+        } catch (error) {
+            console.error('Error fetching service:', error);
+            setError('Failed to load service');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const formatDate = (dateString) => {
+        return new Date(dateString).toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+    };
+
+    const renderStars = (rating) => {
+        return Array.from({ length: 5 }, (_, i) => (
+            <Star
+                key={i}
+                className={`w-4 h-4 ${i < Math.floor(rating)
+                        ? 'fill-yellow-400 text-yellow-400'
+                        : i < rating
+                            ? 'fill-yellow-200 text-yellow-400'
+                            : 'text-gray-300'
+                    }`}
+            />
+        ));
+    };
+
+    const OrderModal = () => (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg max-w-md w-full p-6">
+                <h3 className="text-lg font-semibold mb-4">Order This Service</h3>
+                <div className="space-y-4">
+                    <div className="border rounded-lg p-4">
+                        <h4 className="font-medium mb-2">{service?.title}</h4>
+                        <div className="flex justify-between text-sm text-gray-600">
+                            <span>Delivery: {service?.deliveryTime} days</span>
+                            <span>Revisions: {service?.revisions}</span>
+                        </div>
+                        <div className="flex justify-between items-center mt-2">
+                            <span className="text-lg font-bold">${service?.price}</span>
+                        </div>
+                    </div>
+
+                    <textarea
+                        placeholder="Describe your requirements (optional)"
+                        rows={3}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+
+                    <div className="flex space-x-3">
+                        <button
+                            onClick={() => setShowOrderModal(false)}
+                            className="flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={() => {
+                                setShowOrderModal(false);
+                                alert('Order placed successfully! (Demo)');
+                            }}
+                            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                        >
+                            Place Order
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <Loader className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
+                    <p className="text-gray-600">Loading service details...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error || !service) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-red-600 mb-4">{error || 'Service not found'}</p>
+                    <button
+                        onClick={fetchService}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    >
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    return (
+        <div className="min-h-screen bg-gray-50">
+            {/* Header */}
+            <div className="bg-white shadow-sm border-b">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <button className="flex items-center text-blue-600 hover:text-blue-700 mb-4">
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Back to Services
+                    </button>
+
+                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                        {/* Service Info */}
+                        <div className="flex-1">
+                            <div className="flex items-start justify-between mb-4">
+                                <div className="flex-1">
+                                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                                        {service.title}
+                                    </h1>
+
+                                    <div className="flex items-center space-x-4 mb-4">
+                                        <div className="flex items-center">
+                                            {renderStars(service.rating)}
+                                            <span className="ml-2 text-sm font-medium text-gray-900">
+                                                {service.rating}
+                                            </span>
+                                            <span className="text-sm text-gray-500 ml-1">
+                                                ({service.reviewCount} reviews)
+                                            </span>
+                                        </div>
+
+                                        <div className="flex items-center space-x-2">
+                                            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
+                                                {service.category}
+                                            </span>
+                                            {service.subcategory && (
+                                                <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+                                                    {service.subcategory}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Freelancer Info */}
+                                    <div className="flex items-center space-x-3 mb-6">
+                                        <img
+                                            src={service.user.avatar}
+                                            alt={service.user.name}
+                                            className="w-12 h-12 rounded-full object-cover"
+                                        />
+                                        <div>
+                                            <h3 className="font-medium text-gray-900">{service.user.name}</h3>
+                                            <div className="flex items-center text-sm text-gray-500">
+                                                <MapPin className="w-3 h-3 mr-1" />
+                                                {service.user.location}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Action Buttons */}
+                                <div className="flex items-center space-x-2">
+                                    <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                                        <Heart className="w-5 h-5 text-gray-500" />
+                                    </button>
+                                    <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                                        <Share2 className="w-5 h-5 text-gray-500" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Order Card */}
+                        <div className="lg:w-80">
+                            <div className="bg-white border border-gray-200 rounded-lg p-6 sticky top-6">
+                                <div className="text-center mb-6">
+                                    <div className="text-3xl font-bold text-gray-900 mb-2">
+                                        ${service.price}
+                                    </div>
+                                    <div className="flex items-center justify-center space-x-4 text-sm text-gray-600">
+                                        <div className="flex items-center">
+                                            <Clock className="w-4 h-4 mr-1" />
+                                            {service.deliveryTime} days delivery
+                                        </div>
+                                        <div className="flex items-center">
+                                            <RefreshCw className="w-4 h-4 mr-1" />
+                                            {service.revisions} revisions
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3 mb-6">
+                                    <button
+                                        onClick={() => setShowOrderModal(true)}
+                                        className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 font-medium"
+                                    >
+                                        Continue (${service.price})
+                                    </button>
+                                    <button className="w-full border border-gray-300 py-3 px-4 rounded-md hover:bg-gray-50 flex items-center justify-center">
+                                        <MessageCircle className="w-4 h-4 mr-2" />
+                                        Contact Seller
+                                    </button>
+                                </div>
+
+                                {/* Service Features */}
+                                <div className="border-t pt-4">
+                                    <div className="space-y-2 text-sm">
+                                        <div className="flex items-center text-gray-600">
+                                            <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
+                                            {service.deliveryTime} days delivery
+                                        </div>
+                                        <div className="flex items-center text-gray-600">
+                                            <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
+                                            {service.revisions} revisions included
+                                        </div>
+                                        <div className="flex items-center text-gray-600">
+                                            <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
+                                            Source code included
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Main Content */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="flex flex-col lg:flex-row gap-8">
+                    {/* Left Column */}
+                    <div className="flex-1">
+                        {/* Service Image */}
+                        <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg h-64 sm:h-80 flex items-center justify-center mb-8">
+                            <div className="text-center">
+                                <div className="text-blue-600 text-2xl font-bold mb-2">
+                                    {service.category}
+                                </div>
+                                <div className="text-blue-500 text-lg">
+                                    Professional Service Preview
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Tabs */}
+                        <div className="border-b border-gray-200 mb-6">
+                            <nav className="-mb-px flex space-x-8">
+                                {[
+                                    { id: 'overview', label: 'Overview' },
+                                    { id: 'reviews', label: `Reviews (${service.reviewCount})` },
+                                    { id: 'faq', label: 'FAQ' },
+                                    { id: 'seller', label: 'About Seller' }
+                                ].map(tab => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
+                                                ? 'border-blue-500 text-blue-600'
+                                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </nav>
+                        </div>
+
+                        {/* Tab Content */}
+                        <div className="bg-white rounded-lg border p-6">
+                            {activeTab === 'overview' && (
+                                <div className="space-y-6">
+                                    <div>
+                                        <h3 className="text-lg font-semibold mb-4">About This Service</h3>
+                                        <div className="prose max-w-none text-gray-700 whitespace-pre-line">
+                                            {service.description}
+                                        </div>
+                                    </div>
+
+                                    {/* Tags */}
+                                    <div>
+                                        <h4 className="font-medium mb-3">Skills & Tags</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {service.tags.map((tag, index) => (
+                                                <span
+                                                    key={index}
+                                                    className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
+                                                >
+                                                    {tag}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Requirements */}
+                                    <div>
+                                        <h4 className="font-medium mb-3">What I Need From You</h4>
+                                        <ul className="space-y-2">
+                                            {service.requirements.map((req, index) => (
+                                                <li key={index} className="flex items-start">
+                                                    <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0" />
+                                                    <span className="text-gray-700">{req}</span>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'reviews' && (
+                                <div className="space-y-6">
+                                    {service.reviews.map(review => (
+                                        <div key={review._id} className="border-b border-gray-100 pb-6 last:border-b-0">
+                                            <div className="flex items-start space-x-4">
+                                                <img
+                                                    src={review.user.avatar}
+                                                    alt={review.user.name}
+                                                    className="w-10 h-10 rounded-full object-cover"
+                                                />
+                                                <div className="flex-1">
+                                                    <div className="flex items-center justify-between mb-2">
+                                                        <h4 className="font-medium text-gray-900">{review.user.name}</h4>
+                                                        <span className="text-sm text-gray-500">
+                                                            {formatDate(review.createdAt)}
+                                                        </span>
+                                                    </div>
+                                                    <div className="flex items-center mb-2">
+                                                        {renderStars(review.rating)}
+                                                    </div>
+                                                    <p className="text-gray-700">{review.comment}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {activeTab === 'faq' && (
+                                <div className="space-y-4">
+                                    {service.faqs.map((faq, index) => (
+                                        <div key={index} className="border border-gray-200 rounded-lg p-4">
+                                            <div className="flex items-start">
+                                                <HelpCircle className="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
+                                                <div>
+                                                    <h4 className="font-medium text-gray-900 mb-2">{faq.question}</h4>
+                                                    <p className="text-gray-700">{faq.answer}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+
+                            {activeTab === 'seller' && (
+                                <div className="space-y-6">
+                                    <div className="flex items-start space-x-4">
+                                        <img
+                                            src={service.user.avatar}
+                                            alt={service.user.name}
+                                            className="w-20 h-20 rounded-full object-cover"
+                                        />
+                                        <div className="flex-1">
+                                            <h3 className="text-xl font-semibold mb-2">{service.user.name}</h3>
+                                            <div className="flex items-center mb-2">
+                                                {renderStars(service.user.rating)}
+                                                <span className="ml-2 text-sm text-gray-600">
+                                                    ({service.user.totalOrders} orders completed)
+                                                </span>
+                                            </div>
+                                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                                <div>
+                                                    <span className="text-gray-500">From:</span>
+                                                    <div className="font-medium">{service.user.location}</div>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-500">Member since:</span>
+                                                    <div className="font-medium">{formatDate(service.user.memberSince)}</div>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-500">Avg. response time:</span>
+                                                    <div className="font-medium">{service.user.responseTime}</div>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-500">Languages:</span>
+                                                    <div className="font-medium">{service.user.languages.join(', ')}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center">
+                                        <MessageCircle className="w-4 h-4 mr-2" />
+                                        Contact {service.user.name}
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Right Column - Related Services */}
+                    <div className="lg:w-80">
+                        <div className="bg-white border border-gray-200 rounded-lg p-6">
+                            <h3 className="font-semibold mb-4">More from {service.user.name}</h3>
+                            <div className="space-y-4">
+                                {/* Mock related services */}
+                                {[1, 2].map(i => (
+                                    <div key={i} className="border border-gray-200 rounded-lg p-3">
+                                        <div className="h-24 bg-gray-100 rounded mb-3"></div>
+                                        <h4 className="font-medium text-sm mb-2">Another great service</h4>
+                                        <div className="flex items-center justify-between">
+                                            <div className="flex items-center">
+                                                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                                                <span className="text-xs ml-1">4.8</span>
+                                            </div>
+                                            <span className="font-bold text-sm">$199</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* Order Modal */}
+            {showOrderModal && <OrderModal />}
+        </div>
+    );
+};
+
+export default Service;

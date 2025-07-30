@@ -10,6 +10,7 @@ import ProfileEditPopup from "./components/Popup/ProfileEditPopup.jsx";
 import JobsPopup from "./components/Popup/JobsPopup.jsx";
 import JobsCard from "./components/JobsCard/JobsCard.jsx";
 import ServiceCard from "./components/ServiceCard/ServiceCard.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
     const { user } = useAuth();
@@ -20,7 +21,12 @@ function Profile() {
     const [showServicePopup, setShowServicePopup] = useState(false);
     const { id } = useParams();
     const [profileData, setProfileData] = useState(null);
+    const navigate  = useNavigate();
 
+    const  addService = () => {
+        console.log("Add service clicked");
+        navigate(`/addservice`);
+    }
 
     useEffect(() => {
         const fetchProfile = async () => {
@@ -96,7 +102,7 @@ function Profile() {
                             {profileData?.user?.role === "client" && <p className="text-black text-lg font-semibold">Jobs Offered</p>}
                             <div className="flex gap-[10px]">
                                 {user?.user?._id === profileData?.user?._id &&
-                                    <button className="bg-blue-600 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-white">
+                                    <button onClick={addService} className="bg-blue-600 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-white">
                                         <span className=" text-2xl">+</span> Add Services
                                     </button>
                                 }
