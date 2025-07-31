@@ -101,12 +101,16 @@ function Profile() {
                             {profileData?.user?.role === "freelancer" && <p className="text-black text-lg font-semibold">Services Offered</p>}
                             {profileData?.user?.role === "client" && <p className="text-black text-lg font-semibold">Jobs Offered</p>}
                             <div className="flex gap-[10px]">
-                                {user?.user?._id === profileData?.user?._id &&
+                                {user?.user?._id === profileData?.user?._id && profileData?.user?.role === "freelancer" &&
                                     <button onClick={addService} className="bg-blue-600 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-white">
                                         <span className=" text-2xl">+</span> Add Services
                                     </button>
                                 }
-
+                                {user?.user?._id === profileData?.user?._id && profileData?.user?.role === "client" &&
+                                    <button onClick={addService} className="bg-blue-600 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-white">
+                                        <span className=" text-2xl">+</span> Add Job
+                                    </button>
+                                }
                                 {profileData?.jobs?.length > 2 &&
                                     <button onClick={() => setShowJobsPopup(true)} className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-gray-600">
                                         <Eye className="text-gray-600 w-4 h-4" /> View All
