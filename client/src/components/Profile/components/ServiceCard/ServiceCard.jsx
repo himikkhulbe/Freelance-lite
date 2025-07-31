@@ -1,21 +1,38 @@
-import React from 'react';
-import { Edit, IndianRupee, Clock, Star, User } from 'lucide-react';
+import {useState, useEffect} from 'react';
+import { Edit, IndianRupee, Clock, Star, User, Trash2 } from 'lucide-react';
+import DeleteServicePopup from '../Popup/DeleteServicePopup.jsx';
 
 function ServiceCard({ data, user, loggedInUser }) {
     console.log("Service data:", data);
     console.log("User data:", user);
     console.log("Logged-in user data:", loggedInUser);
-
-
+    const [isOpen, setIsOpen] = useState(false);
+    useEffect(() => {
+            if (!isOpen) {
+                document.body.style.overflow = 'auto';
+            } else {
+                document.body.style.overflow = 'hidden';
+            }
+            return () => (document.body.style.overflow = 'auto');
+        }, [isOpen]);
     return (
+        
         <div
             key={data?._id}
             className="p-5 mb-5 border border-gray-200 shadow-lg rounded-md mt-5 flex flex-col gap-3 overflow-x-hidden bg-white"
         >
+            <DeleteServicePopup
+                serviceId={data?._id}
+                isOpen={isOpen}
+                onClose={() => setIsOpen(false)}
+            />
             <div className="flex gap-[20px] justify-between items-center">
                 <h2 className="font-medium text-lg">{data?.title}</h2>
                 {loggedInUser?.user?._id === user?.user?._id && (
-                    <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
+                    <div className='flex gap-2'>
+                        <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
+                        <Trash2 onClick={() => setIsOpen(true)} className="text-red-600 w-4 h-4 cursor-pointer" />
+                    </div>
                 )}
             </div>
 

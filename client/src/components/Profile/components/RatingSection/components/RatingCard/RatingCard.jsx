@@ -2,11 +2,12 @@ import React from 'react'
 import { Key, User } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 
-function RatingCard({ date, renderStars, data }) {
+function RatingCard({ date, renderStars, data}) {
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
         navigate(`/profile/${data?.raterId?._id}`);
+
     }
     return (
         <div className="flex flex-col gap-[10px] w-full border-b-[0.5px] border-gray-300 pb-[5px] mb-[20px]">

@@ -1,5 +1,6 @@
 import Job from "../models/clientModels.js";
 import User from "../models/userModel.js";
+import mongoose from "mongoose";
 
 export const createJob = async (req, res) => {
     const userId = req.user._id;
