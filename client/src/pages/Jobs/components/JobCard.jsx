@@ -1,12 +1,13 @@
 import { Clock, IndianRupee } from "lucide-react";
 
-const JobCard = ({ filteredJobs }) => {
+const JobCard = ({ data }) => {
+  
   return (
     <>
-      {filteredJobs.map((job) => {
+      {data.map((job) => {
         return (
           <div
-            key={job._id}
+            key={job.id}
             className="p-5 border border-gray-200 shadow-lg rounded-md mt-5 flex flex-col gap-3 overflow-x-hidden bg-white"
           >
             <div className="flex sm:flex-row flex-col gap-[20px] ">
@@ -23,11 +24,11 @@ const JobCard = ({ filteredJobs }) => {
               </div>
               <span className="flex gap-1 justify-start items-center text-gray-500">
                 <Clock className="w-4 h-4 text-gray-500" />
-                {job.duration}
+                {job.duration || job.experienceLevel}
               </span>
             </div>
             <div className="flex gap-2 flex-wrap">
-              {job.requiredSkills.slice(0, 3).map((skill) => {
+              {job.requiredSkills?.slice(0, 3).map((skill) => {
                 return (
                   <span
                     key={skill}
@@ -37,7 +38,7 @@ const JobCard = ({ filteredJobs }) => {
                   </span>
                 );
               })}
-              {job.requiredSkills.length > 3 && (
+              {job.requiredSkills?.length > 3 && (
                 <span className="bg-gray-200 p-1 rounded-full text-sm text-gray-600 px-4 text-nowrap">
                   +{job.requiredSkills.length - 3} more
                 </span>

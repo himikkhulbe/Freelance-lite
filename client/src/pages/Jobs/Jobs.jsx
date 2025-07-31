@@ -6,7 +6,7 @@ import Mobilefilter from "../Jobs/components/Mobilefilter";
 
 const jobsData = [
   {
-    _id: "68563628adb7c8fa5c4ac9bd",
+    id: "68563628adb7c8fa5c4ac9bd",
     client: "6855becd96f186bf3e4cbaaf",
     title: "Build a Landing Page for SaaS Product",
     description:
@@ -23,7 +23,7 @@ const jobsData = [
     __v: 0,
   },
   {
-    _id: "68563628adb7c8fa5c4ac9be",
+    id: "68563628adb7c8fa5c4ac9be",
     client: "6855becd96f186bf3e4cbaaf",
     title: "Mobile App UI/UX Design for Healthcare App",
     description:
@@ -46,7 +46,7 @@ const jobsData = [
     __v: 0,
   },
   {
-    _id: "68563628adb7c8fa5c4ac9bf",
+    id: "68563628adb7c8fa5c4ac9bf",
     client: "6855becd96f186bf3e4cbaaf",
     title: "Content Writing for Digital Marketing Campaign",
     description:
@@ -69,7 +69,7 @@ const jobsData = [
     __v: 0,
   },
   {
-    _id: "68563628adb7c8fa5c4ac9c0",
+    id: "68563628adb7c8fa5c4ac9c0",
     client: "6855becd96f186bf3e4cbaaf",
     title: "Data Analysis and Visualization Dashboard",
     description:
@@ -86,7 +86,7 @@ const jobsData = [
     __v: 0,
   },
   {
-    _id: "68563628adb7c8fa5c4ac9c1",
+    id: "68563628adb7c8fa5c4ac9c1",
     client: "6855becd96f186bf3e4cbaaf",
     title: "Video Editing for YouTube Channel",
     description:
@@ -109,7 +109,7 @@ const jobsData = [
     __v: 0,
   },
   {
-    _id: "68563628adb7c8fa5c4ac9c2",
+    id: "68563628adb7c8fa5c4ac9c2",
     client: "6855becd96f186bf3e4cbaaf",
     title: "SEO Optimization for E-commerce Website",
     description:
@@ -261,7 +261,7 @@ const Jobs = () => {
           <Mobilefilter {...mobileFilterProps} />
 
           {/* Job Cards */}
-          <JobCard filteredJobs={filteredJobs} />
+          <JobCard data={filteredJobs} />
         </div>
       </div>
     </div>
