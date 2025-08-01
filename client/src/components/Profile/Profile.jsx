@@ -11,6 +11,8 @@ import JobsPopup from "./components/Popup/JobsPopup.jsx";
 import JobsCard from "./components/JobsCard/JobsCard.jsx";
 import ServiceCard from "./components/ServiceCard/ServiceCard.jsx";
 import { useNavigate } from "react-router-dom";
+import formatDate from "../../Utils/formatDate.js";
+import RenderStars from "../Common/RenderStars.jsx";
 
 function Profile() {
     const { user } = useAuth();
@@ -26,6 +28,10 @@ function Profile() {
     const  addService = () => {
         console.log("Add service clicked");
         navigate(`/addservice`);
+    }
+    const addJob = () => {
+        console.log("Add service clicked");
+        navigate(`/addJob`);
     }
 
     useEffect(() => {
@@ -48,23 +54,6 @@ function Profile() {
     }, [id, showProfileEditModal]);
     console.log("Fetching profile for ID:", id);
     console.log("Profile data:", profileData);
-    const renderStars = (rating) => {
-        return Array.from({ length: 5 }, (_, i) => (
-            <Star
-                key={i}
-                className={`w-4 h-4 ${i < rating ? "text-yellow-400 fill-current" : "text-gray-300"
-                    }`}
-            />
-        ));
-    };
-
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    };
 
     useEffect(() => {
         if (!showRatingModal && !showProfileEditModal && !showJobsPopup && !showServicePopup) {
@@ -84,11 +73,11 @@ function Profile() {
     return (
         <div className="min-h-screen flex flex-col pt-[20px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
             {/* Profile Section */}
-            {showRatingModal && <RatingPopup renderStars={renderStars} formatDate={formatDate} user={profileData} close={setShowRatingModal} />}
+            {showRatingModal && <RatingPopup formatDate={formatDate} user={profileData} close={setShowRatingModal} />}
             {showProfileEditModal && <ProfileEditPopup loggedInUser={profileData} close={setShowProfileEditModal} />}
             {showJobsPopup && <JobsPopup Component={JobsCard} loggedInUser={user} user={profileData} data={profileData?.jobs} close={setShowJobsPopup} heading="Jobs Offered" />}
             {showServicePopup && <JobsPopup Component={ServiceCard} loggedInUser={user} user={profileData} data={profileData?.services} close={setShowServicePopup} heading="Services Offered" />}
-            <ProfileMain renderStars={renderStars} user={profileData} loggedInUser={user} openEdit={setShowProfileEditModal} />
+            <ProfileMain user={profileData} loggedInUser={user} openEdit={setShowProfileEditModal} />
             {/* bottom Section */}
             <div className="xl:w-[80%] w-[90%] min-h-[250px] flex lg:flex-row flex-col md:gap-[30px] gap-[20px]">
                 {/* left side */}
@@ -107,7 +96,7 @@ function Profile() {
                                     </button>
                                 }
                                 {user?.user?._id === profileData?.user?._id && profileData?.user?.role === "client" &&
-                                    <button onClick={addService} className="bg-blue-600 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-white">
+                                    <button onClick={addJob} className="bg-blue-600 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center gap-[7px] text-sm text-white">
                                         <span className=" text-2xl">+</span> Add Job
                                     </button>
                                 }
@@ -164,11 +153,10 @@ function Profile() {
                         </div>
                     </div>
                     {/* rating */}
-                    <RatingSection user={profileData} renderStars={renderStars} formatDate={formatDate} open={setShowRatingModal} setShowRatingModal={setShowRatingModal} />
+                    <RatingSection user={profileData} formatDate={formatDate} open={setShowRatingModal} setShowRatingModal={setShowRatingModal} />
                 </div>
             </div>
         </div>
     );
 }
-
 export default Profile;

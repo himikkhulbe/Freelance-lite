@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import User from "../models/userModel.js";
 import Service from "../models/freelancerModels.js";
 
+
 export const uploadServices = async (req, res) => {
     try {
         const {
@@ -71,6 +72,7 @@ export const getMyServices = async (req, res) => {
 export const getServices = async (req, res) => {
     const userId = req.params.id;
     console.log(userId);
+    let data;
     try {
         if (!mongoose.Types.ObjectId.isValid(userId)) {
             return res.status(404).json({ message: "Invalid User Id" });
@@ -92,11 +94,12 @@ export const getservice = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(serviceId)) {
             return res.status(404).json({ message: "Invalid Service Id" });
         }
-        const service = await Service.findById(serviceId).populate("user", "name profilePicture username").sort({ createdAt: -1 });
+        const service = await Service.findById(serviceId).populate("user", "name profilePicture username isVerified averageRating reviewCount location createdAt Languages").sort({ createdAt: -1 });
         if (!service) {
             return res.status(404).json({ message: "Service not found" });
         }
-        res.status(200).json(service);
+        const services = await Service.find({ user: service.user._id.toString(), _id: { $ne: serviceId } }).sort({ createdAt: -1 });
+        res.status(200).json({service, services});
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }

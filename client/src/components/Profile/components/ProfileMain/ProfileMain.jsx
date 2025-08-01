@@ -1,6 +1,7 @@
 import { Edit, User, BadgeCheck} from 'lucide-react'
+import RenderStars from '../../../Common/RenderStars'
 
-function ProfileMain({ renderStars, user, loggedInUser, openEdit }) {
+function ProfileMain({ user, loggedInUser, openEdit }) {
 
     return (
         <div className="xl:w-[80%] w-[90%] min-h-[250px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg flex md:flex-row flex-col justify-start md:gap-[25px] gap-[20px] md:items-end items-start pb-[30px] px-[30px] pt-[50px] relative">
@@ -34,7 +35,7 @@ function ProfileMain({ renderStars, user, loggedInUser, openEdit }) {
                 </div>
                 <div className="flex flex-wrap items-center gap-[7px]">
                     <div className="flex items-center">
-                        {renderStars(user?.user?.averageRating)}
+                        {RenderStars(user?.user?.averageRating)}
                     </div>
                     <p>{user?.user?.averageRating.toFixed(1)}</p>
                     <p className="text-gray-500">{`(${user?.ratings?.length} reviews)`}</p>

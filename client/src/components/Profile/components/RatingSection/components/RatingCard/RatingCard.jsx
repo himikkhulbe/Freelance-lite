@@ -1,8 +1,9 @@
 import React from 'react'
 import { Key, User } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import RenderStars from '../../../../../Common/RenderStars.jsx';
 
-function RatingCard({ date, renderStars, data}) {
+function RatingCard({ date, data}) {
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
@@ -25,7 +26,7 @@ function RatingCard({ date, renderStars, data}) {
                         <p onClick={handleProfileClick} className="text-black text-md font-semibold cursor-pointer">{data?.raterId?.name}</p>
                         <div className="flex items-center gap-[5px]">
                             <div className='flex items-center'>
-                                {renderStars(data?.rating)}
+                                {RenderStars(data?.rating)}
                             </div>
                             <p>{Number(data?.rating).toFixed(1)}</p>
                         </div>

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import ServiceCard from '../../components/Profile/components/ServiceCard/ServiceCard';
+import {useAuth} from '../../contexts/AuthContext';
+import formatDate from '../../Utils/formatDate';
+import RenderStars from  "../../components/Common/RenderStars";
 import {
-    Star,
     Clock,
     DollarSign,
     Tag,
@@ -25,6 +29,8 @@ const Service = () => {
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('overview');
     const [showOrderModal, setShowOrderModal] = useState(false);
+    const { id } = useParams();
+    const { user } = useAuth();
 
     // Mock service data for demonstration
     const mockService = {
@@ -139,14 +145,15 @@ I have over 5 years of experience in web development and have completed 200+ pro
             // Try to fetch from API, fall back to mock data
             try {
                 const serviceId = '1'; // In real app, get from URL params
-                const response = await fetch(`https://freelance-lite.onrender.com/api/services/${serviceId}`, {
+                const response = await fetch(`http://localhost:8000/api/freelancer/service/${id}`, {
                     method: "GET",
                     credentials: "include"
                 });
 
                 if (response.ok) {
                     const data = await response.json();
-                    setService(data.service);
+                    setService(data);
+                    console.log('Service fetched from API:', data);
                 } else {
                     throw new Error('API not available');
                 }
@@ -165,27 +172,6 @@ I have over 5 years of experience in web development and have completed 200+ pro
         }
     };
 
-    const formatDate = (dateString) => {
-        return new Date(dateString).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric'
-        });
-    };
-
-    const renderStars = (rating) => {
-        return Array.from({ length: 5 }, (_, i) => (
-            <Star
-                key={i}
-                className={`w-4 h-4 ${i < Math.floor(rating)
-                        ? 'fill-yellow-400 text-yellow-400'
-                        : i < rating
-                            ? 'fill-yellow-200 text-yellow-400'
-                            : 'text-gray-300'
-                    }`}
-            />
-        ));
-    };
 
     const OrderModal = () => (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -193,13 +179,13 @@ I have over 5 years of experience in web development and have completed 200+ pro
                 <h3 className="text-lg font-semibold mb-4">Order This Service</h3>
                 <div className="space-y-4">
                     <div className="border rounded-lg p-4">
-                        <h4 className="font-medium mb-2">{service?.title}</h4>
+                        <h4 className="font-medium mb-2">{service?.service?.title}</h4>
                         <div className="flex justify-between text-sm text-gray-600">
-                            <span>Delivery: {service?.deliveryTime} days</span>
-                            <span>Revisions: {service?.revisions}</span>
+                            <span>Delivery: {service?.service?.deliveryTime} days</span>
+                            <span>Revisions: {service?.service?.revisions}</span>
                         </div>
                         <div className="flex justify-between items-center mt-2">
-                            <span className="text-lg font-bold">${service?.price}</span>
+                            <span className="text-lg font-bold">₹{service?.service?.price}</span>
                         </div>
                     </div>
 
@@ -274,27 +260,27 @@ I have over 5 years of experience in web development and have completed 200+ pro
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex-1">
                                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
-                                        {service.title}
+                                        {service?.service?.title}
                                     </h1>
 
                                     <div className="flex items-center space-x-4 mb-4">
                                         <div className="flex items-center">
-                                            {renderStars(service.rating)}
+                                            {RenderStars(service?.service?.rating)}
                                             <span className="ml-2 text-sm font-medium text-gray-900">
-                                                {service.rating}
+                                                {service?.service?.rating}
                                             </span>
                                             <span className="text-sm text-gray-500 ml-1">
-                                                ({service.reviewCount} reviews)
+                                                ({service?.service?.reviewCount} reviews)
                                             </span>
                                         </div>
 
                                         <div className="flex items-center space-x-2">
                                             <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
-                                                {service.category}
+                                                {service?.service?.category}
                                             </span>
-                                            {service.subcategory && (
+                                            {service?.service?.subcategory && (
                                                 <span className="px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
-                                                    {service.subcategory}
+                                                    {service?.service?.subcategory}
                                                 </span>
                                             )}
                                         </div>
@@ -303,15 +289,15 @@ I have over 5 years of experience in web development and have completed 200+ pro
                                     {/* Freelancer Info */}
                                     <div className="flex items-center space-x-3 mb-6">
                                         <img
-                                            src={service.user.avatar}
-                                            alt={service.user.name}
+                                            src={service?.service?.user.profilePicture}
+                                            alt={service?.service?.user.name}
                                             className="w-12 h-12 rounded-full object-cover"
                                         />
                                         <div>
-                                            <h3 className="font-medium text-gray-900">{service.user.name}</h3>
+                                            <h3 className="font-medium text-gray-900">{service?.service?.user.name}</h3>
                                             <div className="flex items-center text-sm text-gray-500">
                                                 <MapPin className="w-3 h-3 mr-1" />
-                                                {service.user.location}
+                                                {service?.service?.user.location}
                                             </div>
                                         </div>
                                     </div>
@@ -334,16 +320,16 @@ I have over 5 years of experience in web development and have completed 200+ pro
                             <div className="bg-white border border-gray-200 rounded-lg p-6 sticky top-6">
                                 <div className="text-center mb-6">
                                     <div className="text-3xl font-bold text-gray-900 mb-2">
-                                        ${service.price}
+                                        ₹{service?.service?.price}
                                     </div>
                                     <div className="flex items-center justify-center space-x-4 text-sm text-gray-600">
                                         <div className="flex items-center">
                                             <Clock className="w-4 h-4 mr-1" />
-                                            {service.deliveryTime} days delivery
+                                            {service?.service?.deliveryTime} days delivery
                                         </div>
                                         <div className="flex items-center">
                                             <RefreshCw className="w-4 h-4 mr-1" />
-                                            {service.revisions} revisions
+                                            {service?.service?.revisions} revisions
                                         </div>
                                     </div>
                                 </div>
@@ -353,7 +339,7 @@ I have over 5 years of experience in web development and have completed 200+ pro
                                         onClick={() => setShowOrderModal(true)}
                                         className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 font-medium"
                                     >
-                                        Continue (${service.price})
+                                        Continue (${service?.service?.price})
                                     </button>
                                     <button className="w-full border border-gray-300 py-3 px-4 rounded-md hover:bg-gray-50 flex items-center justify-center">
                                         <MessageCircle className="w-4 h-4 mr-2" />
@@ -366,11 +352,11 @@ I have over 5 years of experience in web development and have completed 200+ pro
                                     <div className="space-y-2 text-sm">
                                         <div className="flex items-center text-gray-600">
                                             <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                                            {service.deliveryTime} days delivery
+                                            {service?.service?.deliveryTime} days delivery
                                         </div>
                                         <div className="flex items-center text-gray-600">
                                             <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                                            {service.revisions} revisions included
+                                            {service?.service?.revisions} revisions included
                                         </div>
                                         <div className="flex items-center text-gray-600">
                                             <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
@@ -393,7 +379,7 @@ I have over 5 years of experience in web development and have completed 200+ pro
                         <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg h-64 sm:h-80 flex items-center justify-center mb-8">
                             <div className="text-center">
                                 <div className="text-blue-600 text-2xl font-bold mb-2">
-                                    {service.category}
+                                    {service?.service?.category}
                                 </div>
                                 <div className="text-blue-500 text-lg">
                                     Professional Service Preview
@@ -406,7 +392,7 @@ I have over 5 years of experience in web development and have completed 200+ pro
                             <nav className="-mb-px flex space-x-8">
                                 {[
                                     { id: 'overview', label: 'Overview' },
-                                    { id: 'reviews', label: `Reviews (${service.reviewCount})` },
+                                    { id: 'reviews', label: `Reviews (${service?.service?.reviewCount})` },
                                     { id: 'faq', label: 'FAQ' },
                                     { id: 'seller', label: 'About Seller' }
                                 ].map(tab => (
@@ -431,7 +417,7 @@ I have over 5 years of experience in web development and have completed 200+ pro
                                     <div>
                                         <h3 className="text-lg font-semibold mb-4">About This Service</h3>
                                         <div className="prose max-w-none text-gray-700 whitespace-pre-line">
-                                            {service.description}
+                                            {service?.service?.description}
                                         </div>
                                     </div>
 
@@ -439,7 +425,7 @@ I have over 5 years of experience in web development and have completed 200+ pro
                                     <div>
                                         <h4 className="font-medium mb-3">Skills & Tags</h4>
                                         <div className="flex flex-wrap gap-2">
-                                            {service.tags.map((tag, index) => (
+                                            {service?.service?.tags.map((tag, index) => (
                                                 <span
                                                     key={index}
                                                     className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
@@ -454,7 +440,7 @@ I have over 5 years of experience in web development and have completed 200+ pro
                                     <div>
                                         <h4 className="font-medium mb-3">What I Need From You</h4>
                                         <ul className="space-y-2">
-                                            {service.requirements.map((req, index) => (
+                                            {service?.service?.requirements.map((req, index) => (
                                                 <li key={index} className="flex items-start">
                                                     <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0" />
                                                     <span className="text-gray-700">{req}</span>
@@ -467,7 +453,7 @@ I have over 5 years of experience in web development and have completed 200+ pro
 
                             {activeTab === 'reviews' && (
                                 <div className="space-y-6">
-                                    {service.reviews.map(review => (
+                                    {service?.service?.reviews.map(review => (
                                         <div key={review._id} className="border-b border-gray-100 pb-6 last:border-b-0">
                                             <div className="flex items-start space-x-4">
                                                 <img
@@ -483,7 +469,7 @@ I have over 5 years of experience in web development and have completed 200+ pro
                                                         </span>
                                                     </div>
                                                     <div className="flex items-center mb-2">
-                                                        {renderStars(review.rating)}
+                                                        {RenderStars(review.rating)}
                                                     </div>
                                                     <p className="text-gray-700">{review.comment}</p>
                                                 </div>
@@ -495,7 +481,7 @@ I have over 5 years of experience in web development and have completed 200+ pro
 
                             {activeTab === 'faq' && (
                                 <div className="space-y-4">
-                                    {service.faqs.map((faq, index) => (
+                                    {service?.service?.faqs.map((faq, index) => (
                                         <div key={index} className="border border-gray-200 rounded-lg p-4">
                                             <div className="flex items-start">
                                                 <HelpCircle className="w-5 h-5 text-blue-600 mr-3 mt-0.5 flex-shrink-0" />
@@ -513,34 +499,34 @@ I have over 5 years of experience in web development and have completed 200+ pro
                                 <div className="space-y-6">
                                     <div className="flex items-start space-x-4">
                                         <img
-                                            src={service.user.avatar}
-                                            alt={service.user.name}
+                                            src={service?.service?.user.profilePicture}
+                                            alt={service?.service?.user.name}
                                             className="w-20 h-20 rounded-full object-cover"
                                         />
                                         <div className="flex-1">
-                                            <h3 className="text-xl font-semibold mb-2">{service.user.name}</h3>
+                                            <h3 className="text-xl font-semibold mb-2">{service?.service?.user.name}</h3>
                                             <div className="flex items-center mb-2">
-                                                {renderStars(service.user.rating)}
+                                                {RenderStars(service?.service?.user.averageRating)}
                                                 <span className="ml-2 text-sm text-gray-600">
-                                                    ({service.user.totalOrders} orders completed)
+                                                    ({service?.service?.user.totalOrders || 0} orders completed)
                                                 </span>
                                             </div>
                                             <div className="grid grid-cols-2 gap-4 text-sm">
                                                 <div>
                                                     <span className="text-gray-500">From:</span>
-                                                    <div className="font-medium">{service.user.location}</div>
+                                                    <div className="font-medium">{service?.service?.user.location}</div>
                                                 </div>
                                                 <div>
                                                     <span className="text-gray-500">Member since:</span>
-                                                    <div className="font-medium">{formatDate(service.user.memberSince)}</div>
+                                                    <div className="font-medium">{formatDate(service?.service?.user.createdAt)}</div>
                                                 </div>
                                                 <div>
                                                     <span className="text-gray-500">Avg. response time:</span>
-                                                    <div className="font-medium">{service.user.responseTime}</div>
+                                                    <div className="font-medium">{service?.service?.user.responseTime || "10hr"}</div>
                                                 </div>
                                                 <div>
                                                     <span className="text-gray-500">Languages:</span>
-                                                    <div className="font-medium">{service.user.languages.join(', ')}</div>
+                                                    <div className="font-medium">{service?.service?.user.Languages.join(', ')}</div>
                                                 </div>
                                             </div>
                                         </div>
@@ -548,7 +534,7 @@ I have over 5 years of experience in web development and have completed 200+ pro
 
                                     <button className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center">
                                         <MessageCircle className="w-4 h-4 mr-2" />
-                                        Contact {service.user.name}
+                                        Contact {service?.service?.user.name}
                                     </button>
                                 </div>
                             )}
@@ -558,21 +544,15 @@ I have over 5 years of experience in web development and have completed 200+ pro
                     {/* Right Column - Related Services */}
                     <div className="lg:w-80">
                         <div className="bg-white border border-gray-200 rounded-lg p-6">
-                            <h3 className="font-semibold mb-4">More from {service.user.name}</h3>
+                            <h3 className="font-semibold mb-4">More from {service?.service?.user.name}</h3>
                             <div className="space-y-4">
                                 {/* Mock related services */}
-                                {[1, 2].map(i => (
-                                    <div key={i} className="border border-gray-200 rounded-lg p-3">
-                                        <div className="h-24 bg-gray-100 rounded mb-3"></div>
-                                        <h4 className="font-medium text-sm mb-2">Another great service</h4>
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center">
-                                                <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                                                <span className="text-xs ml-1">4.8</span>
-                                            </div>
-                                            <span className="font-bold text-sm">$199</span>
-                                        </div>
-                                    </div>
+                                {service?.services?.map(data => (
+                                    <ServiceCard
+                                    key = {data._id}
+                                    data = {data}
+                                    loggedInUser={user}
+                                    />
                                 ))}
                             </div>
                         </div>

@@ -1,11 +1,13 @@
 import {useState, useEffect} from 'react';
 import { Edit, IndianRupee, Clock, Star, User, Trash2 } from 'lucide-react';
 import DeleteServicePopup from '../Popup/DeleteServicePopup.jsx';
+import { useNavigate } from 'react-router-dom';
 
 function ServiceCard({ data, user, loggedInUser }) {
     console.log("Service data:", data);
     console.log("User data:", user);
     console.log("Logged-in user data:", loggedInUser);
+    const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     useEffect(() => {
             if (!isOpen) {
@@ -15,6 +17,12 @@ function ServiceCard({ data, user, loggedInUser }) {
             }
             return () => (document.body.style.overflow = 'auto');
         }, [isOpen]);
+
+    const openService = () => {
+        console.log("Open service clicked");
+        navigate(`/service/${data?._id}`);
+    }
+
     return (
         
         <div
@@ -81,7 +89,7 @@ function ServiceCard({ data, user, loggedInUser }) {
                     <button className="px-14 py-2 bg-blue-700 sm:w-fit w-full text-white text-lg font-light rounded-lg text-nowrap">
                         Order Now
                     </button>
-                    <button className="px-4 py-2 border text-gray-500 rounded-lg sm:w-fit w-full">
+                    <button onClick = {openService} className="px-4 py-2 border text-gray-500 rounded-lg sm:w-fit w-full">
                         View Details
                     </button>
                 </div>
