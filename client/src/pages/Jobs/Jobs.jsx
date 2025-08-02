@@ -160,6 +160,24 @@ const Jobs = () => {
   const [sortBy, setSortBy] = useState("newest");
   const [filteredJobs, setFilteredJobs] = useState(jobsData);
 
+useEffect(() => {
+  (
+    async () => {
+      try {
+        const response = await fetch("https://freelance-lite.onrender.com/api/client/jobs");
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        const data = await response.json();
+        setJobData(data);
+        setFilteredJobs(data);
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+      }
+    }
+  )();
+  }, []);
+
   useEffect(() => {
     let filtered = jobData;
 

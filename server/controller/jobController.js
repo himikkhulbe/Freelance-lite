@@ -152,3 +152,12 @@ export const deleteJob = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 };
+
+export const getAllJobs = async (req, res) => {
+    try {
+        const jobs = await Job.find().populate("client", "name profilePicture username").sort({ createdAt: -1 });
+        res.status(200).json(jobs);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}

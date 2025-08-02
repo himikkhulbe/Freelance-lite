@@ -132,6 +132,23 @@ const Services = () => {
     const [filteredServices, setFilteredServices] = useState(servicesData);
 
     useEffect(() => {
+      (
+        async () => {
+          try {
+            const response = await fetch("https://freelance-lite.onrender.com/api/freelancer/services"); // Adjust the endpoint as needed
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            const data = await response.json();
+            setServiceData(data);
+          } catch (error) {
+            console.error("Error fetching services:", error);
+          }
+        }
+      )();
+    }, []);
+
+    useEffect(() => {
     let filtered = serviceData;
 
     // Search filter
