@@ -2,8 +2,9 @@ import React from 'react'
 import { Key, User } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import RenderStars from '../../../../../Common/RenderStars.jsx';
+import formatDate from '../../../../../../Utils/formatDate.js';
 
-function RatingCard({ date, data}) {
+function RatingCard({ data }) {
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
@@ -33,7 +34,7 @@ function RatingCard({ date, data}) {
                     </div>
                 </div>
                 <div>
-                    <p className="text-gray-600 text-xs">{date}</p>
+                    <p className="text-gray-600 text-xs">{formatDate(data.createdAt)}</p>
                 </div>
             </div>
             <div className="w-full">

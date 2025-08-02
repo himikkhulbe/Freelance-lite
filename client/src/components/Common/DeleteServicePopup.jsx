@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Trash2, X, AlertTriangle } from 'lucide-react';
 
-const DeleteServicePopup = ({ isOpen, onClose, serviceId, onDelete }) => {
+const DeleteServicePopup = ({ isOpen, onClose, serviceId }) => {
     const [isDeleting, setIsDeleting] = useState(false);
 
     const handleDelete = async () => {
@@ -15,7 +15,6 @@ const DeleteServicePopup = ({ isOpen, onClose, serviceId, onDelete }) => {
             if (response.ok) {
                 console.log("Service deleted successfully");
                 onClose(); // Close the popup
-                if (onDelete) onDelete(); // Optional callback for parent component
             } else {
                 console.error("Failed to delete service");
             }

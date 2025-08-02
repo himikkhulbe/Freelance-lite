@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useAuth } from "../../contexts/AuthContext.jsx";
 import { Star, Eye, IndianRupee, Clock, Edit } from "lucide-react";
 import { useParams } from "react-router-dom";
 import ProfileMain from "./components/ProfileMain/ProfileMain.jsx";
@@ -8,24 +8,22 @@ import DetailsSection from "./components/DetailsSection/DetailsSection.jsx";
 import RatingPopup from "./components/Popup/RatingPopup.jsx";
 import ProfileEditPopup from "./components/Popup/ProfileEditPopup.jsx";
 import JobsPopup from "./components/Popup/JobsPopup.jsx";
-import JobsCard from "./components/JobsCard/JobsCard.jsx";
-import ServiceCard from "./components/ServiceCard/ServiceCard.jsx";
+import JobsCard from "../Common/JobsCard.jsx";
+import ServiceCard from "../Common/ServiceCard.jsx";
 import { useNavigate } from "react-router-dom";
 import formatDate from "../../Utils/formatDate.js";
-import RenderStars from "../Common/RenderStars.jsx";
 
 function Profile() {
     const { user } = useAuth();
-    console.log(user)
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [showProfileEditModal, setShowProfileEditModal] = useState(false);
     const [showJobsPopup, setShowJobsPopup] = useState(false);
     const [showServicePopup, setShowServicePopup] = useState(false);
     const { id } = useParams();
     const [profileData, setProfileData] = useState(null);
-    const navigate  = useNavigate();
+    const navigate = useNavigate();
 
-    const  addService = () => {
+    const addService = () => {
         console.log("Add service clicked");
         navigate(`/addservice`);
     }
@@ -52,9 +50,6 @@ function Profile() {
         };
         fetchProfile();
     }, [id, showProfileEditModal]);
-    console.log("Fetching profile for ID:", id);
-    console.log("Profile data:", profileData);
-
     useEffect(() => {
         if (!showRatingModal && !showProfileEditModal && !showJobsPopup && !showServicePopup) {
             document.body.style.overflow = 'auto';
@@ -73,7 +68,7 @@ function Profile() {
     return (
         <div className="min-h-screen flex flex-col pt-[20px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
             {/* Profile Section */}
-            {showRatingModal && <RatingPopup formatDate={formatDate} user={profileData} close={setShowRatingModal} />}
+            {showRatingModal && <RatingPopup user={profileData} close={setShowRatingModal} />}
             {showProfileEditModal && <ProfileEditPopup loggedInUser={profileData} close={setShowProfileEditModal} />}
             {showJobsPopup && <JobsPopup Component={JobsCard} loggedInUser={user} user={profileData} data={profileData?.jobs} close={setShowJobsPopup} heading="Jobs Offered" />}
             {showServicePopup && <JobsPopup Component={ServiceCard} loggedInUser={user} user={profileData} data={profileData?.services} close={setShowServicePopup} heading="Services Offered" />}
@@ -117,17 +112,16 @@ function Profile() {
                                 ?
                                 (
                                     profileData?.services?.length === 0 ? (
-                                    <p className="text-gray-500 text-sm font-semibold mb-5">No jobs found</p>
-                                ) : (
-                                    profileData?.services?.slice(0, 2).map((item) => (
-                                        <ServiceCard
-                                            key={item._id}
-                                            data={item}
-                                            user={profileData}
-                                            loggedInUser={user}
-                                        />
+                                        <p className="text-gray-500 text-sm font-semibold mb-5">No jobs found</p>
+                                    ) : (
+                                        profileData?.services?.slice(0, 2).map((item) => (
+                                            <ServiceCard
+                                                key={item._id}
+                                                data={item}
+                                                loggedInUser={user?.user}
+                                            />
+                                        ))
                                     ))
-                                ))
                                 :
                                 null
                             }
@@ -141,8 +135,7 @@ function Profile() {
                                             <JobsCard
                                                 key={item._id}
                                                 data={item}
-                                                user={profileData}
-                                                loggedInUser={user}
+                                                loggedInUser={user?.user}
                                             />
                                         ))
                                     ))
@@ -153,7 +146,7 @@ function Profile() {
                         </div>
                     </div>
                     {/* rating */}
-                    <RatingSection user={profileData} formatDate={formatDate} open={setShowRatingModal} setShowRatingModal={setShowRatingModal} />
+                    <RatingSection user={profileData} open={setShowRatingModal} setShowRatingModal={setShowRatingModal} />
                 </div>
             </div>
         </div>

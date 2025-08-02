@@ -1,7 +1,7 @@
 import { Eye } from 'lucide-react';
 import RatingCard from './components/RatingCard/RatingCard';
 
-function RatingSection({ user, formatDate, open }) {
+function RatingSection({ user, open }) {
     return (
         <div className="w-full min-h-[120px] pt-[30px] px-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg">
             <div className="flex justify-between items-center grow">
@@ -20,7 +20,6 @@ function RatingSection({ user, formatDate, open }) {
                         <RatingCard
                             key={rating._id}
                             data={rating}
-                            date={formatDate(rating.createdAt)}
                         />
                     ))
                 )}

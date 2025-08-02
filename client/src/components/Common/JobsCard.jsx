@@ -1,20 +1,19 @@
 import { useState, useEffect } from 'react';
-import { Edit, IndianRupee, Clock, Trash2} from 'lucide-react'
-import DeleteJobPopup from '../Popup/DeleteJobPopup.jsx';
+import { Edit, IndianRupee, Clock, Trash2 } from 'lucide-react'
+import DeleteJobPopup from './DeleteJobPopup.jsx';
 
-function JobsCard({ data, user, loggedInUser }) {
+function JobsCard({ data, loggedInUser }) {
     console.log("Job data:", data);
-    console.log("User data:", user);
     console.log("Logged-in user data:", loggedInUser);
     const [isOpen, setIsOpen] = useState(false);
-        useEffect(() => {
-                if (!isOpen) {
-                    document.body.style.overflow = 'auto';
-                } else {
-                    document.body.style.overflow = 'hidden';
-                }
-                return () => (document.body.style.overflow = 'auto');
-            }, [isOpen]);
+    useEffect(() => {
+        if (!isOpen) {
+            document.body.style.overflow = 'auto';
+        } else {
+            document.body.style.overflow = 'hidden';
+        }
+        return () => (document.body.style.overflow = 'auto');
+    }, [isOpen]);
     return (
 
         <div
@@ -28,15 +27,13 @@ function JobsCard({ data, user, loggedInUser }) {
             />
             <div className="flex gap-[20px] justify-between items-center ">
                 <h2 className="font-medium text-lg">{data.title}</h2>
-                {loggedInUser?.user?._id === user?.user?._id &&
+                {loggedInUser?._id === data?.client?._id &&
                     <div className='flex gap-2'>
-                                            <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
-                                            <Trash2 onClick={() => setIsOpen(true)} className="text-red-600 w-4 h-4 cursor-pointer" />
-                                        </div>
+                        <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
+                        <Trash2 onClick={() => setIsOpen(true)} className="text-red-600 w-4 h-4 cursor-pointer" />
+                    </div>
                 }
             </div>
-
-
             <p className="text-gray-500 text-sm">{data.description}</p>
             <div className="flex gap-5 justify-start items-center">
                 <div className="flex items-center">
@@ -70,7 +67,7 @@ function JobsCard({ data, user, loggedInUser }) {
                     </span>
                 )}
             </div>
-            {loggedInUser?.user?._id !== user?.user?._id &&
+            {loggedInUser?._id !== data?.client?._id &&
                 <div className="flex gap-4 pt-2 flex-wrap">
                     <button className="px-14 py-2 bg-blue-700 sm:w-fit w-full text-white text-lg font-light rounded-lg text-nowrap ">
                         Apply Now
@@ -80,7 +77,6 @@ function JobsCard({ data, user, loggedInUser }) {
                         View Details
                     </button>
                 </div>}
-
         </div>
     )
 }

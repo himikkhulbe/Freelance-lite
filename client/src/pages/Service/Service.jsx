@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import ServiceCard from '../../components/Profile/components/ServiceCard/ServiceCard';
-import {useAuth} from '../../contexts/AuthContext';
+import ServiceCard from '../../components/Common/ServiceCard';
+import { useAuth } from '../../contexts/AuthContext';
 import formatDate from '../../Utils/formatDate';
-import RenderStars from  "../../components/Common/RenderStars";
+import RenderStars from "../../components/Common/RenderStars";
 import {
     Clock,
-    DollarSign,
-    Tag,
-    User,
     MessageCircle,
     Heart,
     Share2,
-    Shield,
-    Award,
     MapPin,
-    Calendar,
     CheckCircle,
     HelpCircle,
     ArrowLeft,
@@ -32,108 +26,6 @@ const Service = () => {
     const { id } = useParams();
     const { user } = useAuth();
 
-    // Mock service data for demonstration
-    const mockService = {
-        _id: '1',
-        title: 'I will create a modern responsive website with React and Tailwind CSS',
-        description: `I will build you a professional, modern, and fully responsive website using the latest technologies including React.js, Tailwind CSS, and modern web development best practices.
-
-What you'll get:
-• Modern and clean design that reflects your brand
-• Fully responsive across all devices (mobile, tablet, desktop)
-• Fast loading times with optimized performance
-• SEO-friendly structure and meta tags
-• Cross-browser compatibility
-• Clean, maintainable code
-• Basic contact form integration
-• Social media integration
-
-Perfect for:
-- Small businesses looking to establish online presence
-- Startups needing professional websites
-- Personal portfolios and blogs
-- Landing pages for products or services
-
-I have over 5 years of experience in web development and have completed 200+ projects successfully. I focus on creating websites that not only look great but also perform excellently and help achieve your business goals.`,
-        category: 'Web Development',
-        subcategory: 'React',
-        tags: ['react', 'tailwind', 'responsive', 'modern', 'seo', 'fast'],
-        deliveryTime: 7,
-        price: 299,
-        revisions: 3,
-        rating: 4.9,
-        reviewCount: 47,
-        isActive: true,
-        user: {
-            _id: 'user1',
-            name: 'John Developer',
-            avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-            location: 'New York, USA',
-            memberSince: '2020-03-15',
-            totalOrders: 234,
-            rating: 4.8,
-            responseTime: '1 hour',
-            languages: ['English', 'Spanish']
-        },
-        faqs: [
-            {
-                question: 'Do you provide source code?',
-                answer: 'Yes, I provide complete source code with documentation and deployment instructions.'
-            },
-            {
-                question: 'Can you integrate with my existing backend?',
-                answer: 'Absolutely! I can integrate the frontend with your existing APIs and backend services.'
-            },
-            {
-                question: 'Do you offer post-delivery support?',
-                answer: 'Yes, I provide 30 days of free support after delivery for any bugs or minor adjustments.'
-            },
-            {
-                question: 'What if I need additional features?',
-                answer: 'We can discuss additional features as custom add-ons or separate projects based on your needs.'
-            }
-        ],
-        requirements: [
-            'Provide your business/brand information and content',
-            'Share any design preferences or inspiration websites',
-            'Provide logos, images, and other assets you want to include',
-            'Specify any specific functionality requirements',
-            'Provide domain and hosting details if you have them'
-        ],
-        reviews: [
-            {
-                _id: 'review1',
-                user: {
-                    name: 'Sarah Johnson',
-                    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b5bc?w=50&h=50&fit=crop&crop=face'
-                },
-                rating: 5,
-                comment: 'Excellent work! John delivered exactly what I needed. The website is beautiful, fast, and works perfectly on all devices. Great communication throughout the project.',
-                createdAt: '2025-01-20T10:30:00Z'
-            },
-            {
-                _id: 'review2',
-                user: {
-                    name: 'Mike Chen',
-                    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face'
-                },
-                rating: 5,
-                comment: 'Professional developer with great attention to detail. Delivered on time and the code quality is top-notch. Highly recommended!',
-                createdAt: '2025-01-18T14:15:00Z'
-            },
-            {
-                _id: 'review3',
-                user: {
-                    name: 'Emily Rodriguez',
-                    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face'
-                },
-                rating: 4,
-                comment: 'Great work overall. The website looks modern and professional. Minor delay in delivery but the final result was worth it.',
-                createdAt: '2025-01-15T09:45:00Z'
-            }
-        ],
-        createdAt: '2025-01-10T12:00:00Z'
-    };
 
     useEffect(() => {
         fetchService();
@@ -142,27 +34,17 @@ I have over 5 years of experience in web development and have completed 200+ pro
     const fetchService = async () => {
         try {
             setLoading(true);
-            // Try to fetch from API, fall back to mock data
-            try {
-                const serviceId = '1'; // In real app, get from URL params
-                const response = await fetch(`http://localhost:8000/api/freelancer/service/${id}`, {
-                    method: "GET",
-                    credentials: "include"
-                });
+            const response = await fetch(`https://freelance-lite.onrender.com/api/freelancer/service/${id}`, {
+                method: "GET",
+                credentials: "include"
+            });
 
-                if (response.ok) {
-                    const data = await response.json();
-                    setService(data);
-                    console.log('Service fetched from API:', data);
-                } else {
-                    throw new Error('API not available');
-                }
-            } catch (apiError) {
-                // Fall back to mock data for demonstration
-                console.log('Using mock data for demonstration');
-                setTimeout(() => {
-                    setService(mockService);
-                }, 1000);
+            if (response.ok) {
+                const data = await response.json();
+                setService(data);
+                console.log('Service fetched from API:', data);
+            } else {
+                throw new Error('API not available');
             }
         } catch (error) {
             console.error('Error fetching service:', error);
@@ -400,8 +282,8 @@ I have over 5 years of experience in web development and have completed 200+ pro
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
-                                                ? 'border-blue-500 text-blue-600'
-                                                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            ? 'border-blue-500 text-blue-600'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                                             }`}
                                     >
                                         {tab.label}
@@ -549,9 +431,9 @@ I have over 5 years of experience in web development and have completed 200+ pro
                                 {/* Mock related services */}
                                 {service?.services?.map(data => (
                                     <ServiceCard
-                                    key = {data._id}
-                                    data = {data}
-                                    loggedInUser={user}
+                                        key={data._id}
+                                        data={data}
+                                        loggedInUser={user}
                                     />
                                 ))}
                             </div>

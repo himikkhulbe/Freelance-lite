@@ -2,7 +2,7 @@ import React from 'react'
 import RatingCard from '../RatingSection/components/RatingCard/RatingCard'
 import { X } from 'lucide-react'
 
-function RatingPopup({ user, formatDate, close }) {
+function RatingPopup({ user, close }) {
     return (
         <div className='fixed inset-0 bg-black/30 backdrop-blur-sm top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] h-full w-full flex md:items-center items-start justify-center z-[100]'>
             <div className='fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] md:w-[90%] w-[100%] max-w-[800px] md:h-[80%] h-full bg-white md:rounded-lg shadow-lg p-[20px] z-50 '>
@@ -21,7 +21,6 @@ function RatingPopup({ user, formatDate, close }) {
                                 <RatingCard
                                     key={rating._id}
                                     data={rating}
-                                    date={formatDate(rating.createdAt)}
                                 />
                             ))
                         )}
