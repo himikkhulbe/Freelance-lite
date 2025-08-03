@@ -1,10 +1,18 @@
 import { useState, useEffect } from 'react';
 import { Edit, IndianRupee, Clock, Trash2 } from 'lucide-react'
 import DeleteJobPopup from './DeleteJobPopup.jsx';
+import { useNavigate } from 'react-router-dom';
 
 function JobsCard({ data, loggedInUser }) {
+    const navigate = useNavigate();
     console.log("Job data:", data);
     console.log("Logged-in user data:", loggedInUser);
+
+    const editJob = () => {
+        console.log("Edit service clicked");
+        navigate(`/updateJob/${data?._id}`);
+    }
+
     const [isOpen, setIsOpen] = useState(false);
     useEffect(() => {
         if (!isOpen) {
@@ -29,7 +37,7 @@ function JobsCard({ data, loggedInUser }) {
                 <h2 className="font-medium text-lg">{data.title}</h2>
                 {loggedInUser?._id === data?.client?._id &&
                     <div className='flex gap-2'>
-                        <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
+                        <Edit onClick={() => editJob()} className="text-blue-600 w-4 h-4 cursor-pointer" />
                         <Trash2 onClick={() => setIsOpen(true)} className="text-red-600 w-4 h-4 cursor-pointer" />
                     </div>
                 }

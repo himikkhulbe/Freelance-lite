@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
     FileText,
     Tag,
@@ -14,6 +15,7 @@ import {
 
 const AddService = () => {
     const { id } = useParams();
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -47,11 +49,7 @@ useEffect(() => {
             })();
         }
     }, [id]);
-
-
-
-
-    console.log("Initial form data:", formData);
+    
     const [tagInput, setTagInput] = useState('');
     const [requirementInput, setRequirementInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -152,6 +150,52 @@ useEffect(() => {
             }));
         }
     };
+
+const handleUpdate = async () => {
+        setIsLoading(true);
+
+        try {
+            const serviceData = {
+                title: formData.title,
+                description: formData.description,
+                category: formData.category,
+                subcategory: formData.subcategory || undefined,
+                tags: formData.tags,
+                deliveryTime: parseInt(formData.deliveryTime),
+                price: parseFloat(formData.price),
+                revisions: parseInt(formData.revisions) || 1,
+                faqs: formData.faqs.filter(faq => faq.question.trim() && faq.answer.trim()),
+                requirements: formData.requirements
+            };
+
+            console.log("Updating service data:", serviceData);
+
+            const response = await fetch(`https://freelance-lite.onrender.com/api/freelancer/service/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                credentials: "include",
+                body: JSON.stringify(serviceData)
+            });
+            const result = await response.json();
+            console.log("Response from server:", result);
+
+            if (response.ok) {
+                console.log("Service updated:", result.service);
+                setShowSuccess(true);
+                navigate(`/profile`);
+            } else {
+                throw new Error(result.message || 'Failed to update service');
+            }
+        } catch (error) {
+            console.error("Service update failed:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
+
 
     const handleSubmit = async () => {
         setIsLoading(true);
@@ -517,22 +561,42 @@ useEffect(() => {
                     </div>
 
                     {/* Submit Button */}
-                    <div className="pt-6 border-t border-gray-200">
-                        <button
-                            onClick={handleSubmit}
-                            disabled={isLoading || !formData.title || !formData.description || !formData.category || !formData.price || !formData.deliveryTime}
-                            className="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
-                        >
-                            {isLoading ? (
-                                <>
-                                    <Loader className="animate-spin w-4 h-4 mr-2" />
-                                    Creating Service...
-                                </>
-                            ) : (
-                                'Create Service'
-                            )}
-                        </button>
-                    </div>
+                    {id ? (
+                        <div className="pt-6 border-t border-gray-200">
+                            <button
+                                onClick={handleUpdate}
+                                disabled={isLoading || !formData.title || !formData.description || !formData.category || !formData.price || !formData.deliveryTime}
+                                className="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                            >
+                                {isLoading ? (
+                                    <>
+                                        <Loader className="animate-spin w-4 h-4 mr-2" />
+                                        Updating Service...
+                                    </>
+                                ) : (
+                                    'Update Service'
+                                )}
+                            </button>
+                        </div>
+                    ): (
+                            <div className="pt-6 border-t border-gray-200">
+                                <button
+                                    onClick={handleSubmit}
+                                    disabled={isLoading || !formData.title || !formData.description || !formData.category || !formData.price || !formData.deliveryTime}
+                                    className="w-full sm:w-auto px-8 py-3 bg-blue-600 text-white font-medium rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center"
+                                >
+                                    {isLoading ? (
+                                        <>
+                                            <Loader className="animate-spin w-4 h-4 mr-2" />
+                                            Creating Service...
+                                        </>
+                                    ) : (
+                                        'Create Service'
+                                    )}
+                                </button>
+                            </div>
+                    )}
+                    
                 </div>
 
                 {/* Success Message */}

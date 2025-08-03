@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import {
     Briefcase,
     Calendar,
@@ -43,6 +44,7 @@ const Toast = ({ message, type, isVisible, onClose }) => {
 const AddJob = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [toast, setToast] = useState({ isVisible: false, message: '', type: '' });
+    const { id } = useParams();
 
     const [formData, setFormData] = useState({
         title: '',
@@ -98,6 +100,27 @@ const AddJob = () => {
             requiredSkills: prev.requiredSkills.filter(skill => skill !== skillToRemove)
         }));
     };
+
+
+    useEffect(() => {
+            if (id) {
+                (async () => {
+                    try {
+                        const response = await fetch(`https://freelance-lite.onrender.com/api/freelancer/service/${id}`, {
+                            method: 'GET',
+                            credentials: 'include'
+                        });
+                        if (!response.ok) {
+                            throw new Error('Failed to fetch service data');
+                        }
+                        const data = await response.json();
+                        setFormData(data?.service);
+                    } catch (error) {
+                        console.error("Error fetching service data:", error);
+                    }
+                })();
+            }
+        }, [id]);
 
     const handleSubmit = async (e) => {
         if (e) e.preventDefault();
