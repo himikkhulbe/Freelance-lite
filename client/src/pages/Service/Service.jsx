@@ -27,9 +27,7 @@ const Service = () => {
     const { user } = useAuth();
 
 
-    useEffect(() => {
-        fetchService();
-    }, []);
+console.log("User in Service:", user?.user);
 
     const fetchService = async () => {
         try {
@@ -38,7 +36,6 @@ const Service = () => {
                 method: "GET",
                 credentials: "include"
             });
-
             if (response.ok) {
                 const data = await response.json();
                 setService(data);
@@ -54,6 +51,9 @@ const Service = () => {
         }
     };
 
+    useEffect(() => {
+        fetchService();
+    }, [id]);
 
     const OrderModal = () => (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
@@ -433,7 +433,7 @@ const Service = () => {
                                     <ServiceCard
                                         key={data._id}
                                         data={data}
-                                        loggedInUser={user}
+                                        loggedInUser={user?.user}
                                     />
                                 ))}
                             </div>

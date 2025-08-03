@@ -70,8 +70,8 @@ function Profile() {
             {/* Profile Section */}
             {showRatingModal && <RatingPopup user={profileData} close={setShowRatingModal} />}
             {showProfileEditModal && <ProfileEditPopup loggedInUser={profileData} close={setShowProfileEditModal} />}
-            {showJobsPopup && <JobsPopup Component={JobsCard} loggedInUser={user} user={profileData} data={profileData?.jobs} close={setShowJobsPopup} heading="Jobs Offered" />}
-            {showServicePopup && <JobsPopup Component={ServiceCard} loggedInUser={user} user={profileData} data={profileData?.services} close={setShowServicePopup} heading="Services Offered" />}
+            {showJobsPopup && <JobsPopup Component={JobsCard} loggedInUser={user} data={profileData?.jobs} close={setShowJobsPopup} heading="Jobs Offered" />}
+            {showServicePopup && <JobsPopup Component={ServiceCard} loggedInUser={user} data={profileData?.services} close={setShowServicePopup} heading="Services Offered" />}
             <ProfileMain user={profileData} loggedInUser={user} openEdit={setShowProfileEditModal} />
             {/* bottom Section */}
             <div className="xl:w-[80%] w-[90%] min-h-[250px] flex lg:flex-row flex-col md:gap-[30px] gap-[20px]">

@@ -21,6 +21,10 @@ function ServiceCard({ data, loggedInUser }) {
         console.log("Open service clicked");
         navigate(`/service/${data?._id}`);
     }
+    const EditService = () => {
+        console.log("Edit service clicked");
+        navigate(`/updateService/${data?._id}`);
+    }
 
     return (
         <div
@@ -38,7 +42,7 @@ function ServiceCard({ data, loggedInUser }) {
                 {/* Edit , Delete, Preview :- only show when the loggedin user own this service */}
                 {loggedInUser?._id === data?.user?._id && (
                     <div className='flex gap-2'>
-                        <Edit className="text-blue-600 w-4 h-4 cursor-pointer" />
+                        <Edit onClick={() => EditService()} className="text-blue-600 w-4 h-4 cursor-pointer" />
                         <Trash2 onClick={() => setIsOpen(true)} className="text-red-600 w-4 h-4 cursor-pointer" />
                     </div>
                 )}

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import {
     FileText,
     Tag,
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react';
 
 const AddService = () => {
+    const { id } = useParams();
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -24,7 +26,32 @@ const AddService = () => {
         faqs: [{ question: '', answer: '' }],
         requirements: []
     });
+    console.log("ID:", id);
 
+useEffect(() => {
+        if (id) {
+            (async () => {
+                try {
+                    const response = await fetch(`https://freelance-lite.onrender.com/api/freelancer/service/${id}`, {
+                        method: 'GET',
+                        credentials: 'include'
+                    });
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch service data');
+                    }
+                    const data = await response.json();
+                    setFormData(data?.service);
+                } catch (error) {
+                    console.error("Error fetching service data:", error);
+                }
+            })();
+        }
+    }, [id]);
+
+
+
+
+    console.log("Initial form data:", formData);
     const [tagInput, setTagInput] = useState('');
     const [requirementInput, setRequirementInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);

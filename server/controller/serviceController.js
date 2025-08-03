@@ -98,7 +98,7 @@ export const getservice = async (req, res) => {
         if (!service) {
             return res.status(404).json({ message: "Service not found" });
         }
-        const services = await Service.find({ user: service.user._id.toString(), _id: { $ne: serviceId } }).sort({ createdAt: -1 });
+        const services = await Service.find({ user: service.user._id.toString(), _id: { $ne: serviceId } }).populate("user", "_id").sort({ createdAt: -1 });
         res.status(200).json({service, services});
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
