@@ -116,7 +116,8 @@ useEffect(() => {
                     if (!response.ok) {
                         throw new Error('Failed to fetch service data');
                     }
-                    const data = await response.json();
+                    const datas = await response.json();
+                    const data = datas.job;
                     setFormData({
                         title: data.title,
                         description: data.description,

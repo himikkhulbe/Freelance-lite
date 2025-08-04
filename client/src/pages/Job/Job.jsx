@@ -187,7 +187,7 @@ const Job = () => {
             {/* Header */}
             <div className="bg-white shadow-sm border-b">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                    <button className="flex items-center text-blue-600 hover:text-blue-700 mb-4">
+                    <button onClick={() => window.history.back()} className="flex items-center text-blue-600 hover:text-blue-700 mb-4">
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Back to Jobs
                     </button>
@@ -234,7 +234,7 @@ const Job = () => {
                                             <h3 className="font-medium text-gray-900">{job?.job?.client?.name}</h3>
                                             <div className="flex items-center text-sm text-gray-500">
                                                 <MapPin className="w-3 h-3 mr-1" />
-                                                {job?.job?.client?.Locations || 'Location not specified'}
+                                                {job?.job?.client?.location || 'Location not specified'}
                                             </div>
                                         </div>
                                     </div>

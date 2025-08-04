@@ -16,6 +16,7 @@ const DeleteServicePopup = ({ isOpen, onClose, jobId }) => {
             if (response.ok) {
                 console.log("Job deleted successfully");
                 onClose(); // Close the popup
+                window.location.reload(); // Reload the page to reflect changes
             } else {
                 console.error("Failed to delete Job");
             }
