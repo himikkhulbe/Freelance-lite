@@ -234,7 +234,7 @@ const Job = () => {
                                             <h3 className="font-medium text-gray-900">{job?.job?.client?.name}</h3>
                                             <div className="flex items-center text-sm text-gray-500">
                                                 <MapPin className="w-3 h-3 mr-1" />
-                                                {job?.job?.client?.location || 'Location not specified'}
+                                                {job?.job?.client?.Locations || 'Location not specified'}
                                             </div>
                                         </div>
                                     </div>

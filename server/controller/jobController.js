@@ -87,7 +87,7 @@ export const getJob = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(jobId)) {
             return res.status(404).json({ message: "Invalid Job Id" });
         }
-        const job = await Job.findById(jobId).populate("client", "name profilePicture username").sort({ createdAt: -1 });
+        const job = await Job.findById(jobId).populate("client", "name profilePicture username isVerified averageRating reviewCount location createdAt Languages").sort({ createdAt: -1 });
         if (!job) {
             return res.status(404).json({ message: "Job not found" });
         }
