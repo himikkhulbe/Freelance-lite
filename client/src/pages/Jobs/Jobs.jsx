@@ -3,6 +3,8 @@ import SearchBar from "../Jobs/components/SearchBar";
 import Filters from "../Jobs/components/Filters";
 import JobCard from "../Jobs/components/JobCard";
 import Mobilefilter from "../Jobs/components/Mobilefilter";
+import JobsCard from "../../components/Common/JobsCard";
+import { useAuth } from "../../contexts/AuthContext";
 
 const jobsData = [
   {
@@ -152,6 +154,7 @@ const budgetRanges = [
 ];
 
 const Jobs = () => {
+  const { user } = useAuth();
   const [jobData, setJobData] = useState(jobsData);
   const [searchTerm, setSearchTerm] = useState("");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
@@ -159,6 +162,7 @@ const Jobs = () => {
   const [selectedBudget, setSelectedBudget] = useState("All Budgets");
   const [sortBy, setSortBy] = useState("newest");
   const [filteredJobs, setFilteredJobs] = useState(jobsData);
+  
 
 useEffect(() => {
   (
@@ -169,6 +173,7 @@ useEffect(() => {
           throw new Error("Network response was not ok");
         }
         const data = await response.json();
+        console.log(data)
         setJobData(data);
         setFilteredJobs(data);
       } catch (error) {
@@ -279,7 +284,13 @@ useEffect(() => {
           <Mobilefilter {...mobileFilterProps} />
 
           {/* Job Cards */}
-          <JobCard data={filteredJobs} />
+          {filteredJobs.length > 0 ? (filteredJobs.map((job) => {
+        return (
+          <JobsCard key={job._id} data={job} loggedInUser={user?.user} />
+        );
+      })) : (
+        <h1>No Jobs Found</h1>
+      )}
         </div>
       </div>
     </div>

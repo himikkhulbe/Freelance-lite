@@ -51,7 +51,7 @@ function ServiceCard({ data, loggedInUser }) {
             <div className="flex gap-5 justify-start items-center">
                 <div className="flex items-center">
                     <IndianRupee className="w-4 h-4 text-gray-500" />
-                    <span className="text-green-600">{data?.price.toLocaleString('en-IN')}</span>
+                    <span className="text-green-600">{data?.price?.toLocaleString('en-IN')}</span>
                 </div>
                 <span className="flex gap-1 justify-start items-center text-gray-500">
                     <Clock className="w-4 h-4 text-gray-500" />
@@ -64,7 +64,7 @@ function ServiceCard({ data, loggedInUser }) {
                     {data?.category}
                 </span>
                 {/* tag will load not more than 3 tags after that it will show {number} more */}
-                {data?.tags.slice(0, 3).map((tag) => {
+                {data?.tags?.slice(0, 3).map((tag) => {
                     return (
                         <span
                             key={tag}
