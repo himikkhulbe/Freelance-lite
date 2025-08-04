@@ -5,7 +5,7 @@ const Filters = ({selectedCategory, setSelectedCategory, selectedBudget, setSele
   return (
     <>
       {/* Sidebar */}
-      <div className="hidden lg:block h-min py-3 w-1/3 rounded-md bg-white border border-gray-200 shadow-lg">
+      <div className="hidden lg:block md:sticky md:top-5 h-min py-3 w-1/3 rounded-md bg-white border border-gray-200 shadow-lg">
         <h3 className="font-semibold pt-2 px-3">Filters</h3>
 
         {/* Category Filter */}

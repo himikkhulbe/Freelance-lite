@@ -29,7 +29,7 @@ function ServiceCard({ data, loggedInUser }) {
     return (
         <div
             key={data?._id}
-            className="p-5 mb-5 border border-gray-200 shadow-lg rounded-md mt-5 flex flex-col gap-3 overflow-x-hidden bg-white"
+            className="p-5 mb-5 border border-gray-200 shadow-lg rounded-md flex flex-col gap-3 overflow-x-hidden bg-white"
         >
             <DeleteServicePopup
                 serviceId={data?._id}
