@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import {
     Briefcase,
     Calendar,
@@ -45,6 +45,10 @@ const AddJob = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [toast, setToast] = useState({ isVisible: false, message: '', type: '' });
     const { id } = useParams();
+    const navigate = useNavigate();
+    const gotoProfile = () => {
+        navigate('/profile');
+    };
 
     const [formData, setFormData] = useState({
         title: '',
@@ -56,7 +60,7 @@ const AddJob = () => {
         deadline: '',
         category: ''
     });
-
+console.log("Initial formData:", formData);
     const [currentSkill, setCurrentSkill] = useState('');
 
     const categories = [
@@ -101,26 +105,37 @@ const AddJob = () => {
         }));
     };
 
-
-    useEffect(() => {
-            if (id) {
-                (async () => {
-                    try {
-                        const response = await fetch(`https://freelance-lite.onrender.com/api/freelancer/service/${id}`, {
-                            method: 'GET',
-                            credentials: 'include'
-                        });
-                        if (!response.ok) {
-                            throw new Error('Failed to fetch service data');
-                        }
-                        const data = await response.json();
-                        setFormData(data?.service);
-                    } catch (error) {
-                        console.error("Error fetching service data:", error);
+useEffect(() => {
+        if (id) {
+            (async () => {
+                try {
+                    const response = await fetch(`https://freelance-lite.onrender.com/api/client/job/${id}`, {
+                        method: 'GET',
+                        credentials: 'include'
+                    });
+                    if (!response.ok) {
+                        throw new Error('Failed to fetch service data');
                     }
-                })();
-            }
-        }, [id]);
+                    const data = await response.json();
+                    setFormData({
+                        title: data.title,
+                        description: data.description,
+                        requiredSkills: data.requiredSkills,
+                        budget: data.budget,
+                        durationValue: data.duration.split(' ')[0],
+                        durationType: data.duration.split(' ')[1],
+                        deadline: data.deadline.split('T')[0],
+                        category: data.category
+                    });
+                } catch (error) {
+                    console.error("Error fetching service data:", error);
+                }
+            })();
+        }
+    }, [id]);
+
+
+
 
     const handleSubmit = async (e) => {
         if (e) e.preventDefault();
@@ -183,7 +198,63 @@ const AddJob = () => {
             }
         } catch (error) {
             console.error('Error posting job:', error);
-            showToast('Network error. Please check your connection and try again.', 'error');
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const handleUpdate = async (e) => {
+        if (e) e.preventDefault();
+        setIsSubmitting(true);
+
+        try {
+            // Validate required fields
+            if (!formData.title || !formData.description || !formData.budget || !formData.durationValue || !formData.deadline || !formData.category) {
+                showToast('Please fill in all required fields.', 'error');
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Validate and format the deadline
+            const deadlineDate = new Date(formData.deadline);
+            if (isNaN(deadlineDate.getTime())) {
+                showToast('Please select a valid deadline date.', 'error');
+                setIsSubmitting(false);
+                return;
+            }
+
+            // Combine duration value and type
+            const duration = `${formData.durationValue} ${formData.durationType}`;
+
+            const jobData = {
+                title: formData.title,
+                description: formData.description,
+                requiredSkills: formData.requiredSkills,
+                budget: parseInt(formData.budget),
+                duration: duration,
+                deadline: deadlineDate.toISOString(),
+                category: formData.category
+            };
+            console.log("Job data to update:", jobData);
+
+            const response = await fetch(`https://freelance-lite.onrender.com/api/client/job/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                credentials: 'include',
+                body: JSON.stringify(jobData)
+            });
+
+            if (response.ok) {
+                showToast('Job Updated successfully!', 'success');
+                gotoProfile();
+            } else {
+                const errorData = await response.json();
+                showToast(errorData.message || 'Failed to post job. Please try again.', 'error');
+            }
+        } catch (error) {
+            console.error('Error posting job:', error);
         } finally {
             setIsSubmitting(false);
         }
@@ -393,30 +464,47 @@ const AddJob = () => {
                             {/* Submit Button */}
                             <div className="mt-8 pt-6 border-t border-gray-200">
                                 <div className="flex justify-end space-x-4">
-                                    <button
-                                        type="button"
-                                        className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-                                    >
-                                        Save as Draft
-                                    </button>
-                                    <button
-                                        type="submit"
-                                        disabled={isSubmitting}
-                                        onClick={handleSubmit}
-                                        className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                                    >
-                                        {isSubmitting ? (
-                                            <>
-                                                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                                                <span>Posting Job...</span>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <Upload size={16} />
-                                                <span>Post Job</span>
-                                            </>
-                                        )}
-                                    </button>
+                                    {id ? (
+                                        <button
+                                            type="submit"
+                                            disabled={isSubmitting}
+                                            onClick={handleUpdate}
+                                            className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                                        >
+                                            {isSubmitting ? (
+                                                <>
+                                                    <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                                                    <span>Updating Job...</span>
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Upload size={16} />
+                                                    <span>Update Job</span>
+                                                </>
+                                            )}
+                                        </button>
+                                    ):
+                                    (
+                                            <button
+                                                type="submit"
+                                                disabled={isSubmitting}
+                                                onClick={handleSubmit}
+                                                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+                                            >
+                                                {isSubmitting ? (
+                                                    <>
+                                                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
+                                                        <span>Posting Job...</span>
+                                                    </>
+                                                ) : (
+                                                    <>
+                                                        <Upload size={16} />
+                                                        <span>Post Job</span>
+                                                    </>
+                                                )}
+                                            </button>
+                                    )}
+
                                 </div>
                             </div>
                         </div>

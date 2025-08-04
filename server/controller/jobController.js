@@ -87,11 +87,12 @@ export const getJob = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(jobId)) {
             return res.status(404).json({ message: "Invalid Job Id" });
         }
-        const job = await Job.findById(jobId);
+        const job = await Job.findById(jobId).populate("client", "name profilePicture username").sort({ createdAt: -1 });
         if (!job) {
             return res.status(404).json({ message: "Job not found" });
         }
-        res.status(200).json(job);
+        const jobs = await Job.find({ client: job.client._id.toString(), _id: { $ne: jobId } }).populate("client", "_id").sort({ createdAt: -1 });
+        res.status(200).json({ job, jobs });
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }
