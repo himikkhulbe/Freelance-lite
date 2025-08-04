@@ -253,18 +253,22 @@ const Services = () => {
         {/* Sidebar */}
         <Filters {...filterProps} />
 
-        <div className="w-full">
+        <div className="w-full relative">
+
           {/* Search Bar */}
+          <div className="w-full sticky top-5 ">
           <SearchBar
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
             setShowMobileFilters={setShowMobileFilters}
           />
+          </div>
 
           {/* Mobile Filters */}
           <Mobilefilter {...mobileFilterProps} />
 
-          {/* Job Cards */}
+          {/* Service Cards */}
+          <div className="mt-5 rounded h-[70vh] overflow-y-auto">
           {filteredServices.length > 0 ? (
             filteredServices.map((job) => {
               return (
@@ -276,8 +280,9 @@ const Services = () => {
               );
             })
           ) : (
-            <h1>No Services Found</h1>
+            <h1 className="text-center text-zinc-500 font-medium">No Services Found</h1>
           )}
+          </div>
         </div>
       </div>
     </div>
