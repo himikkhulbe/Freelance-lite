@@ -12,6 +12,10 @@ function JobsCard({ data, loggedInUser }) {
         console.log("Edit service clicked");
         navigate(`/updateJob/${data?._id}`);
     }
+    const viewJob = () => {
+        console.log("View service clicked");
+        navigate(`/job/${data?._id}`);
+    }
 
     const [isOpen, setIsOpen] = useState(false);
     useEffect(() => {
@@ -80,7 +84,7 @@ function JobsCard({ data, loggedInUser }) {
                     <button className="px-14 py-2 bg-blue-700 sm:w-fit w-full text-white text-lg font-light rounded-lg text-nowrap ">
                         Apply Now
                     </button>
-                    <button className="px-4 py-2 border text-gray-500 rounded-lg sm:w-fit w-full">
+                    <button onClick={() => viewJob()} className="px-4 py-2 border text-gray-500 rounded-lg sm:w-fit w-full">
                         {" "}
                         View Details
                     </button>

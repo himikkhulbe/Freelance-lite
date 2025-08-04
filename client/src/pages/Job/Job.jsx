@@ -1,534 +1,536 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useAuth } from '../../contexts/AuthContext';
+import formatDate from '../../Utils/formatDate';
 import {
-    Briefcase,
-    Calendar,
-    DollarSign,
     Clock,
-    Tag,
-    FileText,
-    User,
+    MessageCircle,
+    Heart,
+    Share2,
     MapPin,
-    Star,
-    Send,
     CheckCircle,
-    AlertTriangle,
-    X,
-    Eye,
-    ThumbsUp,
-    ThumbsDown,
-    MessageSquare
+    HelpCircle,
+    ArrowLeft,
+    Loader,
+    DollarSign,
+    Calendar,
+    Users,
+    FileText,
+    Send
 } from 'lucide-react';
 
-// Toast Component
-const Toast = ({ message, type, isVisible, onClose }) => {
-    if (!isVisible) return null;
-
-    return (
-        <div className="fixed top-4 right-4 z-50 transform transition-all duration-300 ease-in-out">
-            <div className={`flex items-center space-x-3 px-6 py-4 rounded-lg shadow-lg border ${type === 'success'
-                    ? 'bg-green-50 border-green-200 text-green-800'
-                    : 'bg-red-50 border-red-200 text-red-800'
-                }`}>
-                {type === 'success' ? (
-                    <CheckCircle className="text-green-600" size={20} />
-                ) : (
-                    <AlertTriangle className="text-red-600" size={20} />
-                )}
-                <span className="font-medium">{message}</span>
-                <button
-                    onClick={onClose}
-                    className="text-gray-400 hover:text-gray-600 ml-4"
-                >
-                    <X size={16} />
-                </button>
-            </div>
-        </div>
-    );
-};
-
-// Proposal Modal Component
-const ProposalModal = ({ isOpen, onClose, jobId, jobTitle, onSubmitSuccess }) => {
+const Job = () => {
+    const [job, setJob] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [activeTab, setActiveTab] = useState('overview');
+    const [showProposalModal, setShowProposalModal] = useState(false);
     const [proposalData, setProposalData] = useState({
         coverLetter: '',
         bidAmount: ''
     });
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const { id } = useParams();
+    const { user } = useAuth();
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setProposalData(prev => ({
-            ...prev,
-            [name]: value
-        }));
+    console.log("User in Job:", user?.user);
+
+    const fetchJob = async () => {
+        try {
+            setLoading(true);
+            const response = await fetch(`https://freelance-lite.onrender.com/api/client/job/${id}`, {
+                method: "GET",
+                credentials: "include"
+            });
+            if (response.ok) {
+                const data = await response.json();
+                setJob(data);
+                console.log('Job fetched from API:', data);
+            } else {
+                throw new Error('API not available');
+            }
+        } catch (error) {
+            console.error('Error fetching job:', error);
+            setError('Failed to load job');
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleSubmit = async () => {
-        if (!proposalData.coverLetter.trim() || !proposalData.bidAmount) {
-            return;
-        }
+    useEffect(() => {
+        fetchJob();
+    }, [id]);
 
-        setIsSubmitting(true);
+    const handleProposalSubmit = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/api/freelancer/proposal/${jobId}`, {
+            const response = await fetch(`https://freelance-lite.onrender.com/api/job/${id}/proposal`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify({
-                    coverLetter: proposalData.coverLetter,
-                    bidAmount: parseInt(proposalData.bidAmount)
-                })
+                body: JSON.stringify(proposalData)
             });
 
             if (response.ok) {
-                onSubmitSuccess('Proposal submitted successfully!');
+                setShowProposalModal(false);
                 setProposalData({ coverLetter: '', bidAmount: '' });
-                onClose();
+                alert('Proposal submitted successfully!');
+                fetchJob(); // Refresh job data
             } else {
-                const errorData = await response.json();
-                onSubmitSuccess(errorData.message || 'Failed to submit proposal', 'error');
+                throw new Error('Failed to submit proposal');
             }
         } catch (error) {
-            onSubmitSuccess('Network error. Please try again.', 'error');
-        } finally {
-            setIsSubmitting(false);
+            console.error('Error submitting proposal:', error);
+            alert('Failed to submit proposal');
         }
     };
 
-    if (!isOpen) return null;
-
-    return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="absolute inset-0 bg-black bg-opacity-60 backdrop-blur-md" onClick={onClose} />
-
-            <div className="relative bg-white rounded-xl shadow-2xl border border-gray-100 p-8 mx-4 max-w-2xl w-full">
-                <button
-                    onClick={onClose}
-                    className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full p-1 transition-all duration-200"
-                >
-                    <X size={20} />
-                </button>
-
-                <div className="mb-6">
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-2">Submit Proposal</h2>
-                    <p className="text-gray-600">for "{jobTitle}"</p>
-                </div>
-
-                <div className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Cover Letter *
-                        </label>
-                        <textarea
-                            name="coverLetter"
-                            value={proposalData.coverLetter}
-                            onChange={handleInputChange}
-                            rows={6}
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-none"
-                            placeholder="Explain why you're the perfect fit for this project..."
-                        />
+    const ProposalModal = () => (
+        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+            <div className="bg-white rounded-lg max-w-md w-full p-6 max-h-[90vh] overflow-y-auto">
+                <h3 className="text-lg font-semibold mb-4">Submit Proposal</h3>
+                <div className="space-y-4">
+                    <div className="border rounded-lg p-4 bg-gray-50">
+                        <h4 className="font-medium mb-2">{job?.job?.title}</h4>
+                        <div className="flex justify-between text-sm text-gray-600">
+                            <span>Budget: ₹{job?.job?.budget}</span>
+                            <span>Duration: {job?.job?.duration}</span>
+                        </div>
                     </div>
 
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Bid Amount (₹) *
+                            Your Bid Amount (₹)
                         </label>
                         <input
                             type="number"
-                            name="bidAmount"
                             value={proposalData.bidAmount}
-                            onChange={handleInputChange}
-                            min="1"
-                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                            onChange={(e) => setProposalData(prev => ({
+                                ...prev,
+                                bidAmount: e.target.value
+                            }))}
                             placeholder="Enter your bid amount"
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                     </div>
-                </div>
 
-                <div className="flex justify-end space-x-4 mt-8">
-                    <button
-                        onClick={onClose}
-                        className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleSubmit}
-                        disabled={isSubmitting || !proposalData.coverLetter.trim() || !proposalData.bidAmount}
-                        className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-                    >
-                        {isSubmitting ? (
-                            <>
-                                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent" />
-                                <span>Submitting...</span>
-                            </>
-                        ) : (
-                            <>
-                                <Send size={16} />
-                                <span>Submit Proposal</span>
-                            </>
-                        )}
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
-};
-
-// Proposal Card Component
-const ProposalCard = ({ proposal, isClient, onUpdateStatus }) => {
-    const getStatusColor = (status) => {
-        switch (status) {
-            case 'accepted': return 'bg-green-100 text-green-800 border-green-200';
-            case 'rejected': return 'bg-red-100 text-red-800 border-red-200';
-            default: return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-        }
-    };
-
-    const getStatusIcon = (status) => {
-        switch (status) {
-            case 'accepted': return <CheckCircle size={16} />;
-            case 'rejected': return <X size={16} />;
-            default: return <Clock size={16} />;
-        }
-    };
-
-    return (
-        <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-            <div className="flex justify-between items-start mb-4">
-                <div className="flex items-center space-x-3">
-                    <div className="bg-blue-100 p-2 rounded-full">
-                        <User className="text-blue-600" size={20} />
-                    </div>
                     <div>
-                        <h4 className="font-medium text-gray-900">{proposal.freelancer?.name || 'Freelancer'}</h4>
-                        <p className="text-sm text-gray-500">
-                            Submitted {new Date(proposal.submittedAt).toLocaleDateString()}
-                        </p>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Cover Letter
+                        </label>
+                        <textarea
+                            value={proposalData.coverLetter}
+                            onChange={(e) => setProposalData(prev => ({
+                                ...prev,
+                                coverLetter: e.target.value
+                            }))}
+                            placeholder="Describe why you're the best fit for this job..."
+                            rows={5}
+                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        />
                     </div>
-                </div>
 
-                <div className="flex items-center space-x-3">
-                    <span className={`px-3 py-1 rounded-full text-sm font-medium border flex items-center space-x-1 ${getStatusColor(proposal.status)}`}>
-                        {getStatusIcon(proposal.status)}
-                        <span className="capitalize">{proposal.status}</span>
-                    </span>
-                </div>
-            </div>
-
-            <div className="mb-4">
-                <p className="text-gray-700 leading-relaxed">{proposal.coverLetter}</p>
-            </div>
-
-            <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                    <DollarSign size={16} className="text-green-600" />
-                    <span className="font-semibold text-green-600">
-                        ₹{proposal.bidAmount.toLocaleString('en-IN')}
-                    </span>
-                </div>
-
-                {isClient && proposal.status === 'pending' && (
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-3">
                         <button
-                            onClick={() => onUpdateStatus(proposal._id, 'accepted')}
-                            className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-1"
+                            onClick={() => setShowProposalModal(false)}
+                            className="flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
                         >
-                            <ThumbsUp size={14} />
-                            <span>Accept</span>
+                            Cancel
                         </button>
                         <button
-                            onClick={() => onUpdateStatus(proposal._id, 'rejected')}
-                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors flex items-center space-x-1"
+                            onClick={handleProposalSubmit}
+                            disabled={!proposalData.coverLetter || !proposalData.bidAmount}
+                            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
                         >
-                            <ThumbsDown size={14} />
-                            <span>Reject</span>
+                            Submit Proposal
                         </button>
                     </div>
-                )}
+                </div>
             </div>
         </div>
     );
-};
-
-const Job = () => {
-
-    // State variables
-    const [job, setJob] = useState(null); // Job data
-    const [loading, setLoading] = useState(true); // Loading state
-    const [isProposalModalOpen, setIsProposalModalOpen] = useState(false);
-    const [toast, setToast] = useState({ isVisible: false, message: '', type: '' }); // Toast state
-    const [userType, setUserType] = useState('freelancer'); // 'client' or 'freelancer'
-    const [currentUserId, setCurrentUserId] = useState('user123'); // Mock user ID
-
-    // Mock job data for demo
-    const mockJob = {
-        _id: "685ee1ffe3461591786e99a9",
-        client: {
-            _id: "client123",
-            name: "Tech Solutions Inc.",
-            email: "client@techsolutions.com"
-        },
-        title: "Build a Landing Page for SaaS Product",
-        description: "Need a responsive landing page built with React and Tailwind. Should include hero section, features, pricing, and contact form. The landing page should be modern, fast-loading, and optimized for conversions. Experience with SaaS products preferred.",
-        requiredSkills: ["React", "Tailwind CSS", "JavaScript"],
-        budget: 25000,
-        duration: "2 weeks",
-        deadline: "2025-07-10T00:00:00.000Z",
-        category: "Web Development",
-        isOpen: true,
-        proposals: [
-            {
-                _id: "prop1",
-                freelancer: {
-                    _id: "freelancer1",
-                    name: "John Doe",
-                    email: "john@example.com"
-                },
-                coverLetter: "I have 5+ years of experience building modern React applications with Tailwind CSS. I've created similar SaaS landing pages that achieved 15%+ conversion rates. I can deliver this project within your timeline with pixel-perfect design and optimal performance.",
-                bidAmount: 22000,
-                status: "pending",
-                submittedAt: "2025-06-28T10:30:00.000Z"
-            },
-            {
-                _id: "prop2",
-                freelancer: {
-                    _id: "freelancer2",
-                    name: "Sarah Smith",
-                    email: "sarah@example.com"
-                },
-                coverLetter: "Experienced frontend developer specializing in React and modern CSS frameworks. I've built 20+ landing pages for SaaS companies with focus on user experience and conversion optimization. My approach includes thorough testing and performance optimization.",
-                bidAmount: 24000,
-                status: "accepted",
-                submittedAt: "2025-06-27T14:15:00.000Z"
-            }
-        ],
-        createdAt: "2025-06-27T18:25:03.375Z",
-        updatedAt: "2025-06-27T18:25:03.375Z"
-    };
-
-    useEffect(() => {
-        // Simulate API call
-        setTimeout(() => {
-            setJob(mockJob);
-            setLoading(false);
-        }, 1000);
-    }, []);
-
-    const showToast = (message, type = 'success') => {
-        setToast({ isVisible: true, message, type });
-        setTimeout(() => {
-            setToast({ isVisible: false, message: '', type: '' });
-        }, 4000);
-    };
-
-    const handleProposalSubmit = (message, type = 'success') => {
-        showToast(message, type);
-        // Refresh job data here
-    };
-
-    const handleUpdateProposalStatus = async (proposalId, status) => {
-        try {
-            // Mock API call
-            showToast(`Proposal ${status} successfully!`);
-
-            // Update local state
-            setJob(prev => ({
-                ...prev,
-                proposals: prev.proposals.map(p =>
-                    p._id === proposalId ? { ...p, status } : p
-                )
-            }));
-        } catch (error) {
-            showToast('Failed to update proposal status', 'error');
-        }
-    };
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent"></div>
-            </div>
-        );
-    }
-
-    if (!job) {
-        return (
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-2">Job Not Found</h2>
-                    <p className="text-gray-600">The job you're looking for doesn't exist.</p>
+                    <Loader className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
+                    <p className="text-gray-600">Loading job details...</p>
                 </div>
             </div>
         );
     }
 
-    const isClient = userType === 'client' && currentUserId === job.client._id;
+    if (error || !job) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <p className="text-red-600 mb-4">{error || 'Job not found'}</p>
+                    <button
+                        onClick={fetchJob}
+                        className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                    >
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
+    // Check if user has already submitted a proposal
+    const hasSubmittedProposal = job?.job?.proposals?.some(
+        proposal => proposal.freelancer._id === user?.user?._id
+    );
 
     return (
-        <>
-            <Toast
-                message={toast.message}
-                type={toast.type}
-                isVisible={toast.isVisible}
-                onClose={() => setToast({ isVisible: false, message: '', type: '' })}
-            />
+        <div className="min-h-screen bg-gray-50">
+            {/* Header */}
+            <div className="bg-white shadow-sm border-b">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+                    <button onClick={() => window.history.back()} className="flex items-center text-blue-600 hover:text-blue-700 mb-4">
+                        <ArrowLeft className="w-4 h-4 mr-2" />
+                        Back to Jobs
+                    </button>
 
-            <ProposalModal
-                isOpen={isProposalModalOpen}
-                onClose={() => setIsProposalModalOpen(false)}
-                jobId={job._id}
-                jobTitle={job.title}
-                onSubmitSuccess={handleProposalSubmit}
-            />
-
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
-                <div className="max-w-6xl mx-auto">
-
-                    {/* Job Header */}
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden mb-8">
-                        <div className="p-8">
-                            <div className="flex justify-between items-start mb-6">
+                    <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                        {/* Job Info */}
+                        <div className="flex-1">
+                            <div className="flex items-start justify-between mb-4">
                                 <div className="flex-1">
-                                    <div className="flex items-center space-x-3 mb-4">
-                                        <div className="bg-blue-600 p-3 rounded-full">
-                                            <Briefcase className="text-white" size={24} />
-                                        </div>
-                                        <div>
-                                            <h1 className="text-3xl font-bold text-gray-900">{job.title}</h1>
-                                            <p className="text-gray-600">Posted by {job.client.name}</p>
-                                        </div>
-                                    </div>
+                                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">
+                                        {job?.job?.title}
+                                    </h1>
 
-                                    <div className="flex flex-wrap items-center gap-6 text-sm text-gray-600">
+                                    <div className="flex items-center space-x-4 mb-4">
                                         <div className="flex items-center space-x-2">
-                                            <Calendar size={16} className="text-blue-600" />
-                                            <span>Deadline: {new Date(job.deadline).toLocaleDateString()}</span>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <Clock size={16} className="text-blue-600" />
-                                            <span>Duration: {job.duration}</span>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <DollarSign size={16} className="text-green-600" />
-                                            <span className="font-semibold text-green-600">₹{job.budget.toLocaleString('en-IN')}</span>
-                                        </div>
-                                        <div className="flex items-center space-x-2">
-                                            <Tag size={16} className="text-blue-600" />
-                                            <span>{job.category}</span>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {!isClient && job.isOpen && (
-                                    <button
-                                        onClick={() => setIsProposalModalOpen(true)}
-                                        className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all duration-200 font-medium flex items-center space-x-2 shadow-lg"
-                                    >
-                                        <Send size={16} />
-                                        <span>Submit Proposal</span>
-                                    </button>
-                                )}
-                            </div>
-
-                            <div className="border-t border-gray-200 pt-6">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-3">Project Description</h3>
-                                <p className="text-gray-700 leading-relaxed mb-6">{job.description}</p>
-
-                                <div className="mb-6">
-                                    <h4 className="text-md font-medium text-gray-900 mb-3">Required Skills</h4>
-                                    <div className="flex flex-wrap gap-2">
-                                        {job.requiredSkills.map((skill, index) => (
-                                            <span
-                                                key={index}
-                                                className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium"
-                                            >
-                                                {skill}
+                                            <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
+                                                {job?.job?.category}
                                             </span>
-                                        ))}
+                                            {job?.job?.isOpen ? (
+                                                <span className="px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded">
+                                                    Open
+                                                </span>
+                                            ) : (
+                                                <span className="px-2 py-1 bg-red-100 text-red-800 text-xs font-medium rounded">
+                                                    Closed
+                                                </span>
+                                            )}
+                                        </div>
+
+                                        <div className="flex items-center text-sm text-gray-500">
+                                            <Users className="w-4 h-4 mr-1" />
+                                            {job?.job?.proposals?.length || 0} proposals
+                                        </div>
+                                    </div>
+
+                                    {/* Client Info */}
+                                    <div className="flex items-center space-x-3 mb-6">
+                                        <img
+                                            src={job?.job?.client?.profilePicture || '/default-avatar.png'}
+                                            alt={job?.job?.client?.name}
+                                            className="w-12 h-12 rounded-full object-cover"
+                                        />
+                                        <div>
+                                            <h3 className="font-medium text-gray-900">{job?.job?.client?.name}</h3>
+                                            <div className="flex items-center text-sm text-gray-500">
+                                                <MapPin className="w-3 h-3 mr-1" />
+                                                {job?.job?.client?.location || 'Location not specified'}
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
-                                <div className="flex items-center justify-between">
-                                    <div className="flex items-center space-x-4 text-sm text-gray-500">
-                                        <span>Posted {new Date(job.createdAt).toLocaleDateString()}</span>
-                                        <span>•</span>
-                                        <span>{job.proposals.length} Proposals</span>
-                                        <span>•</span>
-                                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${job.isOpen ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                                            }`}>
-                                            {job.isOpen ? 'Open' : 'Closed'}
-                                        </span>
+                                {/* Action Buttons */}
+                                <div className="flex items-center space-x-2">
+                                    <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                                        <Heart className="w-5 h-5 text-gray-500" />
+                                    </button>
+                                    <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-50">
+                                        <Share2 className="w-5 h-5 text-gray-500" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Proposal Card */}
+                        <div className="lg:w-80">
+                            <div className="bg-white border border-gray-200 rounded-lg p-6 sticky top-6">
+                                <div className="text-center mb-6">
+                                    <div className="text-3xl font-bold text-gray-900 mb-2">
+                                        ₹{job?.job?.budget}
+                                    </div>
+                                    <div className="flex items-center justify-center space-x-4 text-sm text-gray-600">
+                                        <div className="flex items-center">
+                                            <Clock className="w-4 h-4 mr-1" />
+                                            {job?.job?.duration}
+                                        </div>
+                                        {job?.job?.deadline && (
+                                            <div className="flex items-center">
+                                                <Calendar className="w-4 h-4 mr-1" />
+                                                {formatDate(job?.job?.deadline)}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+
+                                <div className="space-y-3 mb-6">
+                                    {job?.job?.isOpen && !hasSubmittedProposal ? (
+                                        <button
+                                            onClick={() => setShowProposalModal(true)}
+                                            className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 font-medium flex items-center justify-center"
+                                        >
+                                            <Send className="w-4 h-4 mr-2" />
+                                            Submit Proposal
+                                        </button>
+                                    ) : hasSubmittedProposal ? (
+                                        <button
+                                            disabled
+                                            className="w-full bg-gray-400 text-white py-3 px-4 rounded-md font-medium cursor-not-allowed"
+                                        >
+                                            Proposal Submitted
+                                        </button>
+                                    ) : (
+                                        <button
+                                            disabled
+                                            className="w-full bg-gray-400 text-white py-3 px-4 rounded-md font-medium cursor-not-allowed"
+                                        >
+                                            Job Closed
+                                        </button>
+                                    )}
+
+                                    <button className="w-full border border-gray-300 py-3 px-4 rounded-md hover:bg-gray-50 flex items-center justify-center">
+                                        <MessageCircle className="w-4 h-4 mr-2" />
+                                        Contact Client
+                                    </button>
+                                </div>
+
+                                {/* Job Features */}
+                                <div className="border-t pt-4">
+                                    <div className="space-y-2 text-sm">
+                                        <div className="flex items-center text-gray-600">
+                                            <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
+                                            Budget: ₹{job?.job?.budget}
+                                        </div>
+                                        <div className="flex items-center text-gray-600">
+                                            <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
+                                            Duration: {job?.job?.duration}
+                                        </div>
+                                        <div className="flex items-center text-gray-600">
+                                            <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
+                                            {job?.job?.proposals?.length || 0} proposals received
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    {/* Proposals Section */}
-                    <div className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-                        <div className="p-8">
-                            <div className="flex items-center justify-between mb-6">
-                                <h2 className="text-2xl font-semibold text-gray-900">
-                                    Proposals ({job.proposals.length})
-                                </h2>
-                                <div className="flex items-center space-x-2 text-sm text-gray-500">
-                                    <MessageSquare size={16} />
-                                    <span>All proposals for this job</span>
+            {/* Main Content */}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <div className="flex flex-col lg:flex-row gap-8">
+                    {/* Left Column */}
+                    <div className="flex-1">
+                        {/* Job Preview */}
+                        <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-lg h-64 sm:h-80 flex items-center justify-center mb-8">
+                            <div className="text-center">
+                                <div className="text-green-600 text-2xl font-bold mb-2">
+                                    {job?.job?.category}
+                                </div>
+                                <div className="text-green-500 text-lg">
+                                    Job Opportunity
                                 </div>
                             </div>
+                        </div>
 
-                            {job.proposals.length === 0 ? (
-                                <div className="text-center py-12">
-                                    <div className="bg-gray-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-                                        <MessageSquare className="text-gray-400" size={24} />
-                                    </div>
-                                    <h3 className="text-lg font-medium text-gray-900 mb-2">No proposals yet</h3>
-                                    <p className="text-gray-500">Be the first to submit a proposal for this job.</p>
-                                </div>
-                            ) : (
+                        {/* Tabs */}
+                        <div className="border-b border-gray-200 mb-6">
+                            <nav className="-mb-px flex space-x-8">
+                                {[
+                                    { id: 'overview', label: 'Overview' },
+                                    { id: 'proposals', label: `Proposals (${job?.job?.proposals?.length || 0})` },
+                                    { id: 'client', label: 'About Client' }
+                                ].map(tab => (
+                                    <button
+                                        key={tab.id}
+                                        onClick={() => setActiveTab(tab.id)}
+                                        className={`py-2 px-1 border-b-2 font-medium text-sm ${activeTab === tab.id
+                                            ? 'border-blue-500 text-blue-600'
+                                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                                            }`}
+                                    >
+                                        {tab.label}
+                                    </button>
+                                ))}
+                            </nav>
+                        </div>
+
+                        {/* Tab Content */}
+                        <div className="bg-white rounded-lg border p-6">
+                            {activeTab === 'overview' && (
                                 <div className="space-y-6">
-                                    {job.proposals.map((proposal) => (
-                                        <ProposalCard
-                                            key={proposal._id}
-                                            proposal={proposal}
-                                            isClient={isClient}
-                                            onUpdateStatus={handleUpdateProposalStatus}
+                                    <div>
+                                        <h3 className="text-lg font-semibold mb-4">Job Description</h3>
+                                        <div className="prose max-w-none text-gray-700 whitespace-pre-line">
+                                            {job?.job?.description}
+                                        </div>
+                                    </div>
+
+                                    {/* Required Skills */}
+                                    <div>
+                                        <h4 className="font-medium mb-3">Required Skills</h4>
+                                        <div className="flex flex-wrap gap-2">
+                                            {job?.job?.requiredSkills?.map((skill, index) => (
+                                                <span
+                                                    key={index}
+                                                    className="px-3 py-1 bg-blue-100 text-blue-800 text-sm rounded-full"
+                                                >
+                                                    {skill}
+                                                </span>
+                                            ))}
+                                        </div>
+                                    </div>
+
+                                    {/* Job Details */}
+                                    <div>
+                                        <h4 className="font-medium mb-3">Project Details</h4>
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                            <div className="flex items-center">
+                                                <DollarSign className="w-4 h-4 mr-2 text-gray-500" />
+                                                <span className="text-gray-600">Budget:</span>
+                                                <span className="ml-2 font-medium">₹{job?.job?.budget}</span>
+                                            </div>
+                                            <div className="flex items-center">
+                                                <Clock className="w-4 h-4 mr-2 text-gray-500" />
+                                                <span className="text-gray-600">Duration:</span>
+                                                <span className="ml-2 font-medium">{job?.job?.duration}</span>
+                                            </div>
+                                            {job?.job?.deadline && (
+                                                <div className="flex items-center">
+                                                    <Calendar className="w-4 h-4 mr-2 text-gray-500" />
+                                                    <span className="text-gray-600">Deadline:</span>
+                                                    <span className="ml-2 font-medium">{formatDate(job?.job?.deadline)}</span>
+                                                </div>
+                                            )}
+                                            <div className="flex items-center">
+                                                <FileText className="w-4 h-4 mr-2 text-gray-500" />
+                                                <span className="text-gray-600">Category:</span>
+                                                <span className="ml-2 font-medium">{job?.job?.category}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'proposals' && (
+                                <div className="space-y-6">
+                                    {job?.job?.proposals?.length > 0 ? (
+                                        job.job.proposals.map(proposal => (
+                                            <div key={proposal._id} className="border border-gray-200 rounded-lg p-4">
+                                                <div className="flex items-start space-x-4">
+                                                    <img
+                                                        src={proposal.freelancer?.profilePicture || '/default-avatar.png'}
+                                                        alt={proposal.freelancer?.name}
+                                                        className="w-12 h-12 rounded-full object-cover"
+                                                    />
+                                                    <div className="flex-1">
+                                                        <div className="flex items-center justify-between mb-2">
+                                                            <h4 className="font-medium text-gray-900">
+                                                                {proposal.freelancer?.name}
+                                                            </h4>
+                                                            <div className="flex items-center space-x-2">
+                                                                <span className="text-lg font-bold text-green-600">
+                                                                    ₹{proposal.bidAmount}
+                                                                </span>
+                                                                <span className={`px-2 py-1 text-xs rounded-full ${proposal.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                                                                        proposal.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                                                                            'bg-red-100 text-red-800'
+                                                                    }`}>
+                                                                    {proposal.status}
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <div className="text-sm text-gray-500 mb-2">
+                                                            Submitted on {formatDate(proposal.submittedAt)}
+                                                        </div>
+                                                        <p className="text-gray-700">{proposal.coverLetter}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))
+                                    ) : (
+                                        <div className="text-center py-8">
+                                            <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                                            <p className="text-gray-500">No proposals submitted yet</p>
+                                        </div>
+                                    )}
+                                </div>
+                            )}
+
+                            {activeTab === 'client' && (
+                                <div className="space-y-6">
+                                    <div className="flex items-start space-x-4">
+                                        <img
+                                            src={job?.job?.client?.profilePicture || '/default-avatar.png'}
+                                            alt={job?.job?.client?.name}
+                                            className="w-20 h-20 rounded-full object-cover"
                                         />
-                                    ))}
+                                        <div className="flex-1">
+                                            <h3 className="text-xl font-semibold mb-2">{job?.job?.client?.name}</h3>
+                                            <div className="grid grid-cols-2 gap-4 text-sm">
+                                                <div>
+                                                    <span className="text-gray-500">From:</span>
+                                                    <div className="font-medium">{job?.job?.client?.location || 'Location not specified'}</div>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-500">Member since:</span>
+                                                    <div className="font-medium">{formatDate(job?.job?.client?.createdAt)}</div>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-500">Jobs posted:</span>
+                                                    <div className="font-medium">{job?.job?.client?.totalJobsPosted || 0}</div>
+                                                </div>
+                                                <div>
+                                                    <span className="text-gray-500">Jobs completed:</span>
+                                                    <div className="font-medium">{job?.job?.client?.totalJobsCompleted || 0}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <button className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center">
+                                        <MessageCircle className="w-4 h-4 mr-2" />
+                                        Contact {job?.job?.client?.name}
+                                    </button>
                                 </div>
                             )}
                         </div>
                     </div>
 
-                    {/* Demo Controls */}
-                    <div className="mt-8 bg-white rounded-xl shadow-lg border border-gray-100 p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Demo Controls</h3>
-                        <div className="flex space-x-4">
-                            <button
-                                onClick={() => setUserType('freelancer')}
-                                className={`px-4 py-2 rounded-lg transition-colors ${userType === 'freelancer'
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                            >
-                                View as Freelancer
-                            </button>
-                            <button
-                                onClick={() => setUserType('client')}
-                                className={`px-4 py-2 rounded-lg transition-colors ${userType === 'client'
-                                        ? 'bg-blue-600 text-white'
-                                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                    }`}
-                            >
-                                View as Client
-                            </button>
+                    {/* Right Column - Related Jobs */}
+                    <div className="lg:w-80">
+                        <div className="bg-white border border-gray-200 rounded-lg p-6">
+                            <h3 className="font-semibold mb-4">Similar Jobs</h3>
+                            <div className="space-y-4">
+                                {/* Mock related jobs - you can replace with actual data */}
+                                <div className="border border-gray-200 rounded-lg p-4">
+                                    <h4 className="font-medium text-sm mb-2">React Developer Needed</h4>
+                                    <p className="text-xs text-gray-600 mb-2">Budget: ₹15,000</p>
+                                    <div className="flex flex-wrap gap-1">
+                                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">React</span>
+                                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">Node.js</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </>
+
+            {/* Proposal Modal */}
+            {showProposalModal && <ProposalModal />}
+        </div>
     );
 };
 
