@@ -94,7 +94,7 @@ export const getservice = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(serviceId)) {
             return res.status(404).json({ message: "Invalid Service Id" });
         }
-        const service = await Service.findById(serviceId).populate("user", "name profilePicture username isVerified averageRating reviewCount location createdAt Languages").sort({ createdAt: -1 });
+        const service = await Service.findById(serviceId).populate("user", "name email profilePicture username isVerified averageRating reviewCount location createdAt Languages").sort({ createdAt: -1 });
         if (!service) {
             return res.status(404).json({ message: "Service not found" });
         }

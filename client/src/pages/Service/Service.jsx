@@ -223,7 +223,7 @@ console.log("User in Service:", user?.user);
                                     >
                                         Continue (${service?.service?.price})
                                     </button>
-                                    <button className="w-full border border-gray-300 py-3 px-4 rounded-md hover:bg-gray-50 flex items-center justify-center">
+                                    <button onClick={window.location.href=`mailto:${service?.service?.user.email}`} className="w-full border border-gray-300 py-3 px-4 rounded-md hover:bg-gray-50 flex items-center justify-center">
                                         <MessageCircle className="w-4 h-4 mr-2" />
                                         Contact Seller
                                     </button>
@@ -414,7 +414,7 @@ console.log("User in Service:", user?.user);
                                         </div>
                                     </div>
 
-                                    <button className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center">
+                                    <button onClick={window.location.href=`mailto:${service?.service?.user.email}`} className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center">
                                         <MessageCircle className="w-4 h-4 mr-2" />
                                         Contact {service?.service?.user.name}
                                     </button>
