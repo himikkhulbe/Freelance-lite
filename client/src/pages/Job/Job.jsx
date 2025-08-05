@@ -34,6 +34,9 @@ const Job = () => {
 
     console.log("User in Job:", user?.user);
 
+    const handleMail = ()=>{
+        window.location.href = `mailto:${job?.job?.client?.email}?subject=${job?.job?.title}&body=Job Id = ${job?.job?._id}`;
+    }
     const fetchJob = async () => {
         try {
             setLoading(true);
@@ -298,7 +301,9 @@ const Job = () => {
                                         </button>
                                     )}
 
-                                    <button className="w-full border border-gray-300 py-3 px-4 rounded-md hover:bg-gray-50 flex items-center justify-center">
+                                    <button onClick={()=>{
+                                        handleMail();
+                                    }} className="w-full border border-gray-300 py-3 px-4 rounded-md hover:bg-gray-50 flex items-center justify-center">
                                         <MessageCircle className="w-4 h-4 mr-2" />
                                         Contact Client
                                     </button>
@@ -499,7 +504,10 @@ const Job = () => {
                                         </div>
                                     </div>
 
-                                    <button className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center">
+                                    <button onClick={ ()=>{
+                                        handleMail();
+                                    }}
+                                    className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center">
                                         <MessageCircle className="w-4 h-4 mr-2" />
                                         Contact {job?.job?.client?.name}
                                     </button>

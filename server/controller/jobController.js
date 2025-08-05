@@ -162,3 +162,78 @@ export const getAllJobs = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
+export const UploadProposal = async (req, res) => {
+    const jobId = req.params.id;
+    const userId = req.user._id;
+    const { bidAmount, coverLetter } = req.body;
+
+    try {   
+        if (!mongoose.Types.ObjectId.isValid(jobId)) {
+            return res.status(404).json({ message: "Invalid Job Id" });
+        }
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+
+        const proposal = {
+            freelancer: userId,
+            coverLetter,
+            bidAmount,
+            status: 'pending'
+        };
+
+        job.proposals.push(proposal);
+        await job.save();
+
+        res.status(201).json({ message: "Proposal submitted successfully", proposal });
+    } catch (error) {
+        console.error("Error submitting proposal:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+export const getProposals = async (req, res) => {
+    const jobId = req.params.id;
+    try {
+        if (!mongoose.Types.ObjectId.isValid(jobId)) {
+            return res.status(404).json({ message: "Invalid Job Id" });
+        }
+        const job = await Job.findById(jobId).populate("proposals.freelancer", "name profilePicture username").sort({ createdAt: -1 });
+        if (!job) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+        res.status(200).json(job.proposals);
+    } catch (error) {
+        console.error("Error fetching proposals:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+export const updateProposalStatus = async (req, res) => {
+    const jobId = req.params.jobId;
+    const proposalId = req.params.proposalId;
+    const { status } = req.body;
+
+    try {
+        if (!mongoose.Types.ObjectId.isValid(jobId)) {
+            return res.status(404).json({ message: "Invalid Job Id" });
+        }
+        const job = await Job.findById(jobId);
+        if (!job) {
+            return res.status(404).json({ message: "Job not found" });
+        }
+
+        const proposal = job.proposals.id(proposalId);
+        if (!proposal) {
+            return res.status(404).json({ message: "Proposal not found" });
+        }
+
+        proposal.status = status;
+        await job.save();
+
+        res.status(200).json({ message: "Proposal status updated successfully", proposal });
+    } catch (error) {
+        console.error("Error updating proposal status:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
