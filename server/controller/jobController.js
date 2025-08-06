@@ -87,16 +87,28 @@ export const getJob = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(jobId)) {
             return res.status(404).json({ message: "Invalid Job Id" });
         }
-        const job = await Job.findById(jobId).populate("client", "name email profilePicture username isVerified averageRating reviewCount location createdAt Languages").sort({ createdAt: -1 });
+
+        const job = await Job.findById(jobId)
+            .populate("client", "name email profilePicture username isVerified averageRating reviewCount location createdAt Languages")
+            .populate("proposals.freelancer", "name username profilePicture") // ✅ This populates freelancer in proposals
+            .sort({ createdAt: -1 });
+
         if (!job) {
             return res.status(404).json({ message: "Job not found" });
         }
-        const jobs = await Job.find({ client: job.client._id.toString(), _id: { $ne: jobId } }).populate("client", "_id").sort({ createdAt: -1 });
+
+        const jobs = await Job.find({ client: job.client._id.toString(), _id: { $ne: jobId } })
+            .populate("client", "_id")
+            .sort({ createdAt: -1 });
+        console.log(jobs);
         res.status(200).json({ job, jobs });
+
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: "Internal server error" });
     }
-}
+};
+
 
 export const updateJob = async (req, res) => {
     const jobId = req.params.id;
@@ -204,6 +216,7 @@ export const getProposals = async (req, res) => {
             return res.status(404).json({ message: "Job not found" });
         }
         res.status(200).json(job.proposals);
+        console.log("Proposals for job:", job);
     } catch (error) {
         console.error("Error fetching proposals:", error);
         res.status(500).json({ message: "Internal server error" });
