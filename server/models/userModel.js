@@ -28,6 +28,9 @@ const UserSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
+    Domain: {
+        type: String,
+    },
     skills: [{
         type: String,
     }],

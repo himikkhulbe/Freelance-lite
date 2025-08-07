@@ -165,6 +165,8 @@ export const updateUserProfile = async (req, res) => {
             profilePicture,
             contactInfo,
             socialMedia,
+            Domain,
+            skills
         } = req.body;
 
         const updates = {};
@@ -172,8 +174,8 @@ export const updateUserProfile = async (req, res) => {
         if (name) updates.name = name;
         if (profilePicture) updates.profilePicture = profilePicture;
         if (location) updates.location = location;
-
-
+        if (Domain) updates.Domain = Domain;
+        if (skills && Array.isArray(skills)) updates.skills = skills;
 
         if (contactInfo) {
             updates.contactInfo = {};

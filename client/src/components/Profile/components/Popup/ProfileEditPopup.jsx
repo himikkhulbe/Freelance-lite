@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Mail, Phone, Github, Linkedin, Twitter, Globe, Camera, X, MapPin } from 'lucide-react';
+import { User, Mail, Phone, Github, Linkedin, Twitter, Globe, Camera, X, MapPin, Briefcase, Tag } from 'lucide-react';
 
 
 function ProfileEditPopup({ loggedInUser, close }) {
@@ -7,6 +7,8 @@ function ProfileEditPopup({ loggedInUser, close }) {
         name: loggedInUser?.user?.name || "",
         location: loggedInUser?.user?.location || "",
         profilePicture: loggedInUser?.user?.profilePicture || "",
+        Domain: loggedInUser?.user?.Domain || "",
+        skills: loggedInUser?.user?.skills || [],
         contactInfo: {
             email: loggedInUser?.user?.contactInfo?.email || "",
             phone: loggedInUser?.user?.contactInfo?.phone || ""
@@ -21,6 +23,7 @@ function ProfileEditPopup({ loggedInUser, close }) {
     );
 
     const [previewImage, setPreviewImage] = useState(loggedInUser?.user?.profilePicture);
+    const [skillInput, setSkillInput] = useState("");
 
 
     const handleInputChange = (e) => {
@@ -64,6 +67,28 @@ function ProfileEditPopup({ loggedInUser, close }) {
             reader.readAsDataURL(file);
         }
     };
+
+    const handleSkillAdd = (e) => {
+        if (e.key === 'Enter' && skillInput.trim()) {
+            e.preventDefault();
+            const newSkill = skillInput.trim();
+            if (!formData.skills.includes(newSkill)) {
+                setFormData(prev => ({
+                    ...prev,
+                    skills: [...prev.skills, newSkill]
+                }));
+            }
+            setSkillInput("");
+        }
+    };
+
+    const handleSkillRemove = (skillToRemove) => {
+        setFormData(prev => ({
+            ...prev,
+            skills: prev.skills.filter(skill => skill !== skillToRemove)
+        }));
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -192,6 +217,63 @@ function ProfileEditPopup({ loggedInUser, close }) {
                                     placeholder="Enter Your Location"
                                 />
                             </div>
+
+                            <div className="md:col-span-2">
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <Briefcase className="w-4 h-4 inline mr-2 text-blue-600" />
+                                    Domain/Field
+                                </label>
+                                <input
+                                    type="text"
+                                    name="Domain"
+                                    value={formData.Domain}
+                                    onChange={handleInputChange}
+                                    className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    placeholder="e.g. Web Development, Data Science, UI/UX Design"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Skills Section */}
+                        <div className="space-y-4">
+                            <h3 className="text-lg font-semibold text-gray-800 border-b border-blue-100 pb-2">
+                                Skills
+                            </h3>
+
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                                    <Tag className="w-4 h-4 inline mr-2 text-blue-600" />
+                                    Add Skills
+                                </label>
+                                <input
+                                    type="text"
+                                    value={skillInput}
+                                    onChange={(e) => setSkillInput(e.target.value)}
+                                    onKeyDown={handleSkillAdd}
+                                    className="w-full px-4 py-3 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                                    placeholder="Type a skill and press Enter to add"
+                                />
+                                <p className="text-xs text-gray-500 mt-1">Press Enter to add each skill</p>
+                            </div>
+
+                            {formData.skills.length > 0 && (
+                                <div className="flex flex-wrap gap-2">
+                                    {formData.skills.map((skill, index) => (
+                                        <span
+                                            key={index}
+                                            className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium flex items-center gap-2"
+                                        >
+                                            {skill}
+                                            <button
+                                                onClick={() => handleSkillRemove(skill)}
+                                                className="text-blue-600 hover:text-blue-800 focus:outline-none"
+                                            >
+                                                <X className="w-3 h-3" />
+                                            </button>
+                                        </span>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Social Media Links */}
