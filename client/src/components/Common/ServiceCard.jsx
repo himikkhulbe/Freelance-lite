@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Edit, IndianRupee, Clock, Star, User, Trash2 } from 'lucide-react';
+import { Edit, IndianRupee, Clock, Star, Eye, Trash2 } from 'lucide-react';
 import DeleteServicePopup from './DeleteServicePopup.jsx';
 import { useNavigate } from 'react-router-dom';
 import RenderStars from "./RenderStars.jsx"
@@ -42,6 +42,7 @@ function ServiceCard({ data, loggedInUser }) {
                 {/* Edit , Delete, Preview :- only show when the loggedin user own this service */}
                 {loggedInUser?._id === data?.user?._id && (
                     <div className='flex gap-2'>
+                        <Eye onClick={openService} className="text-gray-600 w-4 h-4 cursor-pointer" />
                         <Edit onClick={() => EditService()} className="text-blue-600 w-4 h-4 cursor-pointer" />
                         <Trash2 onClick={() => setIsOpen(true)} className="text-red-600 w-4 h-4 cursor-pointer" />
                     </div>

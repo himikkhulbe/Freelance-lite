@@ -246,10 +246,6 @@ const handleMail = ()=>{
                                             <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
                                             {service?.service?.revisions} revisions included
                                         </div>
-                                        <div className="flex items-center text-gray-600">
-                                            <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                                            Source code included
-                                        </div>
                                     </div>
                                 </div>
                             </div>

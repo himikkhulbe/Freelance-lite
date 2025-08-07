@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Edit, IndianRupee, Clock, Trash2 } from 'lucide-react'
+import { Edit, IndianRupee, Clock, Trash2, Eye } from 'lucide-react'
 import DeleteJobPopup from './DeleteJobPopup.jsx';
 import { useNavigate } from 'react-router-dom';
 
@@ -41,6 +41,7 @@ function JobsCard({ data, loggedInUser }) {
                 <h2 className="font-medium text-lg">{data.title}</h2>
                 {loggedInUser?._id === data?.client?._id &&
                     <div className='flex gap-2'>
+                        <Eye onClick={viewJob} className="text-gray-600 w-4 h-4 cursor-pointer" />
                         <Edit onClick={() => editJob()} className="text-blue-600 w-4 h-4 cursor-pointer" />
                         <Trash2 onClick={() => setIsOpen(true)} className="text-red-600 w-4 h-4 cursor-pointer" />
                     </div>

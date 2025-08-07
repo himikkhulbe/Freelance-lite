@@ -27,7 +27,7 @@ const Job = () => {
     const [showProposalModal, setShowProposalModal] = useState(false);
     const [proposalData, setProposalData] = useState({
         coverLetter: '',
-        bidAmount: ''
+        bidAmount: 0
     });
     const { id } = useParams();
     const { user } = useAuth();
@@ -123,10 +123,12 @@ const Job = () => {
                         </label>
                         <textarea
                             value={proposalData.coverLetter}
-                            onChange={(e) => setProposalData(prev => ({
-                                ...prev,
-                                coverLetter: e.target.value
-                            }))}
+                            onChange={(e) =>
+                                setProposalData((prev) => ({
+                                    ...prev,
+                                    coverLetter: e.target.value,
+                                }))
+                            }
                             placeholder="Describe why you're the best fit for this job..."
                             rows={5}
                             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
