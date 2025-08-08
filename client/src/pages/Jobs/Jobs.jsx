@@ -3,7 +3,7 @@ import SearchBar from "../Jobs/components/SearchBar";
 import Filters from "../Jobs/components/Filters";
 import JobCard from "../Jobs/components/JobCard";
 import Mobilefilter from "../Jobs/components/Mobilefilter";
-import JobsCard from "../../components/Common/JobCard";
+import JobsCard from "../../components/Common/JobsCard";
 import { useAuth } from "../../contexts/AuthContext";
 
 const jobsData = [
@@ -265,39 +265,39 @@ const Jobs = () => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col pt-[20px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
+    <div className="min-h-screen w-full flex flex-col pt-[10%] max-sm:pt-[12%] md:pt-[8%] lg:pt-[6%] xl:pt-[5%] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
       <div className="p-5 xl:px-32 md:px-5 min-h-screen w-full flex gap-10 bg-gray-100 relative">
-        {/* Sidebar */}
+        {/* Sidebar */}     
         <Filters {...filterProps} />
 
         <div className="w-full relative">
-
+          
           {/* Search Bar */}
-          <div className="w-full sticky top-5 ">
-            <SearchBar
-              searchTerm={searchTerm}
-              setSearchTerm={setSearchTerm}
-              setShowMobileFilters={setShowMobileFilters}
-            />
-          </div>
+          
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            setShowMobileFilters={setShowMobileFilters}
+          />
+          
 
           {/* Mobile Filters */}
-
+          
           <Mobilefilter {...mobileFilterProps} />
-
+          
 
           {/* Job Cards */}
-          <div className="mt-5 rounded h-[80vh] overflow-y-auto">
-            {filteredJobs.length > 0 ? (
-              filteredJobs.map((job) => {
-                return (
-                  <JobsCard key={job._id} data={job} loggedInUser={user?.user} />
-                );
-              })
-            ) : (
-              <h1 className="text-center text-zinc-500 font-medium">No Jobs Found</h1>
-            )}
-          </div>
+          
+          {filteredJobs.length > 0 ? (
+            filteredJobs.map((job) => {
+              return (
+                <JobsCard key={job._id} data={job} loggedInUser={user?.user} />
+              );
+            })
+          ) : (
+            <h1 className="text-center text-zinc-500 font-medium">No Jobs Found</h1>
+          )}
+          
         </div>
       </div>
     </div>
