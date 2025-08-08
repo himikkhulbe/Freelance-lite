@@ -18,6 +18,7 @@ import {
     FileText,
     Send
 } from 'lucide-react';
+import JobCard from "../../components/Common/JobCard.jsx";
 
 const Job = () => {
     const [job, setJob] = useState(null);
@@ -34,7 +35,7 @@ const Job = () => {
 
     console.log("User in Job:", user?.user);
 
-    const handleMail = ()=>{
+    const handleMail = () => {
         window.location.href = `mailto:${job?.job?.client?.email}?subject=${job?.job?.title}&body=Job Id = ${job?.job?._id}`;
     }
     const fetchJob = async () => {
@@ -303,7 +304,7 @@ const Job = () => {
                                         </button>
                                     )}
 
-                                    <button onClick={()=>{
+                                    <button onClick={() => {
                                         handleMail();
                                     }} className="w-full border border-gray-300 py-3 px-4 rounded-md hover:bg-gray-50 flex items-center justify-center">
                                         <MessageCircle className="w-4 h-4 mr-2" />
@@ -451,8 +452,8 @@ const Job = () => {
                                                                     ₹{proposal.bidAmount}
                                                                 </span>
                                                                 <span className={`px-2 py-1 text-xs rounded-full ${proposal.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                                                                        proposal.status === 'accepted' ? 'bg-green-100 text-green-800' :
-                                                                            'bg-red-100 text-red-800'
+                                                                    proposal.status === 'accepted' ? 'bg-green-100 text-green-800' :
+                                                                        'bg-red-100 text-red-800'
                                                                     }`}>
                                                                     {proposal.status}
                                                                 </span>
@@ -506,10 +507,10 @@ const Job = () => {
                                         </div>
                                     </div>
 
-                                    <button onClick={ ()=>{
+                                    <button onClick={() => {
                                         handleMail();
                                     }}
-                                    className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center">
+                                        className="w-full sm:w-auto px-6 py-2 border border-gray-300 rounded-md hover:bg-gray-50 flex items-center justify-center">
                                         <MessageCircle className="w-4 h-4 mr-2" />
                                         Contact {job?.job?.client?.name}
                                     </button>
@@ -519,19 +520,24 @@ const Job = () => {
                     </div>
 
                     {/* Right Column - Related Jobs */}
-                    <div className="lg:w-80">
+                    <div className="lg:w-[400px]">
                         <div className="bg-white border border-gray-200 rounded-lg p-6">
                             <h3 className="font-semibold mb-4">Similar Jobs</h3>
                             <div className="space-y-4">
                                 {/* Mock related jobs - you can replace with actual data */}
-                                <div className="border border-gray-200 rounded-lg p-4">
-                                    <h4 className="font-medium text-sm mb-2">React Developer Needed</h4>
-                                    <p className="text-xs text-gray-600 mb-2">Budget: ₹15,000</p>
-                                    <div className="flex flex-wrap gap-1">
-                                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">React</span>
-                                        <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">Node.js</span>
-                                    </div>
-                                </div>
+                                {
+                                    job?.jobs?.length > 0 ?
+                                        job?.jobs.map(relatedJob => (
+                                            <JobCard
+                                                key={relatedJob._id}
+                                                data={relatedJob}
+                                                loggedInUser={user?.user}
+                                                size={true}
+                                            />
+                                        )) : (
+                                            <p className="text-gray-500">No similar jobs found</p>
+                                        )
+                                }
                             </div>
                         </div>
                     </div>

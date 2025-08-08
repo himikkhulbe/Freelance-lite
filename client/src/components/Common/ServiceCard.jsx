@@ -4,7 +4,7 @@ import DeleteServicePopup from './DeleteServicePopup.jsx';
 import { useNavigate } from 'react-router-dom';
 import RenderStars from "./RenderStars.jsx"
 
-function ServiceCard({ data, loggedInUser }) {
+function ServiceCard({ data, loggedInUser, size = false }) {
     console.log("Service data:", data);
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
@@ -48,7 +48,10 @@ function ServiceCard({ data, loggedInUser }) {
                     </div>
                 )}
             </div>
-            <p className="text-gray-500 text-sm">{data?.description}</p>
+            <div className="flex gap-2 items-center">
+                <p className="text-gray-500 text-sm">{data?.description.slice(0, 100)}{data?.description.length > 100 ? <span onClick={()=>{openService()
+                }} className="text-blue-600 cursor-pointer">...more</span> : ''}</p>
+            </div>
             <div className="flex gap-5 justify-start items-center">
                 <div className="flex items-center">
                     <IndianRupee className="w-4 h-4 text-gray-500" />
@@ -84,10 +87,10 @@ function ServiceCard({ data, loggedInUser }) {
                 {/* order now and view details button only show when the loggedin user is not the owner of the service */}
             {loggedInUser?._id !== data?.user?._id && (
                 <div className="flex gap-4 pt-2 flex-wrap">
-                    <button className="px-14 py-2 bg-blue-700 sm:w-fit w-full text-white text-lg font-light rounded-lg text-nowrap">
+                    <button className={`px-14 py-2 bg-blue-700 ${size ? "sm:w-fit lg:w-full" : "sm:w-fit"} w-full text-white text-lg font-light rounded-lg text-nowrap`}>
                         Order Now
                     </button>
-                    <button onClick={openService} className="px-4 py-2 border text-gray-500 rounded-lg sm:w-fit w-full">
+                    <button onClick={openService} className={`px-14 py-2 border text-gray-500 rounded-lg ${size ? "sm:w-fit lg:w-full" : "sm:w-fit"} w-full`}>
                         View Details
                     </button>
                 </div>

@@ -1,5 +1,5 @@
 import { Clock, IndianRupee } from "lucide-react";
-import JobsCard from "../../../components/Common/JobsCard";
+import JobsCard from "../../../components/Common/JobCard";
 import { useAuth } from "../../../contexts/AuthContext";
 
 const JobCard = ({ data }) => {

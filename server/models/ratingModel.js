@@ -20,6 +20,10 @@ const ratingModel = new mongoose.Schema({
     comment: {
         type: String,
         required: false
+    },
+    associated: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true,
     }
 }, {timestamps: true})
 

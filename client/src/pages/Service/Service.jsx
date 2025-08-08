@@ -225,7 +225,7 @@ const handleMail = ()=>{
                                         onClick={() => setShowOrderModal(true)}
                                         className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 font-medium"
                                     >
-                                        Continue (${service?.service?.price})
+                                        Continue (₹{service?.service?.price})
                                     </button>
                                     <button onClick={()=>{
                                         handleMail();
@@ -390,7 +390,11 @@ const handleMail = ()=>{
                                         <div className="flex-1">
                                             <h3 className="text-xl font-semibold mb-2">{service?.service?.user.name}</h3>
                                             <div className="flex items-center mb-2">
-                                                {RenderStars(service?.service?.user.averageRating)}
+                                                {RenderStars(service?.service?.user.averageRating)}{
+                                                <span className="ml-2 text-sm text-gray-800">
+                                                    {service?.service?.user.averageRating.toFixed(1)}
+                                                </span>
+                                                }
                                                 <span className="ml-2 text-sm text-gray-600">
                                                     ({service?.service?.user.totalOrders || 0} orders completed)
                                                 </span>
@@ -428,7 +432,7 @@ const handleMail = ()=>{
                     </div>
 
                     {/* Right Column - Related Services */}
-                    <div className="lg:w-80">
+                    <div className="lg:w-[400px]">
                         <div className="bg-white border border-gray-200 rounded-lg p-6">
                             <h3 className="font-semibold mb-4">More from {service?.service?.user.name}</h3>
                             <div className="space-y-4">
@@ -438,6 +442,7 @@ const handleMail = ()=>{
                                         key={data._id}
                                         data={data}
                                         loggedInUser={user?.user}
+                                        size={true}
                                     />
                                 ))}
                             </div>

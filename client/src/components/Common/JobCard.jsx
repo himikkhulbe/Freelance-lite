@@ -3,7 +3,7 @@ import { Edit, IndianRupee, Clock, Trash2, Eye } from 'lucide-react'
 import DeleteJobPopup from './DeleteJobPopup.jsx';
 import { useNavigate } from 'react-router-dom';
 
-function JobsCard({ data, loggedInUser }) {
+function JobsCard({ data, loggedInUser, size=false}) {
     const navigate = useNavigate();
     console.log("Job data:", data);
     console.log("Logged-in user data:", loggedInUser);
@@ -81,11 +81,11 @@ function JobsCard({ data, loggedInUser }) {
                 )}
             </div>
             {loggedInUser?._id !== data?.client?._id &&
-                <div className="flex gap-4 pt-2 flex-wrap">
-                    <button className="px-14 py-2 bg-blue-700 sm:w-fit w-full text-white text-lg font-light rounded-lg text-nowrap ">
+                <div className="flex gap-4 pt-2 flex-wrap ">
+                    <button className={`px-14 py-2 bg-blue-700 ${size ? "sm:w-fit lg:w-full" : "sm:w-fit"} w-full text-white text-lg font-light rounded-lg text-nowrap `}>
                         Apply Now
                     </button>
-                    <button onClick={() => viewJob()} className="px-4 py-2 border text-gray-500 rounded-lg sm:w-fit w-full">
+                    <button onClick={() => viewJob()} className={`px-14 py-2 border text-gray-500 rounded-lg ${size ? "sm:w-fit lg:w-full" : "sm:w-fit"} w-full`}>
                         {" "}
                         View Details
                     </button>

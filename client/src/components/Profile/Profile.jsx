@@ -8,7 +8,7 @@ import DetailsSection from "./components/DetailsSection/DetailsSection.jsx";
 import RatingPopup from "./components/Popup/RatingPopup.jsx";
 import ProfileEditPopup from "./components/Popup/ProfileEditPopup.jsx";
 import JobsPopup from "./components/Popup/JobsPopup.jsx";
-import JobsCard from "../Common/JobsCard.jsx";
+import JobsCard from "../Common/JobCard.jsx";
 import ServiceCard from "../Common/ServiceCard.jsx";
 import { useNavigate } from "react-router-dom";
 import formatDate from "../../Utils/formatDate.js";

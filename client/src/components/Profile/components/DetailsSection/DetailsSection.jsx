@@ -1,6 +1,5 @@
 import DetailCard from './components/Detailcard/DetailCard'
-import { Mail, Phone, Github, Linkedin, Globe, Twitter, Calendar, Eye, MapPin } from 'lucide-react'
-
+import { Mail, Phone, Github, Linkedin, Globe, Twitter, Calendar, Eye, MapPin, BriefcaseBusiness } from 'lucide-react'
 
 function DetailsSection({ user, loggedInUser, formatDate, profileOpen }) {
     return (
@@ -20,6 +19,21 @@ function DetailsSection({ user, loggedInUser, formatDate, profileOpen }) {
                 ]} />
                 :
                 null
+            }
+
+            {/* skills */}
+            {user?.user?.skills && user?.user?.skills.length > 0 ?
+                <DetailCard title="Skills" open={profileOpen} edit={true} user={user} loggedInUser={loggedInUser} data={user?.user?.skills.map((skill) => ({
+                    Icon: null,
+                    text: skill,
+                }
+        ))
+    } />
+                :
+                <DetailCard title="Skills" open={profileOpen} edit={true} user={user} loggedInUser={loggedInUser} data={[{
+                    Icon: null,
+                    text: "No skills added",
+                }]} />
             }
 
 

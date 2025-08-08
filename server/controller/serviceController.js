@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import User from "../models/userModel.js";
-import Service from "../models/freelancerModels.js";
+import Service from "../models/serviceModels.js";
 
 
 export const uploadServices = async (req, res) => {

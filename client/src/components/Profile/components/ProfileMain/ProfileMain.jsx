@@ -23,7 +23,7 @@ function ProfileMain({ user, loggedInUser, openEdit }) {
             <div className="flex md:flex-row flex-col justify-between md:items-center md:gap-[30px] gap-[20px] grow h-full">
                 <div>
                     <div className="flex justify-start items-center gap-[8px]">
-                        <p className="text-black text-4xl font-bold">{user?.user?.name.charAt(0).toUpperCase() + user?.user?.name.slice(1)}</p>
+                        <p className="text-black text-4xl font-bold text-nowrap">{user?.user?.name.charAt(0).toUpperCase() + user?.user?.name.slice(1)}</p>
                         {loggedInUser?.user?._id === user?.user?._id &&
                             <Edit onClick={() => openEdit(true)} className="text-blue-600 w-4 h-4 cursor-pointer" />
                         }
@@ -31,6 +31,9 @@ function ProfileMain({ user, loggedInUser, openEdit }) {
                     <p className="text-black text-md">{`@${user?.user?.username}`}</p>
                     <p className="text-lg font-semibold text-blue-600">
                         {user?.user?.role.charAt(0).toUpperCase() + user?.user?.role.slice(1)}
+                        {user?.user?.Domain &&
+                            <span className="text-gray-800"> • {user?.user?.Domain}</span>
+                        }
                     </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-[7px]">

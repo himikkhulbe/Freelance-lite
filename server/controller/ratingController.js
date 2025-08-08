@@ -7,7 +7,8 @@ const ratingUser = async (req, res) => {
     const {
         ratedId,
         rating,
-        comment
+        comment,
+        associated
     } = req.body;
     if (rating < 1 || rating > 5) {
         return res.status(400).json({
@@ -47,10 +48,11 @@ const ratingUser = async (req, res) => {
             raterId: userId,
             ratedId,
             rating,
-            comment
+            comment,
+            associated
         })
         const avgResult = await Rating.aggregate([
-            { $match: { ratedId: new mongoose.Types.ObjectId(ratedId) } },
+            { $match: { ratedId: ratedId } },
             {
                 $group: {
                     _id: "$ratedId",
@@ -58,7 +60,6 @@ const ratingUser = async (req, res) => {
                 }
             }
         ]);
-
         const avgRating = avgResult.length > 0 ? avgResult[0].averageRating : 0;
 
         // 📝 Update user model with new average
