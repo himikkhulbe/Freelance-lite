@@ -179,22 +179,20 @@ export const UploadProposal = async (req, res) => {
     const jobId = req.params.id;
     const userId = req.user._id;
     const { bidAmount, coverLetter } = req.body;
-    console.log(bidAmount, coverLetter);
 
     try {   
         if (!mongoose.Types.ObjectId.isValid(jobId)) {
             return res.status(404).json({ message: "Invalid Job Id" });
         }
-        const job = await Job.findById(jobId);ghhg
+
+        const job = await Job.findById(jobId);
         if (!job) {
             return res.status(404).json({ message: "Job not found" });
         }
         const user = await User.findById(userId);
-        if(user.role !== 'freelancer'){
-            return res.status(403).json({ message: "Only fleelancer can submit proposals." });
+        if(user.role !== 'freelancer')
+            return res.status(403).json({ message: "Only freelancers can submit proposals." });
         
-        }
-
         const proposal = {
             freelancer: userId,
             coverLetter,
