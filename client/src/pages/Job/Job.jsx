@@ -454,11 +454,10 @@ const Job = () => {
             </div>
 
             {/* Proposal Modal */}
-            {showProposalModal && <ProposalModal 
+            {showProposalModal && <ProposalModal
                 fetchJob={fetchJob}
                 setShowProposalModal={setShowProposalModal}
                 job={job}
-                id={id}
             />}
         </div>
     );

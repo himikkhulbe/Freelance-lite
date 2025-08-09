@@ -91,7 +91,7 @@ function ServiceCard({ data, loggedInUser, size = false }) {
                         Order Now
                     </button>
                     <button onClick={openService} className={`px-14 py-2 border text-gray-500 rounded-lg ${size ? "sm:w-fit lg:w-full" : "sm:w-fit"} w-full`}>
-                        View Details
+                        Views Details
                     </button>
                 </div>
             )}

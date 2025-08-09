@@ -1,35 +1,46 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 
-const ProposalModal = ({setShowProposalModal, job, fetchJob, id}) => {
+const ProposalModal = ({setShowProposalModal, job, fetchJob}) => {
     const [proposalData, setProposalData] = useState({
         coverLetter: '',
         bidAmount: ''
     });
+    const { id } = useParams();
 
     const handleProposalSubmit = async () => {
+        if (!id) {
+            console.error("Job ID missing. Cannot submit proposal.");
+            return;
+        }
+
         try {
-            const response = await fetch(`https://freelance-lite.onrender.com/api/job/${id}/proposal`, {
+            const response = await fetch(`https://freelance-lite.onrender.com/api/client/job/${id}/proposal`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 credentials: 'include',
-                body: JSON.stringify(proposalData)
+                body: JSON.stringify(proposalData),
             });
+
+            const data = await response.json().catch(() => null); // Safe JSON parse
 
             if (response.ok) {
                 setShowProposalModal(false);
                 setProposalData({ coverLetter: '', bidAmount: '' });
-                alert('Proposal submitted successfully!');
+                alert(data?.message || 'Proposal submitted successfully!');
                 fetchJob(); // Refresh job data
             } else {
-                throw new Error('Failed to submit proposal');
-                
+                console.error('Failed to submit proposal:', data?.error || data);
+                alert(data?.error || 'Failed to submit proposal');
             }
         } catch (error) {
             console.error('Error submitting proposal:', error);
+            alert('Something went wrong. Please try again later.');
         }
     };
+
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">

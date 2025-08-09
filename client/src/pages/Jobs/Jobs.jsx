@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
 import SearchBar from "../Jobs/components/SearchBar";
 import Filters from "../Jobs/components/Filters";
-import JobCard from "../Jobs/components/JobCard";
+import JobCard from "../../components/Common/JobCard";
 import Mobilefilter from "../Jobs/components/Mobilefilter";
-import JobsCard from "../../components/Common/JobsCard";
 import { useAuth } from "../../contexts/AuthContext";
 
 const jobsData = [
@@ -291,7 +290,7 @@ const Jobs = () => {
           {filteredJobs.length > 0 ? (
             filteredJobs.map((job) => {
               return (
-                <JobsCard key={job._id} data={job} loggedInUser={user?.user} />
+                <JobCard key={job._id} data={job} loggedInUser={user?.user} />
               );
             })
           ) : (
