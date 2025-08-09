@@ -21,9 +21,10 @@ const ratingModel = new mongoose.Schema({
         type: String,
         required: false
     },
-    associated: {
+    serviceId: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
+        ref: 'Service',
+        required: false
     }
 }, {timestamps: true})
 

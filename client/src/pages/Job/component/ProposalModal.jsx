@@ -29,7 +29,6 @@ const ProposalModal = ({setShowProposalModal, job, fetchJob}) => {
             if (response.ok) {
                 setShowProposalModal(false);
                 setProposalData({ coverLetter: '', bidAmount: '' });
-                alert(data?.message || 'Proposal submitted successfully!');
                 fetchJob(); // Refresh job data
             } else {
                 console.error('Failed to submit proposal:', data?.error || data);

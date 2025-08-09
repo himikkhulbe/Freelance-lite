@@ -406,11 +406,11 @@ const Job = () => {
                                                 </div>
                                                 <div>
                                                     <span className="text-gray-500">Jobs posted:</span>
-                                                    <div className="font-medium">{job?.job?.client?.totalJobsPosted || 0}</div>
+                                                    <div className="font-medium">{job?.jobs?.length + 1 || 0}</div>
                                                 </div>
                                                 <div>
-                                                    <span className="text-gray-500">Jobs completed:</span>
-                                                    <div className="font-medium">{job?.job?.client?.totalJobsCompleted || 0}</div>
+                                                    <span className="text-gray-500">Languages:</span>
+                                                    <div className="font-medium">{job?.user?.Languages.join(', ') || 'No languages specified'}</div>
                                                 </div>
                                             </div>
                                         </div>

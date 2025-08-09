@@ -16,6 +16,7 @@ import {
   Loader,
   RefreshCw
 } from 'lucide-react';
+import RatingCard from '../../components/Profile/components/RatingSection/components/RatingCard/RatingCard';
 
 const Service = () => {
   const [service, setService] = useState(null);
@@ -156,7 +157,7 @@ const Service = () => {
                         {service?.service?.rating}
                       </span>
                       <span className="text-sm text-gray-500 ml-1">
-                        ({service?.service?.reviewCount} reviews)
+                        ({service?.service?.reviewCount || 0} reviews)
                       </span>
                     </div>
 
@@ -260,23 +261,14 @@ const Service = () => {
           {/* Left Column */}
           <div className="flex-1">
             {/* Service Image */}
-            <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg h-64 sm:h-80 flex items-center justify-center mb-8">
-              <div className="text-center">
-                <div className="text-blue-600 text-2xl font-bold mb-2">
-                  {service?.service?.category}
-                </div>
-                <div className="text-blue-500 text-lg">
-                  Professional Service Preview
-                </div>
-              </div>
-            </div>
+
 
             {/* Tabs */}
             <div className="border-b border-gray-200 mb-6">
               <nav className="-mb-px flex space-x-8">
                 {[
                   { id: 'overview', label: 'Overview' },
-                  { id: 'reviews', label: `Reviews (${service?.service?.reviewCount})` },
+                  { id: 'reviews', label: `Reviews (${service?.service?.reviewCount || 0})` },
                   { id: 'faq', label: 'FAQ' },
                   { id: 'seller', label: 'About Seller' }
                 ].map(tab => (
@@ -337,29 +329,9 @@ const Service = () => {
 
               {activeTab === 'reviews' && (
                 <div className="space-y-6">
-                  {service?.service?.reviews.map(review => (
-                    <div key={review._id} className="border-b border-gray-100 pb-6 last:border-b-0">
-                      <div className="flex items-start space-x-4">
-                        <img
-                          src={review.user.avatar}
-                          alt={review.user.name}
-                          className="w-10 h-10 rounded-full object-cover"
-                        />
-                        <div className="flex-1">
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-medium text-gray-900">{review.user.name}</h4>
-                            <span className="text-sm text-gray-500">
-                              {formatDate(review.createdAt)}
-                            </span>
-                          </div>
-                          <div className="flex items-center mb-2">
-                            {RenderStars(review.rating)}
-                          </div>
-                          <p className="text-gray-700">{review.comment}</p>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+                  {
+                    console.log("hello ",service?.service?.reviews)
+                  }
                 </div>
               )}
 
@@ -409,8 +381,8 @@ const Service = () => {
                           <div className="font-medium">{formatDate(service?.service?.user.createdAt)}</div>
                         </div>
                         <div>
-                          <span className="text-gray-500">Avg. response time:</span>
-                          <div className="font-medium">{service?.service?.user.responseTime || "10hr"}</div>
+                          <span className="text-gray-500">Service Posted:</span>
+                          <div className="font-medium">{service?.services?.length + 1 || "10hr"}</div>
                         </div>
                         <div>
                           <span className="text-gray-500">Languages:</span>

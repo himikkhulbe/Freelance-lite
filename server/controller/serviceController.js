@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import User from "../models/userModel.js";
 import Service from "../models/serviceModels.js";
+import Rating from "../models/ratingModel.js";
 
 
 export const uploadServices = async (req, res) => {
@@ -94,12 +95,15 @@ export const getservice = async (req, res) => {
         if (!mongoose.Types.ObjectId.isValid(serviceId)) {
             return res.status(404).json({ message: "Invalid Service Id" });
         }
+        const ratings = await Rating.find({ serviceId: serviceId })
+                .populate("raterId", "name profilePicture username isVerified")
+                    .sort({ createdAt: -1 });
         const service = await Service.findById(serviceId).populate("user", "name email profilePicture username isVerified averageRating reviewCount location createdAt Languages").sort({ createdAt: -1 });
         if (!service) {
             return res.status(404).json({ message: "Service not found" });
         }
         const services = await Service.find({ user: service.user._id.toString(), _id: { $ne: serviceId } }).populate("user", "_id").sort({ createdAt: -1 });
-        res.status(200).json({service, services});
+        res.status(200).json({service, ratings, services});
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }

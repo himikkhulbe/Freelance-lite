@@ -1,6 +1,9 @@
 import Rating from "../models/ratingModel.js";
 import User from "../models/userModel.js";
 import mongoose from "mongoose";
+import Service from "../models/serviceModels.js";
+import { ObjectId } from "mongodb";
+
 
 
 const ratingUser = async (req, res) => {
@@ -8,8 +11,10 @@ const ratingUser = async (req, res) => {
         ratedId,
         rating,
         comment,
-        associated
+        serviceId
     } = req.body;
+    console.log(req.body);
+
     if (rating < 1 || rating > 5) {
         return res.status(400).json({
             message: "Rating must be between 1 and 5"
@@ -34,13 +39,22 @@ const ratingUser = async (req, res) => {
             message: "Rated User not found"
         });
     }
-    const existingRating = await Rating.findOne({
+    let existingRating;
+    if(serviceId){
+    existingRating = await Rating.findOne({
         raterId: userId,
-        ratedId
+        ratedId,
+        serviceId
     });
+    }else{
+    existingRating = await Rating.findOne({
+        raterId: userId,
+        ratedId,
+    });
+}
     if (existingRating) {
         return res.status(400).json({
-            message: "You have already rated this user"
+            message: "You have already rated"
         });
     }
     try {
@@ -49,10 +63,10 @@ const ratingUser = async (req, res) => {
             ratedId,
             rating,
             comment,
-            associated
+            serviceId
         })
         const avgResult = await Rating.aggregate([
-            { $match: { ratedId: ratedId } },
+            { $match: { ratedId: new ObjectId(ratedId) } },
             {
                 $group: {
                     _id: "$ratedId",
@@ -60,10 +74,24 @@ const ratingUser = async (req, res) => {
                 }
             }
         ]);
+        console.log(avgResult)
         const avgRating = avgResult.length > 0 ? avgResult[0].averageRating : 0;
-
-        // 📝 Update user model with new average
         await User.findByIdAndUpdate(ratedId, { averageRating: avgRating });
+
+        if(serviceId){
+        const avgServiceResult = await Rating.aggregate([
+            { $match: { serviceId: new ObjectId(serviceId) } },
+            {
+                $group: {
+                    _id: "$serviceId",
+                    averageRating: { $avg: "$rating" }
+                }
+            }
+        ]);
+        console.log(avgServiceResult);
+        const avgServiceRating = avgServiceResult.length > 0 ? avgServiceResult[0].averageRating : 0;
+        await Service.findByIdAndUpdate(serviceId, { rating: avgServiceRating });
+    }
         res.status(201).json(newRating);
     } catch (error) {
         res.status(500).json({
