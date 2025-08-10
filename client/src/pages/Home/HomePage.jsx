@@ -24,8 +24,9 @@ import {
 } from 'lucide-react';
 
 export default function Home() {
-    const { user } = useAuth();
+    const { user, loading } = useAuth();
     const navigate = useNavigate();
+    console.log("from home", user);
 
 
 
@@ -99,7 +100,7 @@ export default function Home() {
         { icon: <Video className="text-blue-600" size={32} />, title: "Video Editing", jobs: "980+ jobs available" }
     ];
 
-        if (!user) {
+        if (loading) {
             return (
                 <div className="min-h-screen bg-gray-50 flex items-center justify-center">
                     <div className="text-center">
@@ -121,7 +122,6 @@ export default function Home() {
                             <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
                                 Welcome back, {user?.user?.name}!
                             </h1>
-
                             {user?.user?.role === 'freelancer' ? (
                                 <>
                                     <p className="text-xl text-gray-600 mb-8">
@@ -210,13 +210,13 @@ export default function Home() {
 
                             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
                                 <button
-                                    onClick={() => navigate('/jobs')}
+                                    onClick={() => navigate('/signup')}
                                     className="bg-blue-600 text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-blue-700 transition-colors"
                                 >
                                     Join as Freelancer
                                 </button>
                                 <button
-                                    onClick={() => navigate('/services')}
+                                    onClick={() => navigate('/signup')}
                                     className="border border-blue-600 text-blue-600 px-8 py-3 rounded-md text-lg font-medium hover:bg-blue-50 transition-colors"
                                 >
                                     Hire Talent
@@ -415,7 +415,7 @@ export default function Home() {
                         </p>
 
                         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                            <button className="bg-white text-blue-600 px-8 py-3 rounded-md text-lg font-medium hover:bg-gray-50 transition-colors">
+                            <button onClick={() => navigate('/signup')} className="bg-white text-blue-600 px-8 py-3 rounded-md text-lg font-medium hover:bg-gray-50 transition-colors">
                                 Sign Up Now
                             </button>
                             <button className="border border-white text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-blue-700 transition-colors">
