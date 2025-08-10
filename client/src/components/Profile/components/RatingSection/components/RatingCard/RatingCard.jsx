@@ -39,7 +39,9 @@ function RatingCard({ data }) {
             </div>
             <div className="w-full">
                 <p className="">{`"${data?.comment}"`}</p>
-                {/* <a className="text-sm text-blue-600" href="">{`Service: ${service}`}</a> */}
+                {data?.serviceId &&
+                <a className="text-sm text-blue-600 cursor-pointer" onClick={() => navigate(`/service/${data?.serviceId?._id}`)}>{`Service: ${data?.serviceId?.title}`}</a>
+                }
             </div>
         </div>
     )

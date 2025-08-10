@@ -96,7 +96,7 @@ export const getservice = async (req, res) => {
             return res.status(404).json({ message: "Invalid Service Id" });
         }
         const ratings = await Rating.find({ serviceId: serviceId })
-                .populate("raterId", "name profilePicture username isVerified")
+                .populate("raterId", "name profilePicture username isVerified").populate("serviceId", "title")
                     .sort({ createdAt: -1 });
         const service = await Service.findById(serviceId).populate("user", "name email profilePicture username isVerified averageRating reviewCount location createdAt Languages").sort({ createdAt: -1 });
         if (!service) {

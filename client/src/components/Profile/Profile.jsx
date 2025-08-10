@@ -51,6 +51,7 @@ function Profile() {
         };
         fetchProfile();
     }, [id, showProfileEditModal]);
+
     useEffect(() => {
         if (!showRatingModal && !showProfileEditModal && !showJobsPopup && !showServicePopup) {
             document.body.style.overflow = 'auto';
@@ -64,6 +65,7 @@ function Profile() {
             <Loader />
         );
     }
+    console.log("Profile Data:", profileData);
     return (
         <div className="min-h-screen flex flex-col pt-[85px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
             {/* Profile Section */}
