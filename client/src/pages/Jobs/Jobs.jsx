@@ -4,135 +4,8 @@ import Filters from "../Jobs/components/Filters";
 import JobCard from "../../components/Common/JobCard";
 import Mobilefilter from "../Jobs/components/Mobilefilter";
 import { useAuth } from "../../contexts/AuthContext";
+import Loading from "../../components/Common/Loading";
 
-const jobsData = [
-  {
-    id: "68563628adb7c8fa5c4ac9bd",
-    client: "6855becd96f186bf3e4cbaaf",
-    title: "Build a Landing Page for SaaS Product",
-    description:
-      "Need a responsive landing page built with React and Tailwind. Should include hero section, features, pricing, and contact form.",
-    requiredSkills: ["React", "Tailwind CSS", "JavaScript"],
-    budget: 25000,
-    duration: "2 weeks",
-    deadline: "2025-07-10T00:00:00.000Z",
-    category: "Web Development",
-    isOpen: true,
-    proposals: [],
-    createdAt: "2025-06-21T04:33:44.135Z",
-    updatedAt: "2025-06-21T04:33:44.135Z",
-    __v: 0,
-  },
-  {
-    id: "68563628adb7c8fa5c4ac9be",
-    client: "6855becd96f186bf3e4cbaaf",
-    title: "Mobile App UI/UX Design for Healthcare App",
-    description:
-      "Seeking a talented UI/UX designer to create intuitive and accessible designs for our healthcare mobile application. Experience in healthcare industry preferred.",
-    requiredSkills: [
-      "UI/UX Design",
-      "Mobile Design",
-      "Figma",
-      "Healthcare",
-      "Accessibility",
-    ],
-    budget: 35000,
-    duration: "1 month",
-    deadline: "2025-07-25T00:00:00.000Z",
-    category: "Design",
-    isOpen: true,
-    proposals: [],
-    createdAt: "2025-06-22T04:33:44.135Z",
-    updatedAt: "2025-06-22T04:33:44.135Z",
-    __v: 0,
-  },
-  {
-    id: "68563628adb7c8fa5c4ac9bf",
-    client: "6855becd96f186bf3e4cbaaf",
-    title: "Content Writing for Digital Marketing Campaign",
-    description:
-      "Need experienced content writers for various digital marketing campaigns. Must be able to write engaging blog posts, social media content, and email campaigns.",
-    requiredSkills: [
-      "Content Writing",
-      "SEO",
-      "Social Media",
-      "Email Marketing",
-      "Copywriting",
-    ],
-    budget: 15000,
-    duration: "3 weeks",
-    deadline: "2025-07-15T00:00:00.000Z",
-    category: "Writing",
-    isOpen: true,
-    proposals: [],
-    createdAt: "2025-06-21T04:33:44.135Z",
-    updatedAt: "2025-06-21T04:33:44.135Z",
-    __v: 0,
-  },
-  {
-    id: "68563628adb7c8fa5c4ac9c0",
-    client: "6855becd96f186bf3e4cbaaf",
-    title: "Data Analysis and Visualization Dashboard",
-    description:
-      "Looking for a data scientist to create interactive dashboards and perform complex data analysis. Experience with Python, Tableau, and statistical modeling required.",
-    requiredSkills: ["Python", "Tableau", "Data Analysis", "Statistics", "SQL"],
-    budget: 45000,
-    duration: "6 weeks",
-    deadline: "2025-08-05T00:00:00.000Z",
-    category: "Data Science",
-    isOpen: true,
-    proposals: [],
-    createdAt: "2025-06-19T04:33:44.135Z",
-    updatedAt: "2025-06-19T04:33:44.135Z",
-    __v: 0,
-  },
-  {
-    id: "68563628adb7c8fa5c4ac9c1",
-    client: "6855becd96f186bf3e4cbaaf",
-    title: "Video Editing for YouTube Channel",
-    description:
-      "Seeking a skilled video editor for ongoing YouTube content creation. Must be proficient in After Effects and Premiere Pro with a creative eye for storytelling.",
-    requiredSkills: [
-      "Video Editing",
-      "After Effects",
-      "Premiere Pro",
-      "Motion Graphics",
-      "YouTube",
-    ],
-    budget: 20000,
-    duration: "4 weeks",
-    deadline: "2025-07-20T00:00:00.000Z",
-    category: "Video & Animation",
-    isOpen: true,
-    proposals: [],
-    createdAt: "2025-06-23T04:33:44.135Z",
-    updatedAt: "2025-06-23T04:33:44.135Z",
-    __v: 0,
-  },
-  {
-    id: "68563628adb7c8fa5c4ac9c2",
-    client: "6855becd96f186bf3e4cbaaf",
-    title: "SEO Optimization for E-commerce Website",
-    description:
-      "Need an SEO expert to improve organic search rankings for our e-commerce website. Must have proven track record with technical SEO and content optimization.",
-    requiredSkills: [
-      "SEO",
-      "Google Analytics",
-      "Keyword Research",
-      "Technical SEO",
-      "Content Strategy",
-    ],
-    budget: 30000,
-    duration: "5 weeks",
-    deadline: "2025-07-30T00:00:00.000Z",
-    category: "Digital Marketing",
-    isOpen: true,
-    proposals: [],
-    createdAt: "2025-06-18T04:33:44.135Z",
-    updatedAt: "2025-06-18T04:33:44.135Z",
-    __v: 0,
-  },
-];
 
 const categories = [
   "All Categories",
@@ -154,13 +27,14 @@ const budgetRanges = [
 
 const Jobs = () => {
   const { user } = useAuth();
-  const [jobData, setJobData] = useState(jobsData);
+  const [jobData, setJobData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [showMobileFilters, setShowMobileFilters] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("All Categories");
   const [selectedBudget, setSelectedBudget] = useState("All Budgets");
   const [sortBy, setSortBy] = useState("newest");
-  const [filteredJobs, setFilteredJobs] = useState(jobsData);
+  const [filteredJobs, setFilteredJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     (async () => {
@@ -175,6 +49,7 @@ const Jobs = () => {
         console.log(data);
         setJobData(data);
         setFilteredJobs(data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching jobs:", error);
       }
@@ -263,9 +138,14 @@ const Jobs = () => {
     setShowMobileFilters,
   };
 
+  if (loading) {
+    return (<Loading />)
+  }
+
+
   return (
-    <div className="min-h-screen w-full flex flex-col pt-[10%] max-sm:pt-[12%] md:pt-[8%] lg:pt-[6%] xl:pt-[5%] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
-      <div className="p-5 xl:px-32 md:px-5 min-h-screen w-full flex gap-10 bg-gray-100 relative">
+    <div className="min-h-screen  w-full flex flex-col pt-[85px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
+      <div className="xl:px-32 md:px-5 min-h-screen w-full flex gap-10 bg-gray-100">
         {/* Sidebar */}     
         <Filters {...filterProps} />
 
@@ -273,11 +153,13 @@ const Jobs = () => {
           
           {/* Search Bar */}
           
-          <SearchBar
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            setShowMobileFilters={setShowMobileFilters}
-          />
+          <div className="w-full sticky top-[85px] ">
+            <SearchBar
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              setShowMobileFilters={setShowMobileFilters}
+            />
+          </div>
           
 
           {/* Mobile Filters */}
@@ -286,7 +168,7 @@ const Jobs = () => {
           
 
           {/* Job Cards */}
-          
+          <div className="mt-5 rounded min-h-[70vh] overflow-y-auto">
           {filteredJobs.length > 0 ? (
             filteredJobs.map((job) => {
               return (
@@ -294,9 +176,9 @@ const Jobs = () => {
               );
             })
           ) : (
-            <h1 className="text-center text-zinc-500 font-medium">No Jobs Found</h1>
+              <h1 className="text-center text-zinc-500 font-medium">No Job Found</h1>
           )}
-          
+          </div>
         </div>
       </div>
     </div>

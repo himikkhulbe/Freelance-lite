@@ -4,6 +4,7 @@ import Filters from "../Jobs/components/Filters";
 import Mobilefilter from "../Jobs/components/Mobilefilter";
 import ServiceCard from "../../components/Common/ServiceCard";
 import { useAuth } from "../../contexts/AuthContext";
+import Loading from "../../components/Common/Loading";
 
 const categories = [
   "All Categories",
@@ -32,6 +33,8 @@ const Services = () => {
   const [selectedBudget, setSelectedBudget] = useState("All Budgets");
   const [sortBy, setSortBy] = useState("newest");
   const [filteredServices, setFilteredServices] = useState([]);
+  const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     (async () => {
@@ -44,6 +47,8 @@ const Services = () => {
         }
         const data = await response.json();
         setServiceData(data);
+        setFilteredServices(data);
+        setLoading(false);
       } catch (error) {
         console.error("Error fetching services:", error);
       }
@@ -136,16 +141,21 @@ const Services = () => {
     setShowMobileFilters,
   };
 
+  if (loading) {
+    return (<Loading />)
+  }
+
+
   return (
-    <div className="min-h-screen w-full flex flex-col pt-[20px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
-      <div className="p-5 xl:px-32 md:px-5 min-h-screen w-full flex gap-10 bg-gray-100">
+    <div className="min-h-screen w-full flex flex-col pt-[85px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
+      <div className=" xl:px-32 md:px-5 min-h-screen w-full flex gap-10 bg-gray-100">
         {/* Sidebar */}
         <Filters {...filterProps} />
 
         <div className="w-full relative">
 
           {/* Search Bar */}
-          <div className="w-full sticky top-5 ">
+          <div className="w-full sticky top-[85px] ">
           <SearchBar
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
@@ -157,7 +167,7 @@ const Services = () => {
           <Mobilefilter {...mobileFilterProps} />
 
           {/* Service Cards */}
-          <div className="mt-5 rounded h-[70vh] overflow-y-auto">
+          <div className="mt-5 rounded min-h-[70vh] overflow-y-auto">
           {filteredServices.length > 0 ? (
             filteredServices.map((job) => {
               return (

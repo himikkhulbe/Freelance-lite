@@ -12,6 +12,7 @@ import JobsCard from "../Common/JobCard.jsx";
 import ServiceCard from "../Common/ServiceCard.jsx";
 import { useNavigate } from "react-router-dom";
 import formatDate from "../../Utils/formatDate.js";
+import Loader from "../Common/Loading.jsx";
 
 function Profile() {
     const { user } = useAuth();
@@ -60,13 +61,11 @@ function Profile() {
     }, [showRatingModal, showProfileEditModal, showJobsPopup, showServicePopup]);
     if (!profileData) {
         return (
-            <div className="min-h-screen flex items-center justify-center">
-                <p className="text-gray-500 text-lg">Loading...</p>
-            </div>
+            <Loader />
         );
     }
     return (
-        <div className="min-h-screen flex flex-col pt-[20px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
+        <div className="min-h-screen flex flex-col pt-[85px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
             {/* Profile Section */}
             {showRatingModal && <RatingPopup user={profileData} close={setShowRatingModal} />}
             {showProfileEditModal && <ProfileEditPopup loggedInUser={profileData} close={setShowProfileEditModal} />}

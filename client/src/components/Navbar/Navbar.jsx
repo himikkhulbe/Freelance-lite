@@ -99,7 +99,7 @@ const FreelanceNavbar = () => {
   return (
     <div>
       {/* Main Navbar */}
-      <nav className="bg-white shadow-lg border-b border-blue-100 sticky top-0 z-50">
+      <nav className="bg-white h-[64px]  shadow-lg border-b border-blue-100 fixed w-full top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
 
@@ -231,8 +231,8 @@ const FreelanceNavbar = () => {
 
           {/* Mobile Menu */}
           {isMobileMenuOpen && (
-            <div className="md:hidden">
-              <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200">
+            <div className="md-lg:block md:hidden bg-white px-0 absolute w-full top-[64px] left-0">
+              <div className="px-2 pt-2 pb-3 space-y-1  sm:px-3 border-t border-gray-200">
                 {navigationItems.map((item, index) => (
                   <a
                     key={index}

@@ -8,7 +8,6 @@ import {
   Clock,
   MessageCircle,
   Heart,
-  Share2,
   MapPin,
   CheckCircle,
   HelpCircle,
@@ -132,7 +131,7 @@ const Service = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen mt-[85px] bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -150,18 +149,18 @@ const Service = () => {
                     {service?.service?.title}
                   </h1>
 
-                  <div className="flex items-center space-x-4 mb-4">
+                  <div className="xs:flex xs:items-center xs:space-x-4 mb-4 flex-wrap">
                     <div className="flex items-center">
                       {RenderStars(service?.service?.rating)}
                       <span className="ml-2 text-sm font-medium text-gray-900">
                         {service?.service?.rating}
                       </span>
                       <span className="text-sm text-gray-500 ml-1">
-                        ({service?.service?.reviewCount || 0} reviews)
+                        ({service?.ratings?.length || 0} reviews)
                       </span>
                     </div>
 
-                    <div className="flex items-center space-x-2">
+                    <div className="flex mt-[10px] xs:mt-[0px] items-center space-x-2">
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded">
                         {service?.service?.category}
                       </span>
@@ -188,16 +187,6 @@ const Service = () => {
                       </div>
                     </div>
                   </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex items-center space-x-2">
-                  <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-50">
-                    <Heart className="w-5 h-5 text-gray-500" />
-                  </button>
-                  <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-50">
-                    <Share2 className="w-5 h-5 text-gray-500" />
-                  </button>
                 </div>
               </div>
             </div>
@@ -268,7 +257,7 @@ const Service = () => {
               <nav className="-mb-px flex space-x-8">
                 {[
                   { id: 'overview', label: 'Overview' },
-                  { id: 'reviews', label: `Reviews (${service?.service?.reviewCount || 0})` },
+                  { id: 'reviews', label: `Reviews (${service?.ratings?.length || 0})` },
                   { id: 'faq', label: 'FAQ' },
                   { id: 'seller', label: 'About Seller' }
                 ].map(tab => (
@@ -330,7 +319,17 @@ const Service = () => {
               {activeTab === 'reviews' && (
                 <div className="space-y-6">
                   {
-                    console.log("hello ",service?.service?.reviews)
+                    service?.ratings?.length > 0 
+                    ?
+                    (
+                      service?.ratings?.map((rating) => (
+                        <RatingCard key={rating._id} data={rating} />
+                      ))
+                    )
+                    :
+                    (
+                      <div className="text-center">No Rating Found</div>
+                    )
                   }
                 </div>
               )}
@@ -361,7 +360,7 @@ const Service = () => {
                     />
                     <div className="flex-1">
                       <h3 className="text-xl font-semibold mb-2">{service?.service?.user.name}</h3>
-                      <div className="flex items-center mb-2">
+                      <div className="flex flex-wrap items-center mb-2">
                         {RenderStars(service?.service?.user.averageRating)}{
                           <span className="ml-2 text-sm text-gray-800">
                             {service?.service?.user.averageRating.toFixed(1)}

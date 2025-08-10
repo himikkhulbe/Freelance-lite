@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 import formatDate from '../../Utils/formatDate';
 import ProposalModal from './component/ProposalModal.jsx';
+import Loading from '../../components/Common/Loading.jsx';
 import {
     Clock,
     MessageCircle,
@@ -67,18 +68,13 @@ const Job = () => {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="text-center">
-                    <Loader className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
-                    <p className="text-gray-600">Loading job details...</p>
-                </div>
-            </div>
+            <Loading/>
         );
     }
 
     if (error || !job) {
         return (
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen mt-[85px] bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-red-600 mb-4">{error || 'Job not found'}</p>
                     <button

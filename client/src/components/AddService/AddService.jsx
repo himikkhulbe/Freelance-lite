@@ -259,7 +259,7 @@ const handleUpdate = async () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 py-4 px-4 sm:py-8">
+        <div className="min-h-screen mt-[85px] bg-gray-50 py-4 px-4 sm:py-8">
             <div className="max-w-4xl mx-auto">
                 {/* Header */}
                 <div className="bg-white rounded-t-lg shadow-sm border border-b-0 px-4 py-4 sm:px-6 sm:py-5">
