@@ -90,7 +90,6 @@ export const getUserProfile = async (req, res) => {
 
         const ratings = await Rating.find({ ratedId: userId })
         .populate("raterId", "name profilePicture username isVerified").populate("serviceId", "title")
-        .populate("jobId", "title")
             .sort({ createdAt: -1 });
         if (user.role === "freelancer") {
             const services = await Service.find({ user: userId }).populate("user", "name profilePicture username isVerified").sort({ createdAt: -1 });
@@ -137,7 +136,7 @@ export const getOtherUserProfile = async (req, res) => {
             return res.status(404).json({ message: "User not found" });
         }
         const ratings = await Rating.find({ ratedId: userId })
-        .populate("raterId", "name profilePicture username isVerified")
+        .populate("raterId", "name profilePicture username isVerified").populate("serviceId", "title")
         .sort({ createdAt: -1 });
         if (user.role === "freelancer") {
             const services = await Service.find({ user: userId }).populate("user", "name profilePicture username isVerified").sort({ createdAt: -1 });

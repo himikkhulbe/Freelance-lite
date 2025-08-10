@@ -23,8 +23,8 @@ const ratingModel = new mongoose.Schema({
     },
     serviceId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Service',
-        required: false
+        required: false,
+        ref: 'Service'
     }
 }, {timestamps: true})
 
