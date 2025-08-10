@@ -39,7 +39,7 @@ function RatingCard({ data }) {
             </div>
             <div className="w-full">
                 <p className="">{`"${data?.comment}"`}</p>
-                {/* <a className="text-sm text-blue-600" href="">{`Service: ${service}`}</a> */}
+                <a className="text-sm text-blue-600" href="">{`Service: ${service}`}</a>
             </div>
         </div>
     )

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 import ServiceCard from '../../components/Common/ServiceCard';
 import { useAuth } from '../../contexts/AuthContext';
 import formatDate from '../../Utils/formatDate';
 import RenderStars from "../../components/Common/RenderStars";
+import { useNavigate } from 'react-router-dom';
 import {
   Clock,
   MessageCircle,
@@ -18,6 +19,7 @@ import {
 import RatingCard from '../../components/Profile/components/RatingSection/components/RatingCard/RatingCard';
 
 const Service = () => {
+  const Navigate = useNavigate();
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -180,7 +182,7 @@ const Service = () => {
                       className="w-12 h-12 rounded-full object-cover"
                     />
                     <div>
-                      <h3 className="font-medium text-gray-900">{service?.service?.user.name}</h3>
+                      <h3 onClick={() => Navigate(`/profile/${service?.service?.user._id}`)} className="font-medium cursor-pointer text-gray-900">{service?.service?.user.name}</h3>
                       <div className="flex items-center text-sm text-gray-500">
                         <MapPin className="w-3 h-3 mr-1" />
                         {service?.service?.user.location}
@@ -319,17 +321,17 @@ const Service = () => {
               {activeTab === 'reviews' && (
                 <div className="space-y-6">
                   {
-                    service?.ratings?.length > 0 
-                    ?
-                    (
-                      service?.ratings?.map((rating) => (
-                        <RatingCard key={rating._id} data={rating} />
-                      ))
-                    )
-                    :
-                    (
-                      <div className="text-center">No Rating Found</div>
-                    )
+                    service?.ratings?.length > 0
+                      ?
+                      (
+                        service?.ratings?.map((rating) => (
+                          <RatingCard key={rating._id} data={rating} />
+                        ))
+                      )
+                      :
+                      (
+                        <div className="text-center">No Rating Found</div>
+                      )
                   }
                 </div>
               )}
@@ -359,7 +361,7 @@ const Service = () => {
                       className="w-20 h-20 rounded-full object-cover"
                     />
                     <div className="flex-1">
-                      <h3 className="text-xl font-semibold mb-2">{service?.service?.user.name}</h3>
+                      <h3 onClick={() => Navigate(`/profile/${service?.service?.user._id}`)} className="text-xl cursor-pointer font-semibold mb-2">{service?.service?.user.name}</h3>
                       <div className="flex flex-wrap items-center mb-2">
                         {RenderStars(service?.service?.user.averageRating)}{
                           <span className="ml-2 text-sm text-gray-800">

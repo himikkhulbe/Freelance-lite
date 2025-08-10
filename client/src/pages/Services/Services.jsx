@@ -165,7 +165,6 @@ const Services = () => {
 
           {/* Mobile Filters */}
           <Mobilefilter {...mobileFilterProps} />
-
           {/* Service Cards */}
           <div className="mt-5 rounded min-h-[70vh] overflow-y-auto">
           {filteredServices.length > 0 ? (
