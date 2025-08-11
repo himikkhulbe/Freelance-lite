@@ -4,12 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import RenderStars from '../../../../../Common/RenderStars.jsx';
 import formatDate from '../../../../../../Utils/formatDate.js';
 
-function RatingCard({ data }) {
+function RatingCard({ data , show = true}) {
     const navigate = useNavigate();
 
     const handleProfileClick = () => {
         navigate(`/profile/${data?.raterId?._id}`);
-
     }
     return (
         <div className="flex flex-col gap-[10px] w-full border-b-[0.5px] border-gray-300 pb-[5px] mb-[20px]">
@@ -39,7 +38,7 @@ function RatingCard({ data }) {
             </div>
             <div className="w-full">
                 <p className="">{`"${data?.comment}"`}</p>
-                {data?.serviceId &&
+                {data?.serviceId && show &&
                 <a className="text-sm text-blue-600 cursor-pointer" onClick={() => navigate(`/service/${data?.serviceId?._id}`)}>{`Service: ${data?.serviceId?.title}`}</a>
                 }
             </div>

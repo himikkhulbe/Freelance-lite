@@ -9,12 +9,15 @@ import {
   Clock,
   MessageCircle,
   Heart,
+  FileText,
   MapPin,
   CheckCircle,
   HelpCircle,
   ArrowLeft,
   Loader,
-  RefreshCw
+  RefreshCw,
+  Star,
+  Eye
 } from 'lucide-react';
 import RatingCard from '../../components/Profile/components/RatingSection/components/RatingCard/RatingCard';
 
@@ -133,7 +136,7 @@ const Service = () => {
   }
 
   return (
-    <div className="min-h-screen mt-[85px] bg-gray-50">
+    <div className="min-h-screen mt-[65px] bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -155,7 +158,7 @@ const Service = () => {
                     <div className="flex items-center">
                       {RenderStars(service?.service?.rating)}
                       <span className="ml-2 text-sm font-medium text-gray-900">
-                        {service?.service?.rating}
+                        {service?.service?.rating.toFixed(1)}
                       </span>
                       <span className="text-sm text-gray-500 ml-1">
                         ({service?.ratings?.length || 0} reviews)
@@ -324,14 +327,25 @@ const Service = () => {
                     service?.ratings?.length > 0
                       ?
                       (
-                        service?.ratings?.map((rating) => (
-                          <RatingCard key={rating._id} data={rating} />
+                        service?.ratings?.slice(0,3).map((rating) => (
+                          <RatingCard key={rating._id} data={rating} show={false} />
                         ))
                       )
                       :
                       (
-                        <div className="text-center">No Rating Found</div>
+                        <div className="text-center py-8">
+                          <Star className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                          <p className="text-gray-500">No Review Found</p>
+                        </div>
                       )
+                  }{
+                    service?.ratings?.length > 3 &&
+                  <button className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center w-full gap-[7px] text-sm text-zinc-600 group ">
+                    <Eye className="text-gray-600 w-4 h-4 group-hover:text-blue-600" />
+                    <span className='group-hover:text-blue-600'>
+                      View All
+                    </span>
+                  </button>  
                   }
                 </div>
               )}
@@ -410,7 +424,7 @@ const Service = () => {
               <h3 className="font-semibold mb-4">More from {service?.service?.user.name}</h3>
               <div className="space-y-4">
                 {/* Mock related services */}
-                {service?.services?.map(data => (
+                {service?.services?.slice(0,2).map(data => (
                   <ServiceCard
                     key={data._id}
                     data={data}
@@ -418,7 +432,14 @@ const Service = () => {
                     size={true}
                   />
                 ))}
-              </div>
+                {service?.services?.length > 2 &&
+                  <button className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center w-full gap-[7px] text-sm text-zinc-600 group ">
+                  <Eye className="text-gray-600 w-4 h-4 group-hover:text-blue-600" />
+                  <span className='group-hover:text-blue-600'>
+                    View All
+                  </span>
+                </button>}        
+                </div>
             </div>
           </div>
         </div>

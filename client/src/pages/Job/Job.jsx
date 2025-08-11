@@ -18,7 +18,8 @@ import {
     Calendar,
     Users,
     FileText,
-    Send
+    Send,
+    Eye
 } from 'lucide-react';
 import JobCard from "../../components/Common/JobCard.jsx";
 
@@ -68,13 +69,13 @@ const Job = () => {
 
     if (loading) {
         return (
-            <Loading/>
+            <Loading />
         );
     }
 
     if (error || !job) {
         return (
-            <div className="min-h-screen mt-[85px] bg-gray-50 flex items-center justify-center">
+            <div className="min-h-screen  bg-gray-50 flex items-center justify-center">
                 <div className="text-center">
                     <p className="text-red-600 mb-4">{error || 'Job not found'}</p>
                     <button
@@ -94,7 +95,7 @@ const Job = () => {
     );
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen mt-[65px] bg-gray-50">
             {/* Header */}
             <div className="bg-white shadow-sm border-b">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -149,16 +150,6 @@ const Job = () => {
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-
-                                {/* Action Buttons */}
-                                <div className="flex items-center space-x-2">
-                                    <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-50">
-                                        <Heart className="w-5 h-5 text-gray-500" />
-                                    </button>
-                                    <button className="p-2 border border-gray-300 rounded-md hover:bg-gray-50">
-                                        <Share2 className="w-5 h-5 text-gray-500" />
-                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -245,17 +236,6 @@ const Job = () => {
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Left Column */}
                     <div className="flex-1">
-                        {/* Job Preview */}
-                        <div className="bg-gradient-to-br from-green-100 to-green-200 rounded-lg h-64 sm:h-80 flex items-center justify-center mb-8">
-                            <div className="text-center">
-                                <div className="text-green-600 text-2xl font-bold mb-2">
-                                    {job?.job?.category}
-                                </div>
-                                <div className="text-green-500 text-lg">
-                                    Job Opportunity
-                                </div>
-                            </div>
-                        </div>
 
                         {/* Tabs */}
                         <div className="border-b border-gray-200 mb-6">
@@ -339,7 +319,7 @@ const Job = () => {
                             {activeTab === 'proposals' && (
                                 <div className="space-y-6">
                                     {job?.job?.proposals?.length > 0 ? (
-                                        job.job.proposals.map(proposal => (
+                                        job?.job?.proposals.slice(0, 2).map(proposal => (
                                             <div key={proposal._id} className="border border-gray-200 rounded-lg p-4">
                                                 <div className="flex items-start space-x-4">
                                                     <img
@@ -372,12 +352,20 @@ const Job = () => {
                                                 </div>
                                             </div>
                                         ))
+
                                     ) : (
                                         <div className="text-center py-8">
                                             <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                                             <p className="text-gray-500">No proposals submitted yet</p>
                                         </div>
                                     )}
+                                    {job?.job?.proposals?.length > 2 &&
+                                        <button className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center w-full gap-[7px] text-sm text-zinc-600 group ">
+                                            <Eye className="text-gray-600 w-4 h-4 group-hover:text-blue-600" />
+                                            <span className='group-hover:text-blue-600'>
+                                                View All
+                                            </span>
+                                        </button>}
                                 </div>
                             )}
 
@@ -432,7 +420,7 @@ const Job = () => {
                                 {/* Mock related jobs - you can replace with actual data */}
                                 {
                                     job?.jobs?.length > 0 ?
-                                        job?.jobs.map(relatedJob => (
+                                        job?.jobs?.slice(0, 2).map(relatedJob => (
                                             <JobCard
                                                 key={relatedJob._id}
                                                 data={relatedJob}
@@ -442,7 +430,16 @@ const Job = () => {
                                         )) : (
                                             <p className="text-gray-500">No similar jobs found</p>
                                         )
+                                }{
+                                    job?.jobs?.length > 2 &&
+                                    <button className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center w-full gap-[7px] text-sm text-zinc-600 group ">
+                                        <Eye className="text-gray-600 w-4 h-4 group-hover:text-blue-600" />
+                                        <span className='group-hover:text-blue-600'>
+                                            View All
+                                        </span>
+                                    </button>
                                 }
+                                
                             </div>
                         </div>
                     </div>

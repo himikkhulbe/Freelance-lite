@@ -47,7 +47,9 @@ function JobsCard({ data, loggedInUser, size=false}) {
                     </div>
                 }
             </div>
-            <p className="text-gray-500 text-sm">{data.description}</p>
+            <p className="text-gray-500 text-sm">{data?.description.slice(0, 100)}{data?.description.length > 100 ? <span onClick={() => {
+                viewJob()
+            }} className="text-blue-600 cursor-pointer">...more</span> : ''}</p>
             <div className="flex gap-5 justify-start items-center">
                 <div className="flex items-center">
                     <IndianRupee className="w-4 h-4 text-gray-500" />
