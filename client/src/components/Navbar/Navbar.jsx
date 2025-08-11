@@ -16,7 +16,9 @@ import {
   Filter,
   MapPin,
   DollarSign,
-  Star
+  Star,
+  Handshake,
+  FileCheck
 } from 'lucide-react';
 
 const FreelanceNavbar = () => {
@@ -84,7 +86,7 @@ const FreelanceNavbar = () => {
         { label: 'About', href: '/about' },
         { label: 'Contact Us', href: '/contact' }
       ];
-    } else if(user?.user?.role === 'client'){
+    } else if (user?.user?.role === 'client') {
       return [
         { label: 'Home', href: '/' },
         { label: 'Find Services', href: '/services' },
@@ -137,19 +139,19 @@ const FreelanceNavbar = () => {
                       onClick={() => setIsProfileDropdownOpen(!isProfileDropdownOpen)}
                       className="flex items-center space-x-2 bg-blue-50 hover:bg-blue-100 rounded-full p-1 pr-3 transition-colors duration-200"
                     >
-                      {userData.avatar ? 
+                      {userData.avatar ?
                         <img
                           src={userData.avatar}
                           alt="Profile"
                           className="w-8 h-8 rounded-full object-cover"
                         />
-                      : 
-                      <div className='w-8 h-8 rounded-full object-cover flex justify-center items-center bg-blue-200'>
-                        <User className="w-6 h-6 text-black" />
-                      </div>
+                        :
+                        <div className='w-8 h-8 rounded-full object-cover flex justify-center items-center bg-blue-200'>
+                          <User className="w-6 h-6 text-black" />
+                        </div>
 
                       }
-                      
+
                       <span className="hidden sm:block text-sm font-medium text-gray-700">{userData.name}</span>
                       <ChevronDown className="w-4 h-4 text-gray-500" />
                     </button>
@@ -159,24 +161,22 @@ const FreelanceNavbar = () => {
                       <div className="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
                         <div className="px-4 py-3 border-b border-gray-100">
                           <div className="flex items-center space-x-3">
-                            {userData.avatar 
-                            ? 
+                            {userData.avatar
+                              ?
                               <img
                                 src={userData.avatar}
                                 alt="Profile"
                                 className="w-10 h-10 rounded-full object-cover"
                               />
-                            :
-                            <div className='w-10 h-10 rounded-full object-cover flex justify-center items-center bg-blue-200'>
-                              <User className="w-8 h-8 text-black" />
-                            </div>}
-                            
+                              :
+                              <div className='w-10 h-10 rounded-full object-cover flex justify-center items-center bg-blue-200'>
+                                <User className="w-8 h-8 text-black" />
+                              </div>}
+
                             <div>
                               <p className="text-sm font-medium text-gray-900">{userData.name}</p>
                               <p className="text-xs text-gray-500">{userData.email}</p>
                               <div className="flex items-center space-x-2 mt-1">
-                                <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                                <span className="text-xs text-gray-600">{userData.rating}</span>
                                 {/* <span className="text-xs text-gray-400">•</span> */}
                                 {/* <span className="text-xs text-gray-600">{userData.completedJobs} jobs</span> */}
                               </div>
@@ -187,7 +187,35 @@ const FreelanceNavbar = () => {
                         <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <User className="w-4 h-4 mr-3" />
                           View Profile
-                        </a>
+                        </a>{
+                          user?.user?.role === 'freelancer' ?
+                            (
+                              <>
+                                <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                  <Handshake className="w-4 h-4 mr-3" />
+                                  My orders
+                                </a>
+                                <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                  <FileCheck className="w-4 h-4 mr-3" />
+                                  Proposed Order
+                                </a>
+                              </>
+                            ) :
+                            (
+                              <>
+                                <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                  <FileCheck className="w-4 h-4 mr-3" />
+                                  Propsals
+                                </a>
+                                <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                  <Handshake className="w-4 h-4 mr-3" />
+                                  Placed Order
+                                </a>
+                              </>
+
+                            )
+                        }
+
 
                         <div className="border-t border-gray-100">
                           <button
