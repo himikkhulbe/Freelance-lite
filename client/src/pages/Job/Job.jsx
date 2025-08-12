@@ -4,6 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import formatDate from '../../Utils/formatDate';
 import ProposalModal from './component/ProposalModal.jsx';
 import Loading from '../../components/Common/Loading.jsx';
+import { useNavigate } from 'react-router-dom';
 import {
     Clock,
     MessageCircle,
@@ -24,6 +25,7 @@ import {
 import JobCard from "../../components/Common/JobCard.jsx";
 
 const Job = () => {
+    const navigate = useNavigate();
     const [job, setJob] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -40,7 +42,7 @@ const Job = () => {
     const fetchJob = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`https://freelance-lite.onrender.com/api/client/job/${id}`, {
+            const response = await fetch(`http://localhost:8000/api/client/job/${id}`, {
                 method: "GET",
                 credentials: "include"
             });
@@ -90,7 +92,7 @@ const Job = () => {
     }
 
     // Check if user has already submitted a proposal
-    const hasSubmittedProposal = job?.job?.proposals?.some(
+    const hasSubmittedProposal = job?.proposal?.some(
         proposal => proposal.freelancer._id === user?.user?._id
     );
 
@@ -131,7 +133,7 @@ const Job = () => {
 
                                         <div className="flex items-center text-sm text-gray-500">
                                             <Users className="w-4 h-4 mr-1" />
-                                            {job?.job?.proposals?.length || 0} proposals
+                                            {job?.proposal?.length || 0} proposals
                                         </div>
                                     </div>
 
@@ -143,7 +145,7 @@ const Job = () => {
                                             className="w-12 h-12 rounded-full object-cover"
                                         />
                                         <div>
-                                            <h3 className="font-medium text-gray-900">{job?.job?.client?.name}</h3>
+                                            <h3 onClick={() => navigate(`/profile/${job?.job?.client?._id}`)} className="cursor-pointer font-medium text-gray-900">{job?.job?.client?.name}</h3>
                                             <div className="flex items-center text-sm text-gray-500">
                                                 <MapPin className="w-3 h-3 mr-1" />
                                                 {job?.job?.client?.location || 'Location not specified'}
@@ -242,7 +244,7 @@ const Job = () => {
                             <nav className="-mb-px flex space-x-8">
                                 {[
                                     { id: 'overview', label: 'Overview' },
-                                    { id: 'proposals', label: `Proposals (${job?.job?.proposals?.length || 0})` },
+                                    { id: 'proposals', label: `Proposals (${job?.proposal?.length || 0})` },
                                     { id: 'client', label: 'About Client' }
                                 ].map(tab => (
                                     <button
@@ -318,8 +320,8 @@ const Job = () => {
 
                             {activeTab === 'proposals' && (
                                 <div className="space-y-6">
-                                    {job?.job?.proposals?.length > 0 ? (
-                                        job?.job?.proposals.slice(0, 2).map(proposal => (
+                                    {job?.proposal?.length > 0 ? (
+                                        job?.proposal.slice(0, 10).map(proposal => (
                                             <div key={proposal._id} className="border border-gray-200 rounded-lg p-4">
                                                 <div className="flex items-start space-x-4">
                                                     <img
@@ -378,7 +380,7 @@ const Job = () => {
                                             className="w-20 h-20 rounded-full object-cover"
                                         />
                                         <div className="flex-1">
-                                            <h3 className="text-xl font-semibold mb-2">{job?.job?.client?.name}</h3>
+                                            <h3 onClick={() => navigate(`/profile/${job?.job?.client?._id}`)} className="text-xl cursor-pointer font-semibold mb-2">{job?.job?.client?.name}</h3>
                                             <div className="grid grid-cols-2 gap-4 text-sm">
                                                 <div>
                                                     <span className="text-gray-500">From:</span>

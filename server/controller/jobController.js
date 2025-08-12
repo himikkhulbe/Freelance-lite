@@ -1,6 +1,7 @@
+import mongoose from "mongoose";
 import Job from "../models/jobModels.js";
 import User from "../models/userModel.js";
-import mongoose from "mongoose";
+import Proposal from "../models/proposalModels.js";
 
 export const createJob = async (req, res) => {
     const userId = req.user._id;
@@ -88,9 +89,10 @@ export const getJob = async (req, res) => {
             return res.status(404).json({ message: "Invalid Job Id" });
         }
 
+        const proposal = await Proposal.find({ job: jobId }).populate("freelancer", "name username profilePicture");;
+
         const job = await Job.findById(jobId)
             .populate("client", "name email profilePicture username isVerified averageRating reviewCount location createdAt Languages")
-            .populate("proposals.freelancer", "name username profilePicture") // ✅ This populates freelancer in proposals
             .sort({ createdAt: -1 });
 
         if (!job) {
@@ -101,7 +103,7 @@ export const getJob = async (req, res) => {
             .populate("client", "_id")
             .sort({ createdAt: -1 });
         console.log(jobs);
-        res.status(200).json({ job, jobs });
+        res.status(200).json({ job, jobs , proposal });
 
     } catch (error) {
         console.error(error);
@@ -192,17 +194,14 @@ export const UploadProposal = async (req, res) => {
         const user = await User.findById(userId);
         if(user.role !== 'freelancer')
             return res.status(403).json({ message: "Only freelancers can submit proposals." });
-        
-        const proposal = {
+        const proposal = await Proposal.create({
+            client: job.client,
+            job: jobId,
             freelancer: userId,
             coverLetter,
             bidAmount,
             status: 'pending'
-        };
-
-        job.proposals.push(proposal);
-        await job.save();
-
+        });
         res.status(201).json({ message: "Proposal submitted successfully", proposal });
     } catch (error) {
         console.error("Error submitting proposal:", error);

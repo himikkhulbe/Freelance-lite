@@ -183,7 +183,6 @@ const FreelanceNavbar = () => {
                             </div>
                           </div>
                         </div>
-
                         <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                           <User className="w-4 h-4 mr-3" />
                           View Profile
@@ -191,25 +190,25 @@ const FreelanceNavbar = () => {
                           user?.user?.role === 'freelancer' ?
                             (
                               <>
-                                <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="/orderrecieved" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                   <Handshake className="w-4 h-4 mr-3" />
-                                  My orders
+                                  Order Received
                                 </a>
-                                <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="/myproposals" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                   <FileCheck className="w-4 h-4 mr-3" />
-                                  Proposed Order
+                                  My Proposals
                                 </a>
                               </>
                             ) :
                             (
                               <>
-                                <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="/proposalsreceived" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                   <FileCheck className="w-4 h-4 mr-3" />
-                                  Propsals
+                                  Proposals Received
                                 </a>
-                                <a href="/profile" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="/myorder" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                   <Handshake className="w-4 h-4 mr-3" />
-                                  Placed Order
+                                  My Order
                                 </a>
                               </>
 

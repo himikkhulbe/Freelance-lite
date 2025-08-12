@@ -1,9 +1,19 @@
 import mongoose from "mongoose";
 
 const proposalSchema = new mongoose.Schema({
+  client: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true
+  },
   freelancer: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true
+  },
+  job: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Job",
     required: true
   },
   coverLetter: {
