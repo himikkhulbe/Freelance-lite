@@ -200,7 +200,8 @@ export const UploadProposal = async (req, res) => {
             freelancer: userId,
             coverLetter,
             bidAmount,
-            status: 'pending'
+            status: 'pending',
+            editing: 0
         });
         res.status(201).json({ message: "Proposal submitted successfully", proposal });
     } catch (error) {
@@ -250,6 +251,33 @@ export const updateProposalStatus = async (req, res) => {
         res.status(200).json({ message: "Proposal status updated successfully", proposal });
     } catch (error) {
         console.error("Error updating proposal status:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const getMyProposals = async (req, res) => {
+    const userId = req.user._id;
+    console.log(userId);
+    try {
+        const proposals = await Proposal.find({ freelancer: userId }).populate("client", "name location contactInfo").populate("job", "title description budget deadline").sort({ createdAt: -1 });
+        console.log(proposals);
+        res.status(200).json(proposals);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
+export const editPorposal = async (req, res) => {
+    const proposalId = req.params.id;
+    const { bidAmount, coverLetter } = req.body;
+
+    try {
+        const proposal = await Proposal.findByIdAndUpdate(proposalId, { bidAmount, coverLetter, editing: editing+1 }, { new: true });
+        if (!proposal) {
+            return res.status(404).json({ message: "Proposal not found" });
+        }
+        res.status(200).json({ message: "Proposal updated successfully", proposal });
+    } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }
 }

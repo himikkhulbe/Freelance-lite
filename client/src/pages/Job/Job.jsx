@@ -20,6 +20,7 @@ import {
     Users,
     FileText,
     Send,
+    User,
     Eye
 } from 'lucide-react';
 import JobCard from "../../components/Common/JobCard.jsx";
@@ -42,7 +43,7 @@ const Job = () => {
     const fetchJob = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:8000/api/client/job/${id}`, {
+            const response = await fetch(`https://freelance-lite.onrender.com/api/client/job/${id}`, {
                 method: "GET",
                 credentials: "include"
             });
@@ -223,7 +224,7 @@ const Job = () => {
                                         </div>
                                         <div className="flex items-center text-gray-600">
                                             <CheckCircle className="w-4 h-4 mr-2 text-green-500" />
-                                            {job?.job?.proposals?.length || 0} proposals received
+                                            {job?.proposal?.length || 0} proposals received
                                         </div>
                                     </div>
                                 </div>
@@ -324,11 +325,14 @@ const Job = () => {
                                         job?.proposal.slice(0, 10).map(proposal => (
                                             <div key={proposal._id} className="border border-gray-200 rounded-lg p-4">
                                                 <div className="flex items-start space-x-4">
-                                                    <img
-                                                        src={proposal.freelancer?.profilePicture || '/default-avatar.png'}
-                                                        alt={proposal.freelancer?.name}
-                                                        className="w-12 h-12 rounded-full object-cover"
-                                                    />
+                                                    {proposal.freelancer?.profilePicture ? <div className="h-[40px] rounded-full aspect-[1/1] bg-gray-300"
+                                                        style={{ backgroundImage: `url(${proposal.freelancer?.profilePicture})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+                                                    </div>
+                                                        :
+                                                        <div className="h-[40px] rounded-full aspect-[1/1] bg-gray-300 flex justify-center items-center">
+                                                            <User className="h-6 w-6 text-gray-500" h-full w-full />
+                                                        </div>
+                                                    }
                                                     <div className="flex-1">
                                                         <div className="flex items-center justify-between mb-2">
                                                             <h4 className="font-medium text-gray-900">
@@ -441,7 +445,7 @@ const Job = () => {
                                         </span>
                                     </button>
                                 }
-                                
+
                             </div>
                         </div>
                     </div>
