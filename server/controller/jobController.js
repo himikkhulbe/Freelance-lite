@@ -272,7 +272,7 @@ export const editProposal = async (req, res) => {
     const { bidAmount, coverLetter } = req.body;
 
     try {
-        const proposal = await Proposal.findByIdAndUpdate(proposalId, { bidAmount, coverLetter, editing: editing+1 }, { new: true });
+        const proposal = await Proposal.findByIdAndUpdate(proposalId, { bidAmount, coverLetter}, { new: true });
         if (!proposal) {
             return res.status(404).json({ message: "Proposal not found" });
         }

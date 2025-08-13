@@ -125,6 +125,8 @@ const handleEdit = async() => {
             },
             body: JSON.stringify(editForm)
         });
+        console.log(selectedProposal._id)
+        console.log(response);
         if (response.ok) {
             const data = await response.json();
             console.log('Proposal edited:', data);
