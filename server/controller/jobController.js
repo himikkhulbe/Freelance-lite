@@ -267,7 +267,7 @@ export const getMyProposals = async (req, res) => {
     }
 };
 
-export const editPorposal = async (req, res) => {
+export const editProposal = async (req, res) => {
     const proposalId = req.params.id;
     const { bidAmount, coverLetter } = req.body;
 

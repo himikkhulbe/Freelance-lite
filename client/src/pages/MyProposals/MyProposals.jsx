@@ -93,7 +93,7 @@ const MyProposals = () => {
     const fetchMyProposals = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:8000/api/client/myproposals`, {
+            const response = await fetch(`https://freelance-lite.onrender.com/api/client/myproposals`, {
                 method: "GET",
                 credentials: "include"
             });
@@ -117,7 +117,7 @@ const MyProposals = () => {
 
 const handleEdit = async() => {
     try{
-        const response = await fetch(`http://localhost:8000/api/client/editproposal/${selectedProposal._id}`, {
+        const response = await fetch(`https://freelance-lite.onrender.com/api/client/editproposal/${selectedProposal._id}`, {
             method: "PUT",
             credentials: "include",
             headers: {
