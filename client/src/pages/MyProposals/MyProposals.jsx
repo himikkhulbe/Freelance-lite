@@ -406,6 +406,7 @@ const handleEdit = async() => {
                                                 placeholder="Write your cover letter here..."
                                             />
                                         </div>
+                                        <p className="text-gray-600 text-sm">Edited : {selectedProposal.editing}/2</p>
                                         <div className="flex space-x-3 pt-4">
                                             <button
                                                 onClick={handleEdit}

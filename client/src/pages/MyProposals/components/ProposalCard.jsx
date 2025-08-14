@@ -1,34 +1,36 @@
 import React from 'react'
 import formatDate from "../../../Utils/formatDate"
 import {
-    Calendar, CheckCircle, Clock,
-    Eye, Edit3, Trash2, Phone, Mail, MapPin, Briefcase, Send
+    Calendar, CheckCircle, Clock, Star,
+    Eye, Edit3, Trash2, Phone, Mail, MapPin, Briefcase
 } from 'lucide-react';
 import { useNavigate } from "react-router-dom";
+
 const ProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon }) => {
     const navigate = useNavigate();
 
     return (
         <div key={proposal._id} className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
-            <div className="p-6">
+            <div className="p-4 sm:p-6">
 
-                <div className="flex items-start justify-between mb-4">
+                {/* Top Section */}
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between mb-4">
                     <div className="flex-1">
-                        <div className="flex items-center justify-between mb-2">
-                            <h3 className="text-xl font-bold text-gray-900">{proposal.job.title}</h3>
-                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(proposal.status)}`}>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-2">
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 break-words">{proposal.job.title}</h3>
+                            <span className={`mt-2 sm:mt-0 flex w-fit items-center px-3 py-1 rounded-full text-xs sm:text-sm font-medium border ${getStatusColor(proposal.status)}`}>
                                 {getStatusIcon(proposal.status)}
                                 <span className="ml-1">{proposal.status.charAt(0).toUpperCase() + proposal.status.slice(1)}</span>
                             </span>
                         </div>
-                        <p className="text-gray-600 mb-2">{proposal.client.name}</p>
-                        <div className="flex items-center space-x-6 text-sm text-gray-500">
+                        <p className="text-gray-600 mb-2 text-sm sm:text-base">{proposal.client.name}</p>
+                        <div className="flex flex-col sm:flex-row sm:flex-wrap sm:space-x-6 space-y-1 sm:space-y-0 text-xs sm:text-sm text-gray-500">
                             <span className="flex items-center">
                                 Bid: ₹{proposal.bidAmount.toLocaleString()}
                             </span>
                             <span className="flex items-center">
                                 <Calendar className="w-4 h-4 mr-1" />
-                                Submitted: {formatDate(proposal.submittedAt)}
+                                Submitted: {formatDate(proposal.createdAt)}
                             </span>
                             {proposal.editing >= 1 && (
                                 <span className="flex items-center">
@@ -40,23 +42,23 @@ const ProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon }) =>
                     </div>
                 </div>
 
-                {/* Client Contact Details (for accepted proposals) */}
-                {proposal.status === 'accepted' && (
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                        <h4 className="font-semibold text-green-800 mb-2 flex items-center">
+                {/* Client Contact Details */}
+                {proposal.status !== 'pending' && proposal.status != 'rejected' && proposal.status != 'cancelled' && (
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4 mb-4">
+                        <h4 className="font-semibold text-green-800 mb-2 flex items-center text-sm sm:text-base">
                             <CheckCircle className="w-4 h-4 mr-2" />
                             Client Contact Details
                         </h4>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                            <div className="flex items-center text-green-700">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs sm:text-sm">
+                            <div className="flex items-center text-green-700 break-all">
                                 <Mail className="w-4 h-4 mr-2" />
                                 {proposal.client.contactInfo.email}
                             </div>
-                            <div className="flex items-center text-green-700">
+                            <div className="flex items-center text-green-700 break-all">
                                 <Phone className="w-4 h-4 mr-2" />
                                 {proposal.client.contactInfo.phone}
                             </div>
-                            <div className="flex items-center text-green-700">
+                            <div className="flex items-center text-green-700 break-words">
                                 <MapPin className="w-4 h-4 mr-2" />
                                 {proposal.client.location}
                             </div>
@@ -64,15 +66,17 @@ const ProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon }) =>
                     </div>
                 )}
 
+                {/* Cover Letter */}
                 <div className="mb-4">
-                    <p className="text-gray-700 text-sm line-clamp-2">{proposal.coverLetter}</p>
+                    <p className="text-gray-700 text-xs sm:text-sm line-clamp-2 break-words">{proposal.coverLetter}</p>
                 </div>
 
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex space-x-3">
+                {/* Actions */}
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between pt-4 border-t border-gray-100 space-y-3 sm:space-y-0">
+                    <div className="flex flex-col sm:flex-row sm:space-x-3 space-y-2 sm:space-y-0">
                         <button
                             onClick={() => openModal('view', proposal)}
-                            className="inline-flex items-center px-4 py-2 bg-white text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors text-sm font-medium"
+                            className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 bg-white text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors text-xs sm:text-sm font-medium"
                         >
                             <Eye className="w-4 h-4 mr-2" />
                             View Details
@@ -81,40 +85,58 @@ const ProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon }) =>
                             onClick={() => {
                                 navigate(`/job/${proposal.job._id}`)
                             }}
-                            className="inline-flex items-center px-4 py-2 bg-white text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
+                            className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 bg-white text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-xs sm:text-sm font-medium"
                         >
                             <Briefcase className="w-4 h-4 mr-2" />
                             View Job
                         </button>
                     </div>
 
-                    <div className="flex space-x-2">
+                    <div className="flex flex-wrap gap-2">
                         {(proposal.status === 'pending' || proposal.status === 'accepted') && (
-                            (proposal.editing < 2 && <button
-                                onClick={() => openModal('edit', proposal)}
-                                title={"Edit Proposal"}
-                                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                <Edit3 className="w-4 h-4 mr-2" />
-                                Edit
-                            </button>)
+                            (proposal.editing < 2 && proposal.startWork === 'pending' &&
+                                <button
+                                    onClick={() => openModal('edit', proposal)}
+                                    title={"Edit Proposal"}
+                                    className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-xs sm:text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    <Edit3 className="w-4 h-4 mr-2" />
+                                    Edit
+                                </button>)
                         )}
-                        {proposal.status !== 'completed' && proposal.status !== 'rejected' && proposal.status !== 'cancelled' &&  proposal.status !== 'processing' && (
+                        {proposal.status !== 'completed' && proposal.status !== 'rejected' && proposal.status !== 'cancelled' && proposal.status !== 'processing' && proposal.startWork === 'pending' && (
                             <button
                                 onClick={() => openModal('cancel', proposal)}
-                                className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors text-sm font-medium bg-red-600 text-white hover:bg-red-700'
-                                    }`}
+                                className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-red-600 text-white hover:bg-red-700"
                             >
-                                {proposal.status === 'processing' ? (
-                                    null
-                                ) : (
-                                    <>
-                                        <Trash2 className="w-4 h-4 mr-2" />
-                                        Cancel
-                                    </>
-                                )}
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Cancel
                             </button>
                         )}
+                        {proposal.startWork === 'start' &&
+                            <button
+                                className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-green-600 text-white hover:bg-green-700"
+                            >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Agree
+                            </button>
+                        }
+                        {proposal.completedWork === 'request' &&
+                            <button
+                                className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-green-600 text-white hover:bg-green-700"
+                            >
+                                <Trash2 className="w-4 h-4 mr-2" />
+                                Mark As Completed
+                            </button>
+                        }
+                        {proposal.completedWork === 'completed' && proposal.status === 'completed' &&
+                            <button
+                                className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-yellow-500 text-white hover:bg-green-700"
+                            >
+                                <Star className="w-4 h-4 mr-2" />
+                                Rate {proposal.client.name.split(" ")[0]}
+                            </button>
+                        }
                     </div>
                 </div>
 
