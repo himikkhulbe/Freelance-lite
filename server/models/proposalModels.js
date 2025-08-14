@@ -33,11 +33,17 @@ const proposalSchema = new mongoose.Schema({
         type: Number,
         default: 0,
     },
-    submittedAt: {
-        type: Date,
-        default: Date.now
-    }
-});
+    startWork:{
+        type: String,
+        enum: ['pending', 'start', 'accepted'],
+        default: 'pending'
+    },
+    conpletedWork:{
+        type: String,
+        enum: ['pending', 'request', 'completed'],
+        default: 'pending'
+    },
+}, {timestamps: true});
 
 
 

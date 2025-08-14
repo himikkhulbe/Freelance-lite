@@ -4,6 +4,8 @@ import {
     Eye, Filter, Edit3, Trash2, Phone, Mail, MapPin, Star, Briefcase,
     AlertTriangle, Send, X, Save, FileText, ExternalLink
 } from 'lucide-react';
+import ProposalCard from "./components/ProposalCard"
+import Loading from '../../components/Common/Loading';
 
 const MyProposals = () => {
     const [proposals, setProposals] = useState([]);
@@ -21,15 +23,15 @@ const MyProposals = () => {
 
     const statusOptions = ['all', 'pending', 'accepted', 'cancelled', 'rejected', 'processing', 'completed'];
 
-    const updateProposalStatus = (proposalId, newStatus) => {
-        setProposals(prev =>
-            prev.map(proposal =>
-                proposal._id === proposalId
-                    ? { ...proposal, status: newStatus, updatedAt: new Date().toISOString() }
-                    : proposal
-            )
-        );
-    };
+    // const updateProposalStatus = (proposalId, newStatus) => {
+    //     setProposals(prev =>
+    //         prev.map(proposal =>
+    //             proposal._id === proposalId
+    //                 ? { ...proposal, status: newStatus, updatedAt: new Date().toISOString() }
+    //                 : proposal
+    //         )
+    //     );
+    // };
 
     const filteredProposals = proposals.filter(proposal => {
         if (filter === 'all') return true;
@@ -91,9 +93,10 @@ const MyProposals = () => {
     };
 
     const fetchMyProposals = async () => {
+        console.log("run")
         try {
             setLoading(true);
-            const response = await fetch(`https://freelance-lite.onrender.com/api/client/myproposals`, {
+            const response = await fetch(`http://localhost:8000/api/client/myproposals`, {
                 method: "GET",
                 credentials: "include"
             });
@@ -109,15 +112,16 @@ const MyProposals = () => {
         } finally {
             setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
         fetchMyProposals();
-    },[filter])
+    }, []); // <- empty dependency array
+
 
 const handleEdit = async() => {
     try{
-        const response = await fetch(`https://freelance-lite.onrender.com/api/client/editproposal/${selectedProposal._id}`, {
+        const response = await fetch(`http://localhost:8000/api/client/editproposal/${selectedProposal._id}`, {
             method: "PUT",
             credentials: "include",
             headers: {
@@ -130,24 +134,39 @@ const handleEdit = async() => {
         if (response.ok) {
             const data = await response.json();
             console.log('Proposal edited:', data);
+            fetchMyProposals();
             closeModal();
         } else {
-            throw new Error('API not available');
+            const responseText = await response.text();
+            console.log(responseText)
         }
     }catch(error){
         console.error('Error editing proposal:', error);
     }
 }
 
-    const handleCancel = () => {
-        if (selectedProposal.status === 'processing') {
-            // Send cancellation request
-            alert('Cancellation request sent to client. You will be notified of their response.');
-        } else {
-            updateProposalStatus(selectedProposal._id, 'cancelled');
+    const handleCancel = async() => {
+        try{
+            const response = fetch(`http://localhost:8000/api/client/cancelproposal/${selectedProposal._id}`, {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ cancelReason })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Proposal cancelled:', data);
+                closeModal();
+            } else {
+                const responseText = await response.text();
+                console.log(responseText);
+            }
+        }catch(error){
+            console.error('Error cancelling proposal:', error);
         }
-        closeModal();
-    };
+    }
 
     const stats = {
         total: proposals.length,
@@ -158,6 +177,10 @@ const handleEdit = async() => {
         completed: proposals.filter(p => p.status === 'completed').length,
         cancelled: proposals.filter(p => p.status === 'cancelled').length
     };
+
+    if(loading) {
+        return <Loading />
+    }
 
     return (
         <div className="min-h-screen mt-[65px] bg-gray-50">
@@ -248,118 +271,13 @@ const handleEdit = async() => {
                 {/* Proposals List */}
                 <div className="space-y-4">
                     {filteredProposals.map((proposal) => (
-                        <div key={proposal._id} className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
-                            <div className="p-6">
-                                <div className="flex items-start justify-between mb-4">
-                                    <div className="flex-1">
-                                        <div className="flex items-center justify-between mb-2">
-                                            <h3 className="text-xl font-bold text-gray-900">{proposal.job.title}</h3>
-                                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(proposal.status)}`}>
-                                                {getStatusIcon(proposal.status)}
-                                                <span className="ml-1">{proposal.status.charAt(0).toUpperCase() + proposal.status.slice(1)}</span>
-                                            </span>
-                                        </div>
-                                        <p className="text-gray-600 mb-2">{proposal.client.name}</p>
-                                        <div className="flex items-center space-x-6 text-sm text-gray-500">
-                                            <span className="flex items-center">
-                                                <DollarSign className="w-4 h-4 mr-1" />
-                                                Bid: ₹{proposal.bidAmount.toLocaleString()}
-                                            </span>
-                                            <span className="flex items-center">
-                                                <Calendar className="w-4 h-4 mr-1" />
-                                                Submitted: {formatDate(proposal.submittedAt)}
-                                            </span>
-                                            {proposal.status !== 'pending' && (
-                                                <span className="flex items-center">
-                                                    <Clock className="w-4 h-4 mr-1" />
-                                                    Updated: {formatDate(proposal.updatedAt)}
-                                                </span>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Client Contact Details (for accepted proposals) */}
-                                {proposal.status === 'accepted' && (
-                                    <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
-                                        <h4 className="font-semibold text-green-800 mb-2 flex items-center">
-                                            <CheckCircle className="w-4 h-4 mr-2" />
-                                            Client Contact Details
-                                        </h4>
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                                            <div className="flex items-center text-green-700">
-                                                <Mail className="w-4 h-4 mr-2" />
-                                                {proposal.client.email}
-                                            </div>
-                                            <div className="flex items-center text-green-700">
-                                                <Phone className="w-4 h-4 mr-2" />
-                                                {proposal.client.phone}
-                                            </div>
-                                            <div className="flex items-center text-green-700">
-                                                <MapPin className="w-4 h-4 mr-2" />
-                                                {proposal.client.location}
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="mb-4">
-                                    <p className="text-gray-700 text-sm line-clamp-2">{proposal.coverLetter}</p>
-                                </div>
-
-                                <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                                    <div className="flex space-x-3">
-                                        <button
-                                            onClick={() => openModal('view', proposal)}
-                                            className="inline-flex items-center px-4 py-2 bg-white text-blue-600 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors text-sm font-medium"
-                                        >
-                                            <Eye className="w-4 h-4 mr-2" />
-                                            View Details
-                                        </button>
-                                        <button
-                                            onClick={() => openModal('job', proposal)}
-                                            className="inline-flex items-center px-4 py-2 bg-white text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
-                                        >
-                                            <Briefcase className="w-4 h-4 mr-2" />
-                                            View Job
-                                        </button>
-                                    </div>
-
-                                    <div className="flex space-x-2">
-                                        {(proposal.status === 'pending' || proposal.status === 'accepted') && (
-                                            <button
-                                                onClick={() => openModal('edit', proposal)}
-                                                className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium"
-                                            >
-                                                <Edit3 className="w-4 h-4 mr-2" />
-                                                Edit
-                                            </button>
-                                        )}
-                                        {proposal.status !== 'completed' && proposal.status !== 'rejected' && proposal.status !== 'cancelled' && (
-                                            <button
-                                                onClick={() => openModal('cancel', proposal)}
-                                                className={`inline-flex items-center px-4 py-2 rounded-lg transition-colors text-sm font-medium ${proposal.status === 'processing'
-                                                        ? 'bg-orange-600 text-white hover:bg-orange-700'
-                                                        : 'bg-red-600 text-white hover:bg-red-700'
-                                                    }`}
-                                            >
-                                                {proposal.status === 'processing' ? (
-                                                    <>
-                                                        <Send className="w-4 h-4 mr-2" />
-                                                        Request Cancel
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Trash2 className="w-4 h-4 mr-2" />
-                                                        Cancel
-                                                    </>
-                                                )}
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <ProposalCard
+                            key={proposal._id}
+                            proposal={proposal}
+                            openModal={openModal}
+                            getStatusColor={getStatusColor}
+                            getStatusIcon={getStatusIcon}
+                        />
                     ))}
                 </div>
 
