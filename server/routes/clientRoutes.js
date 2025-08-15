@@ -18,7 +18,7 @@ router.get("/myproposals", protect, getMyProposals);
 router.put("/editproposal/:id", protect, editProposal);
 router.put("/cancelproposal/:id", protect, cancelProposal);
 router.get("/receivedproposals", protect, getReceivedProposals);
-router.get("/agreestartwork/:id", protect, agreeStartWork);
+router.put("/agreestartwork/:id", protect, agreeStartWork);
 
 
 

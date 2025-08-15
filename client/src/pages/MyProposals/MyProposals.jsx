@@ -170,7 +170,7 @@ const handleEdit = async() => {
 
     const handleAgreeStartWork = async() => {
         try{
-            const response = fetch(`https://freelance-lite.onrender.com/api/client/startwork/${selectedProposal._id}`, {
+            const response = fetch(`https://freelance-lite.onrender.com/api/client/agreestartwork/${selectedProposal._id}`, {
                 method: "PUT",
                 credentials: "include",
                 headers: {
@@ -182,7 +182,7 @@ const handleEdit = async() => {
                 console.log('Work started:', data);
                 fetchMyProposals();
                 closeModal();
-            }        else {
+            }else {
                 const responseText = await response.text();
                 console.log(responseText);
             }
@@ -332,6 +332,7 @@ const handleEdit = async() => {
                                         {modalType === 'edit' && 'Edit Proposal'}
                                         {modalType === 'cancel' && 'Cancel Proposal'}
                                         {modalType === 'job' && 'Job Details'}
+                                        {modalType === 'agreeStartWork' && 'Agree & Start Work'}
                                     </h2>
                                     <button
                                         onClick={closeModal}
@@ -563,6 +564,35 @@ const handleEdit = async() => {
                                         </div>
                                     </div>
                                 )}
+
+                                {
+                                    modalType === 'agreeStartWork' && (
+                                        <div className="space-y-6">
+                                            <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                                <CheckCircle className="w-6 h-6 text-green-600" />
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-green-600">Are You Sure!</h3>
+                                                    <p className="text-gray-900">You can't cancel this deal again.</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex space-x-3 pt-4">
+                                                <button
+                                                    onClick={handleAgreeStartWork}
+                                                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                                                >
+                                                    Agree & Start Work
+                                                </button>
+                                                <button
+                                                    onClick={closeModal}
+                                                    className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                            </div>
+                                            )
+                                }
                             </div>
                         </div>
                     </div>

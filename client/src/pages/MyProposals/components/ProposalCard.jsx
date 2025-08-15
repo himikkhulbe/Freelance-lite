@@ -107,7 +107,7 @@ const ProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon }) =>
                                     Edit
                                 </button>)
                         )}
-                        {proposal.status !== 'completed' && proposal.status !== 'rejected' && proposal.status !== 'cancelled' && proposal.status !== 'processing' && proposal.startWork === 'pending' && (
+                        {proposal.status !== 'completed' && proposal.status !== 'rejected' && proposal.status !== 'cancelled' && proposal.status !== 'processing' && proposal.startWork !== 'accepted' && (
                             <button
                                 onClick={() => openModal('cancel', proposal)}
                                 className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-red-600 text-white hover:bg-red-700"
@@ -118,6 +118,7 @@ const ProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon }) =>
                         )}
                         {proposal.startWork === 'start' &&
                             <button
+                            onClick={() => openModal('agreeStartWork', proposal)}
                                 className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-green-600 text-white hover:bg-green-700"
                             >
                                 <Trash2 className="w-4 h-4 mr-2" />
