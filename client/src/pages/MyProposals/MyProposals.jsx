@@ -96,7 +96,7 @@ const MyProposals = () => {
         console.log("run")
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:8000/api/client/myproposals`, {
+            const response = await fetch(`https://freelance-lite.onrender.com/api/client/myproposals`, {
                 method: "GET",
                 credentials: "include"
             });
@@ -121,7 +121,7 @@ const MyProposals = () => {
 
 const handleEdit = async() => {
     try{
-        const response = await fetch(`http://localhost:8000/api/client/editproposal/${selectedProposal._id}`, {
+        const response = await fetch(`https://freelance-lite.onrender.com/api/client/editproposal/${selectedProposal._id}`, {
             method: "PUT",
             credentials: "include",
             headers: {
@@ -147,7 +147,7 @@ const handleEdit = async() => {
 
     const handleCancel = async() => {
         try{
-            const response = fetch(`http://localhost:8000/api/client/cancelproposal/${selectedProposal._id}`, {
+            const response = fetch(`https://freelance-lite.onrender.com/api/client/cancelproposal/${selectedProposal._id}`, {
                 method: "PUT",
                 credentials: "include",
                 headers: {
@@ -167,6 +167,32 @@ const handleEdit = async() => {
             console.error('Error cancelling proposal:', error);
         }
     }
+
+    const handleAgreeStartWork = async() => {
+        try{
+            const response = fetch(`https://freelance-lite.onrender.com/api/client/startwork/${selectedProposal._id}`, {
+                method: "PUT",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Work started:', data);
+                fetchMyProposals();
+                closeModal();
+            }        else {
+                const responseText = await response.text();
+                console.log(responseText);
+            }
+
+            }
+        catch(error){
+            console.error('Error starting work:', error);
+        }
+}
+
 
     const stats = {
         total: proposals.length,
@@ -277,6 +303,7 @@ const handleEdit = async() => {
                             openModal={openModal}
                             getStatusColor={getStatusColor}
                             getStatusIcon={getStatusIcon}
+                            handleAgreeStartWork={handleAgreeStartWork}
                         />
                     ))}
                 </div>

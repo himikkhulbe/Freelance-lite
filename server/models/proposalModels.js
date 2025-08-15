@@ -38,7 +38,7 @@ const proposalSchema = new mongoose.Schema({
         enum: ['pending', 'start', 'accepted'],
         default: 'pending'
     },
-    conpletedWork:{
+    completedWork:{
         type: String,
         enum: ['pending', 'request', 'completed'],
         default: 'pending'

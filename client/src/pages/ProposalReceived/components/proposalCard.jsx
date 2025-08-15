@@ -9,9 +9,6 @@ import { useNavigate } from "react-router-dom";
 const ProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon }) => {
     const navigate = useNavigate();
 
-
-    
-
     return (
         <div key={proposal._id} className="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
             <div className="p-4 sm:p-6">

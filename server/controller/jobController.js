@@ -306,3 +306,25 @@ export const getReceivedProposals = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
     }
+
+
+
+    export const agreeStartWork = async (req, res) => {
+        const proposalId = req.params.id;
+        const userId = req.user._id;
+        try {
+            const proposal = await Proposal.findById(proposalId);
+            if (!proposal) {
+                return res.status(404).json({ message: "Proposal not found" });
+            }
+            if (proposal.freelancer.toString() !== userId.toString()) {
+                return res.status(403).json({ message: "You are not authorized to start work on this proposal" });
+            }
+            proposal.startWork = 'accepted';
+            await proposal.save();
+            res.status(200).json({ message: "Proposal accepted successfully", proposal });
+        }
+        catch (error) {
+            res.status(500).json({ message: "Internal server error" });
+        }   
+        }

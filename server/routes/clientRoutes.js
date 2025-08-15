@@ -1,6 +1,6 @@
 import express from "express";
 import { protect } from "../middlewares/authMiddleware.js";
-import {createJob, getMyJobs, getJobs, getJob, updateJob, deleteJob, getAllJobs, UploadProposal, getProposals, getMyProposals, editProposal, cancelProposal, getReceivedProposals} from "../controller/jobController.js";
+import {createJob, getMyJobs, getJobs, getJob, updateJob, deleteJob, getAllJobs, UploadProposal, getProposals, getMyProposals, editProposal, cancelProposal, getReceivedProposals, agreeStartWork} from "../controller/jobController.js";
 
 const router = express.Router();
 
@@ -18,6 +18,7 @@ router.get("/myproposals", protect, getMyProposals);
 router.put("/editproposal/:id", protect, editProposal);
 router.put("/cancelproposal/:id", protect, cancelProposal);
 router.get("/receivedproposals", protect, getReceivedProposals);
+router.get("/agreestartwork/:id", protect, agreeStartWork);
 
 
 
