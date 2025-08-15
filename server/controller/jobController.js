@@ -328,3 +328,25 @@ export const getReceivedProposals = async (req, res) => {
             res.status(500).json({ message: "Internal server error" });
         }   
         }
+
+
+
+        export const markAsCompleted = async (req, res) => {
+            const proposalId = req.params.id;
+            const userId = req.user._id;
+            try {
+                const proposal = await Proposal.findById(proposalId);
+                if (!proposal) {
+                    return res.status(404).json({ message: "Proposal not found" });
+                }
+                if (proposal.freelancer.toString() !== userId.toString()) {
+                    return res.status(403).json({ message: "You are not authorized to mark this proposal as completed" });
+                }
+                proposal.status = 'completed';
+                await proposal.save();
+                res.status(200).json({ message: "Proposal marked as completed successfully", proposal })
+            }catch (error) {
+                res.status(500).json({ message: "Internal server error" });
+            }
+
+}

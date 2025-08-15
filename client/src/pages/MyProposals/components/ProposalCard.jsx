@@ -127,6 +127,7 @@ const ProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon }) =>
                         }
                         {proposal.completedWork === 'request' &&
                             <button
+                                onClick={() => openModal('markAsCompleted', proposal)}
                                 className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-green-600 text-white hover:bg-green-700"
                             >
                                 <Trash2 className="w-4 h-4 mr-2" />

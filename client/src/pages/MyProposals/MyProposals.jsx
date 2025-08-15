@@ -168,31 +168,57 @@ const handleEdit = async() => {
         }
     }
 
-    const handleAgreeStartWork = async() => {
-        try{
-            const response = fetch(`https://freelance-lite.onrender.com/api/client/agreestartwork/${selectedProposal._id}`, {
-                method: "PUT",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
+    const handleAgreeStartWork = async () => {
+        try {
+            const response = await fetch(
+                `https://freelance-lite.onrender.com/api/client/agreestartwork/${selectedProposal._id}`,
+                {
+                    method: "PUT",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
                 }
-            });
+            );
+
             if (response.ok) {
                 const data = await response.json();
-                console.log('Work started:', data);
+                console.log("Work started:", data);
                 fetchMyProposals();
                 closeModal();
-            }else {
+            } else {
                 const responseText = await response.text();
                 console.log(responseText);
             }
-
-            }
-        catch(error){
-            console.error('Error starting work:', error);
+        } catch (error) {
+            console.error("Error starting work:", error);
         }
-}
+    };
 
+
+    const handleCompleteWork = async () => {
+        try {
+            const response = await fetch(
+                `https://freelance-lite.onrender.com/api/client/completework/${selectedProposal._id}`,
+                {
+                    method: "PUT",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Work completed:", data);
+                fetchMyProposals();
+                closeModal();
+        }
+        } catch (error) {
+            console.error("Error completing work:", error);
+        }
+    };
 
     const stats = {
         total: proposals.length,
@@ -303,7 +329,6 @@ const handleEdit = async() => {
                             openModal={openModal}
                             getStatusColor={getStatusColor}
                             getStatusIcon={getStatusIcon}
-                            handleAgreeStartWork={handleAgreeStartWork}
                         />
                     ))}
                 </div>
@@ -333,6 +358,7 @@ const handleEdit = async() => {
                                         {modalType === 'cancel' && 'Cancel Proposal'}
                                         {modalType === 'job' && 'Job Details'}
                                         {modalType === 'agreeStartWork' && 'Agree & Start Work'}
+                                        {modalType === 'markAsCompleted' && 'Mark as Completed'}
                                     </h2>
                                     <button
                                         onClick={closeModal}
@@ -565,8 +591,7 @@ const handleEdit = async() => {
                                     </div>
                                 )}
 
-                                {
-                                    modalType === 'agreeStartWork' && (
+                                { modalType === 'agreeStartWork' && (
                                         <div className="space-y-6">
                                             <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg">
                                                 <CheckCircle className="w-6 h-6 text-green-600" />
@@ -591,8 +616,33 @@ const handleEdit = async() => {
                                                 </button>
                                             </div>
                                             </div>
-                                            )
-                                }
+                                )}
+
+                                {modalType === 'markAsCompleted' && (
+                                        <div className="space-y-6">
+                                            <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                                <CheckCircle className="w-6 h-6 text-green-600" />
+                                                <div>
+                                                    <h3 className="text-lg font-semibold text-green-600">Are You Sure!</h3>
+                                                    <p className="text-gray-900">You can't undo this action.</p>
+                                                </div>
+                                            </div>
+
+                                            <div className="flex space-x-3 pt-4">
+                                                <button
+                                                onClick={handleCompleteWork}
+                                                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                                                >
+                                                    Mark As Completed
+                                                </button>
+                                                <button
+                                                    onClick={closeModal}
+                                                    className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                                                >
+                                                    Cancel
+                                                </button>
+                                                </div>
+                                                </div>)}
                             </div>
                         </div>
                     </div>
