@@ -116,7 +116,7 @@ const ProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon }) =>
                                 Cancel
                             </button>
                         )}
-                        {proposal.startWork === 'start' &&
+                        {proposal.startWork === 'start' && proposal.status === 'accepted' &&
                             <button
                             onClick={() => openModal('agreeStartWork', proposal)}
                                 className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-green-600 text-white hover:bg-green-700"
@@ -125,7 +125,7 @@ const ProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon }) =>
                                 Agree
                             </button>
                         }
-                        {proposal.completedWork === 'request' &&
+                        {proposal.completedWork === 'request' && proposal.status === 'processing' &&
                             <button
                                 onClick={() => openModal('markAsCompleted', proposal)}
                                 className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-green-600 text-white hover:bg-green-700"
