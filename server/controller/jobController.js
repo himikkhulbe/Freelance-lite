@@ -321,6 +321,7 @@ export const getReceivedProposals = async (req, res) => {
                 return res.status(403).json({ message: "You are not authorized to start work on this proposal" });
             }
             proposal.startWork = 'accepted';
+            proposal.status = 'processing';
             await proposal.save();
             res.status(200).json({ message: "Proposal accepted successfully", proposal });
         }
@@ -343,6 +344,7 @@ export const getReceivedProposals = async (req, res) => {
                     return res.status(403).json({ message: "You are not authorized to mark this proposal as completed" });
                 }
                 proposal.completedWork = 'completed';
+                proposal.status = 'completed';
                 await proposal.save();
                 res.status(200).json({ message: "Proposal marked as completed successfully", proposal })
             }catch (error) {
