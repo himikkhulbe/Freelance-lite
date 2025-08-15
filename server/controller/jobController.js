@@ -342,7 +342,7 @@ export const getReceivedProposals = async (req, res) => {
                 if (proposal.freelancer.toString() !== userId.toString()) {
                     return res.status(403).json({ message: "You are not authorized to mark this proposal as completed" });
                 }
-                proposal.status = 'completed';
+                proposal.completedWork = 'completed';
                 await proposal.save();
                 res.status(200).json({ message: "Proposal marked as completed successfully", proposal })
             }catch (error) {
