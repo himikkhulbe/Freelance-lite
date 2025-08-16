@@ -23,7 +23,7 @@ router.get("/receivedproposals", protect, getReceivedProposals);
 router.put("/rejectproposal/:id", protect, rejectProposal);
 router.put("/acceptproposal/:id", protect, acceptProposal);
 router.put("/approvestartwork/:id", protect, approveStartWork)
-router.put("/completeworkrequest", protect, completeWorkRequest);
+router.put("/completeworkrequest/:id", protect, completeWorkRequest);
 
 
 

@@ -143,7 +143,7 @@ const MyProposals = () => {
         setEditForm({ coverLetter: "", bidAmount: 0 });
     };
 
-    const fetchMyProposals = async () => {
+    const fetchReceivedProposals = async () => {
         console.log("run");
         try {
             setLoading(true);
@@ -169,41 +169,41 @@ const MyProposals = () => {
     };
 
     useEffect(() => {
-        fetchMyProposals();
+        fetchReceivedProposals();
     }, []); // <- empty dependency array
 
-    const handleEdit = async () => {
+    const handleAccept = async () =>{
         try {
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/editproposal/${selectedProposal._id}`,
+                `https://freelance-lite.onrender.com/api/client/acceptproposal/${selectedProposal._id}`,
                 {
                     method: "PUT",
                     credentials: "include",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(editForm),
                 }
             );
-            console.log(selectedProposal._id);
-            console.log(response);
+
             if (response.ok) {
                 const data = await response.json();
-                console.log("Proposal edited:", data);
-                fetchMyProposals();
+                console.log("Proposal accepted:", data);
+                fetchReceivedProposals();
                 closeModal();
             } else {
                 const responseText = await response.text();
                 console.log(responseText);
             }
         } catch (error) {
-            console.error("Error editing proposal:", error);
+            console.error("Error accepting proposal:", error);
         }
-    };
-    const handleCancel = async () => {
+    }
+
+
+    const rejectProposal = async () => {
         try {
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/cancelproposal/${selectedProposal._id}`,
+                `https://freelance-lite.onrender.com/api/client/rejectproposal/${selectedProposal._id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -217,7 +217,7 @@ const MyProposals = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Proposal cancelled:", data);
-                fetchMyProposals();
+                fetchReceivedProposals();
                 closeModal();
             } else {
                 const responseText = await response.text();
@@ -228,10 +228,10 @@ const MyProposals = () => {
         }
     };
 
-    const handleAgreeStartWork = async () => {
+    const handleApproveStartWork = async () => {
         try {
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/agreestartwork/${selectedProposal._id}`,
+                `https://freelance-lite.onrender.com/api/client/approvestartwork/${selectedProposal._id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -244,7 +244,7 @@ const MyProposals = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Work started:", data);
-                fetchMyProposals();
+                fetchReceivedProposals();
                 closeModal();
             } else {
                 const responseText = await response.text();
@@ -258,7 +258,7 @@ const MyProposals = () => {
     const handleCompleteWork = async () => {
         try {
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/completework/${selectedProposal._id}`,
+                `https://freelance-lite.onrender.com/api/client/completeworkrequest/${selectedProposal._id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -271,7 +271,7 @@ const MyProposals = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Work completed:", data);
-                fetchMyProposals();
+                fetchReceivedProposals();
                 closeModal();
             }
         } catch (error) {
@@ -665,7 +665,7 @@ const MyProposals = () => {
 
                                         <div className="flex space-x-3 pt-4">
                                             <button
-                                                onClick={handleAgreeStartWork}
+                                                onClick={rejectProposal}
                                                 className="flex-1 inline-flex items-center justify-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
                                                 <Trash2 className="w-5 h-5 mr-2" />
@@ -697,7 +697,7 @@ const MyProposals = () => {
 
                                         <div className="flex space-x-3 pt-4">
                                             <button
-                                                onClick={handleAgreeStartWork}
+                                                onClick={handleAccept}
                                                 className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                                             >
                                                 Accept
@@ -728,7 +728,7 @@ const MyProposals = () => {
 
                                         <div className="flex space-x-3 pt-4">
                                             <button
-                                                onClick={handleAgreeStartWork}
+                                                onClick={handleApproveStartWork}
                                                 className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                                             >
                                                 Approve & Start Work
