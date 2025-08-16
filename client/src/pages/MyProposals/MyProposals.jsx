@@ -416,14 +416,20 @@ const MyProposals = () => {
                                                     </div>
                                                     {selectedProposal.status === 'accepted' && (
                                                         <>
-                                                            <div>
-                                                                <label className="text-sm font-medium text-gray-500">Email</label>
-                                                                <p className="text-gray-900">{selectedProposal.client.email}</p>
-                                                            </div>
-                                                            <div>
-                                                                <label className="text-sm font-medium text-gray-500">Phone</label>
-                                                                <p className="text-gray-900">{selectedProposal.client.phone}</p>
-                                                            </div>
+                                                        {selectedProposal.client.contactInfo.email && (
+                                                                <div>
+                                                                    <label className="text-sm font-medium text-gray-500">Email</label>
+                                                                    <p className="text-gray-900">{selectedProposal.client.contactInfo.email}</p>
+                                                                </div>
+                                                        )}
+                                                        {
+                                                            selectedProposal.client.contactInfo.phone &&(
+                                                                    <div>
+                                                                        <label className="text-sm font-medium text-gray-500">Phone</label>
+                                                                        <p className="text-gray-900">{selectedProposal.client.contactInfo.phone}</p>
+                                                                    </div>
+                                                            )
+                                                        }
                                                             <div>
                                                                 <label className="text-sm font-medium text-gray-500">Location</label>
                                                                 <p className="text-gray-900">{selectedProposal.client.location}</p>
