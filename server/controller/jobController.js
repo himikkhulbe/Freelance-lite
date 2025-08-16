@@ -289,69 +289,146 @@ export const cancelProposal = async (req, res) => {
         if (!proposal) {
             return res.status(404).json({ message: "Proposal not found" });
         }
-        if(proposal.freelancer.toString() !== req.user._id.toString()){
+        if (proposal.freelancer.toString() !== req.user._id.toString()) {
             return res.status(403).json({ message: "You are not authorized to cancel this proposal" });
         }
         proposal.status = 'cancelled';
         await proposal.save();
         res.status(200).json({ message: "Proposal cancelled successfully", proposal });
-    }catch (error) {
+    } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
+
+
+
+export const agreeStartWork = async (req, res) => {
+    const proposalId = req.params.id;
+    const userId = req.user._id;
+    try {
+        const proposal = await Proposal.findById(proposalId);
+        if (!proposal) {
+            return res.status(404).json({ message: "Proposal not found" });
+        }
+        if (proposal.freelancer.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not authorized to start work on this proposal" });
+        }
+        proposal.startWork = 'accepted';
+        proposal.status = 'processing';
+        await proposal.save();
+        res.status(200).json({ message: "Proposal accepted successfully", proposal });
+    }
+    catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
+
+export const markAsCompleted = async (req, res) => {
+    const proposalId = req.params.id;
+    const userId = req.user._id;
+    try {
+        const proposal = await Proposal.findById(proposalId);
+        if (!proposal) {
+            return res.status(404).json({ message: "Proposal not found" });
+        }
+        if (proposal.freelancer.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not authorized to mark this proposal as completed" });
+        }
+        proposal.completedWork = 'completed';
+        proposal.status = 'completed';
+        await proposal.save();
+        res.status(200).json({ message: "Proposal marked as completed successfully", proposal })
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+
+}
+
 
 export const getReceivedProposals = async (req, res) => {
     const userId = req.user._id;
     try {
         const proposals = await Proposal.find({ client: userId }).populate("freelancer", "name profilePicture rating averageRating location contactInfo").populate("job", "title description budget deadline").sort({ createdAt: -1 });
         res.status(200).json(proposals);
-    }catch(error){
+    } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }
+}
+
+
+export const rejectProposal = async (req, res) => {
+    const proposalId = req.params.id;
+    try {
+        const proposal = await Proposal.findById(proposalId);
+        if (!proposal) {
+            return res.status(404).json({ message: "Proposal not found" });
+        }
+        if (proposal.client.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: "You are not authorized to reject this proposal" });
+        }
+        proposal.status = 'rejected';
+        await proposal.save();
+        res.status(200).json({ message: "Proposal rejected successfully", proposal });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
     }
+}
 
 
-
-    export const agreeStartWork = async (req, res) => {
-        const proposalId = req.params.id;
-        const userId = req.user._id;
-        try {
-            const proposal = await Proposal.findById(proposalId);
-            if (!proposal) {
-                return res.status(404).json({ message: "Proposal not found" });
-            }
-            if (proposal.freelancer.toString() !== userId.toString()) {
-                return res.status(403).json({ message: "You are not authorized to start work on this proposal" });
-            }
-            proposal.startWork = 'accepted';
-            proposal.status = 'processing';
-            await proposal.save();
-            res.status(200).json({ message: "Proposal accepted successfully", proposal });
+export const acceptProposal = async (req, res) => {
+    const proposalId = req.params.id;
+    try {
+        const proposal = await Proposal.findById(proposalId);
+        if (!proposal) {
+            return res.status(404).json({ message: "Proposal not found" });
         }
-        catch (error) {
-            res.status(500).json({ message: "Internal server error" });
-        }   
+        if (proposal.client.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: "You are not authorized to accept this proposal" });
         }
+        proposal.status = 'accepted';
+        await proposal.save();
+        res.status(200).json({ message: "Proposal accepted successfully", proposal });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const approveStartWork = async (req, res) => {
+    const proposalId = req.params.id;
+    try {
+        const proposal = await Proposal.findById(proposalId);
+        if (!proposal) {
+            return res.status(404).json({ message: "Proposal not found" });
+        }
+        if (proposal.client.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: "You are not authorized to approve start work" });
+        }
+        proposal.startWork = 'start';
+        await proposal.save();
+        res.status(200).json({ message: "Proposal approved successfully", proposal });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
 
 
-
-        export const markAsCompleted = async (req, res) => {
-            const proposalId = req.params.id;
-            const userId = req.user._id;
-            try {
-                const proposal = await Proposal.findById(proposalId);
-                if (!proposal) {
-                    return res.status(404).json({ message: "Proposal not found" });
-                }
-                if (proposal.freelancer.toString() !== userId.toString()) {
-                    return res.status(403).json({ message: "You are not authorized to mark this proposal as completed" });
-                }
-                proposal.completedWork = 'completed';
-                proposal.status = 'completed';
-                await proposal.save();
-                res.status(200).json({ message: "Proposal marked as completed successfully", proposal })
-            }catch (error) {
-                res.status(500).json({ message: "Internal server error" });
-            }
-
+export const completeWorkRequest = async (req, res) => {
+    const proposalId = req.params.id;
+    try {
+        const proposal = await Proposal.findById(proposalId);
+        if (!proposal) {
+            return res.status(404).json({ message: "Proposal not found" });
+        }
+        if (proposal.client.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: "You are not authorized to mark this proposal as completed" });
+        }
+        proposal.completedWork = 'request';
+        await proposal.save();
+        res.status(200).json({ message: "Proposal marked as completed successfully", proposal });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
 }

@@ -60,6 +60,7 @@ function Profile() {
         }
         return () => (document.body.style.overflow = 'auto');
     }, [showRatingModal, showProfileEditModal, showJobsPopup, showServicePopup]);
+    
     if (!profileData) {
         return (
             <Loader />

@@ -60,6 +60,16 @@ const MyProposals = () => {
     //     );
     // };
 
+
+        useEffect(() => {
+            if (!showModal) {
+                document.body.style.overflow = 'auto';
+            } else {
+                document.body.style.overflow = 'hidden';
+            }
+            return () => (document.body.style.overflow = 'auto');
+        }, [showModal]);
+
     const filteredProposals = proposals.filter((proposal) => {
         if (filter === "all") return true;
         return proposal.status === filter;
@@ -431,8 +441,8 @@ const MyProposals = () => {
                                         {modalType === "reject" && "Reject Proposal"}
                                         {modalType === "accept" && "Accept Proposal"}
                                         {modalType === "job" && "Job Details"}
-                                        {modalType === "agreeStartWork" && "Agree & Start Work"}
-                                        {modalType === "markAsCompleted" && "Mark as Completed"}
+                                        {modalType === "approveStart" && "Approve & Start Work"}
+                                        {modalType === "markCompleted" && "Mark as Completed"}
                                     </h2>
                                     <button
                                         onClick={closeModal}
@@ -521,7 +531,7 @@ const MyProposals = () => {
                                                                     Email
                                                                 </label>
                                                                 <p className="text-gray-900">
-                                                                    {selectedProposal.client.email}
+                                                                    {selectedProposal.freelancer.contactInfo.email}
                                                                 </p>
                                                             </div>
                                                             <div>
@@ -529,7 +539,7 @@ const MyProposals = () => {
                                                                     Phone
                                                                 </label>
                                                                 <p className="text-gray-900">
-                                                                    {selectedProposal.client.phone}
+                                                                    {selectedProposal.freelancer.contactInfo.phone}
                                                                 </p>
                                                             </div>
                                                             <div>
@@ -537,7 +547,7 @@ const MyProposals = () => {
                                                                     Location
                                                                 </label>
                                                                 <p className="text-gray-900">
-                                                                    {selectedProposal.client.location}
+                                                                    {selectedProposal.freelancer.location}
                                                                 </p>
                                                             </div>
                                                         </>
@@ -702,7 +712,7 @@ const MyProposals = () => {
                                     </div>
                                 )}
 
-                                {modalType === "agreeStartWork" && (
+                                {modalType === "approveStart" && (
                                     <div className="space-y-6">
                                         <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg">
                                             <CheckCircle className="w-6 h-6 text-green-600" />
@@ -721,7 +731,7 @@ const MyProposals = () => {
                                                 onClick={handleAgreeStartWork}
                                                 className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
                                             >
-                                                Agree & Start Work
+                                                Approve & Start Work
                                             </button>
                                             <button
                                                 onClick={closeModal}
@@ -733,7 +743,7 @@ const MyProposals = () => {
                                     </div>
                                 )}
 
-                                {modalType === "markAsCompleted" && (
+                                {modalType === "markCompleted" && (
                                     <div className="space-y-6">
                                         <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg">
                                             <CheckCircle className="w-6 h-6 text-green-600" />

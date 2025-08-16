@@ -82,32 +82,12 @@ const ClientProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs sm:text-sm">
                             <div className="flex items-center text-green-700 break-all">
                                 <Mail className="w-4 h-4 mr-2" />
-                                {proposal.freelancer.email || 'Contact via platform'}
+                                {proposal.freelancer.contactInfo.email || 'Contact via platform'}
                             </div>
                             <div className="flex items-center text-green-700 break-all">
                                 <Phone className="w-4 h-4 mr-2" />
-                                {proposal.freelancer.phone || 'Contact via platform'}
+                                {proposal.freelancer.contactInfo.phone || 'Contact via platform'}
                             </div>
-                        </div>
-                    </div>
-                )}
-
-                {/* Work Progress Indicator */}
-                {proposal.status === 'accepted' && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 sm:p-4 mb-4">
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <Clock className="w-4 h-4 mr-2 text-blue-600" />
-                                <span className="text-sm font-medium text-blue-800">
-                                    Work Status: {proposal.startWork === 'pending' ? 'Waiting to Start' :
-                                        proposal.startWork === 'start' ? 'In Progress' : 'Started'}
-                                </span>
-                            </div>
-                            {proposal.completedWork === 'request' && (
-                                <span className="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded-full">
-                                    Completion Requested
-                                </span>
-                            )}
                         </div>
                     </div>
                 )}
@@ -163,7 +143,7 @@ const ClientProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon
                         )}
 
                         {/* Approve work start for accepted proposals */}
-                        {proposal.status === 'accepted' && proposal.startWork === 'start' && (
+                        {proposal.status === 'accepted' && proposal.startWork === 'pending' && (
                             <button
                                 onClick={() => openModal('approveStart', proposal)}
                                 className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-blue-600 text-white hover:bg-blue-700"
@@ -172,9 +152,14 @@ const ClientProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon
                                 Approve Work Start
                             </button>
                         )}
+                        {
+                            proposal.startWork === 'start' && (
+                                <p className="text-[#A16207] text-xs sm:text-sm">Waiting for Approval...</p>
+                            )
+                        }
 
                         {/* Mark as completed when freelancer requests completion */}
-                        {proposal.completedWork === 'request' && proposal.status === 'processing' && (
+                        {proposal.completedWork === 'pending' && proposal.status === 'processing' && (
                             <button
                                 onClick={() => openModal('markCompleted', proposal)}
                                 className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-green-600 text-white hover:bg-green-700"
@@ -183,6 +168,10 @@ const ClientProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon
                                 Mark as Complete
                             </button>
                         )}
+                        {
+                            proposal.completedWork === 'request' &&
+                            <p className="text-[#A16207] text-xs sm:text-sm">Waiting for Approval...</p>
+                        }
 
                         {/* Rate freelancer for completed work */}
                         {proposal.status === 'completed' && proposal.completedWork === 'completed' && (
