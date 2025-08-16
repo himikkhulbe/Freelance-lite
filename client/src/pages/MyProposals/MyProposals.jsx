@@ -119,54 +119,59 @@ const MyProposals = () => {
     }, []); // <- empty dependency array
 
 
-const handleEdit = async() => {
-    try{
-        const response = await fetch(`https://freelance-lite.onrender.com/api/client/editproposal/${selectedProposal._id}`, {
-            method: "PUT",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(editForm)
-        });
-        console.log(selectedProposal._id)
-        console.log(response);
-        if (response.ok) {
-            const data = await response.json();
-            console.log('Proposal edited:', data);
-            fetchMyProposals();
-            closeModal();
-        } else {
-            const responseText = await response.text();
-            console.log(responseText)
-        }
-    }catch(error){
-        console.error('Error editing proposal:', error);
-    }
-}
-
-    const handleCancel = async() => {
-        try{
-            const response = fetch(`https://freelance-lite.onrender.com/api/client/cancelproposal/${selectedProposal._id}`, {
+    const handleEdit = async () => {
+        try {
+            const response = await fetch(`https://freelance-lite.onrender.com/api/client/editproposal/${selectedProposal._id}`, {
                 method: "PUT",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json"
                 },
-                body: JSON.stringify({ cancelReason })
+                body: JSON.stringify(editForm)
             });
+            console.log(selectedProposal._id)
+            console.log(response);
             if (response.ok) {
                 const data = await response.json();
-                console.log('Proposal cancelled:', data);
+                console.log('Proposal edited:', data);
+                fetchMyProposals();
+                closeModal();
+            } else {
+                const responseText = await response.text();
+                console.log(responseText)
+            }
+        } catch (error) {
+            console.error('Error editing proposal:', error);
+        }
+    }
+    const handleCancel = async () => {
+        try {
+            const response = await fetch(
+                `https://freelance-lite.onrender.com/api/client/cancelproposal/${selectedProposal._id}`,
+                {
+                    method: "PUT",
+                    credentials: "include",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ cancelReason }),
+                }
+            );
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log("Proposal cancelled:", data);
+                fetchMyProposals();
                 closeModal();
             } else {
                 const responseText = await response.text();
                 console.log(responseText);
             }
-        }catch(error){
-            console.error('Error cancelling proposal:', error);
+        } catch (error) {
+            console.error("Error cancelling proposal:", error);
         }
-    }
+    };
+
 
     const handleAgreeStartWork = async () => {
         try {
@@ -214,7 +219,7 @@ const handleEdit = async() => {
                 console.log("Work completed:", data);
                 fetchMyProposals();
                 closeModal();
-        }
+            }
         } catch (error) {
             console.error("Error completing work:", error);
         }
@@ -230,7 +235,7 @@ const handleEdit = async() => {
         cancelled: proposals.filter(p => p.status === 'cancelled').length
     };
 
-    if(loading) {
+    if (loading) {
         return <Loading />
     }
 
@@ -304,8 +309,8 @@ const handleEdit = async() => {
                                     key={status}
                                     onClick={() => setFilter(status)}
                                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filter === status
-                                            ? 'bg-blue-600 text-white shadow-md'
-                                            : 'bg-white text-gray-700 border border-gray-200 hover:bg-blue-50 hover:border-blue-200'
+                                        ? 'bg-blue-600 text-white shadow-md'
+                                        : 'bg-white text-gray-700 border border-gray-200 hover:bg-blue-50 hover:border-blue-200'
                                         }`}
                                 >
                                     {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -391,7 +396,7 @@ const handleEdit = async() => {
                                                     </div>
                                                     <div>
                                                         <label className="text-sm font-medium text-gray-500">Submitted</label>
-                                                        <p className="text-gray-900">{formatDate(selectedProposal.submittedAt)}</p>
+                                                        <p className="text-gray-900">{formatDate(selectedProposal.createdAt)}</p>
                                                     </div>
                                                     {selectedProposal.status !== 'pending' && (
                                                         <div>
@@ -484,48 +489,20 @@ const handleEdit = async() => {
                                         <div className="flex items-center space-x-3 p-4 bg-red-50 border border-red-200 rounded-lg">
                                             <AlertTriangle className="w-6 h-6 text-red-600" />
                                             <div>
-                                                <h3 className="font-semibold text-red-800">
-                                                    {selectedProposal.status === 'processing' ? 'Request Cancellation' : 'Cancel Proposal'}
-                                                </h3>
                                                 <p className="text-sm text-red-700">
-                                                    {selectedProposal.status === 'processing'
-                                                        ? 'This will send a cancellation request to the client. You cannot cancel directly during processing.'
-                                                        : 'This action cannot be undone. Are you sure you want to cancel this proposal?'
-                                                    }
+                                                    This action cannot be undone. Are you sure you want to cancel this proposal?
                                                 </p>
                                             </div>
-                                        </div>
-
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">
-                                                {selectedProposal.status === 'processing' ? 'Cancellation Reason (Required)' : 'Reason (Optional)'}
-                                            </label>
-                                            <textarea
-                                                value={cancelReason}
-                                                onChange={(e) => setCancelReason(e.target.value)}
-                                                rows={4}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                                                placeholder="Please provide a reason for cancellation..."
-                                            />
                                         </div>
 
                                         <div className="flex space-x-3 pt-4">
                                             <button
                                                 onClick={handleCancel}
-                                                disabled={selectedProposal.status === 'processing' && !cancelReason.trim()}
+                                                disabled={selectedProposal.status === 'processing' || selectedProposal.status === 'completed'}
                                                 className="flex-1 inline-flex items-center justify-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
-                                                {selectedProposal.status === 'processing' ? (
-                                                    <>
-                                                        <Send className="w-5 h-5 mr-2" />
-                                                        Send Request
-                                                    </>
-                                                ) : (
-                                                    <>
-                                                        <Trash2 className="w-5 h-5 mr-2" />
-                                                        Cancel Proposal
-                                                    </>
-                                                )}
+                                                <Trash2 className="w-5 h-5 mr-2" />
+                                                Cancel Proposal
                                             </button>
                                             <button
                                                 onClick={closeModal}
@@ -591,58 +568,58 @@ const handleEdit = async() => {
                                     </div>
                                 )}
 
-                                { modalType === 'agreeStartWork' && (
-                                        <div className="space-y-6">
-                                            <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg">
-                                                <CheckCircle className="w-6 h-6 text-green-600" />
-                                                <div>
-                                                    <h3 className="text-lg font-semibold text-green-600">Are You Sure!</h3>
-                                                    <p className="text-gray-900">You can't cancel this deal again.</p>
-                                                </div>
+                                {modalType === 'agreeStartWork' && (
+                                    <div className="space-y-6">
+                                        <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                            <CheckCircle className="w-6 h-6 text-green-600" />
+                                            <div>
+                                                <h3 className="text-lg font-semibold text-green-600">Are You Sure!</h3>
+                                                <p className="text-gray-900">You can't cancel this deal again.</p>
                                             </div>
+                                        </div>
 
-                                            <div className="flex space-x-3 pt-4">
-                                                <button
-                                                    onClick={handleAgreeStartWork}
-                                                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-                                                >
-                                                    Agree & Start Work
-                                                </button>
-                                                <button
-                                                    onClick={closeModal}
-                                                    className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
-                                                >
-                                                    Cancel
-                                                </button>
-                                            </div>
-                                            </div>
+                                        <div className="flex space-x-3 pt-4">
+                                            <button
+                                                onClick={handleAgreeStartWork}
+                                                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                                            >
+                                                Agree & Start Work
+                                            </button>
+                                            <button
+                                                onClick={closeModal}
+                                                className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>
                                 )}
 
                                 {modalType === 'markAsCompleted' && (
-                                        <div className="space-y-6">
-                                            <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg">
-                                                <CheckCircle className="w-6 h-6 text-green-600" />
-                                                <div>
-                                                    <h3 className="text-lg font-semibold text-green-600">Are You Sure!</h3>
-                                                    <p className="text-gray-900">You can't undo this action.</p>
-                                                </div>
+                                    <div className="space-y-6">
+                                        <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                            <CheckCircle className="w-6 h-6 text-green-600" />
+                                            <div>
+                                                <h3 className="text-lg font-semibold text-green-600">Are You Sure!</h3>
+                                                <p className="text-gray-900">You can't undo this action.</p>
                                             </div>
+                                        </div>
 
-                                            <div className="flex space-x-3 pt-4">
-                                                <button
+                                        <div className="flex space-x-3 pt-4">
+                                            <button
                                                 onClick={handleCompleteWork}
-                                                    className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
-                                                >
-                                                    Mark As Completed
-                                                </button>
-                                                <button
-                                                    onClick={closeModal}
-                                                    className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
-                                                >
-                                                    Cancel
-                                                </button>
-                                                </div>
-                                                </div>)}
+                                                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium"
+                                            >
+                                                Mark As Completed
+                                            </button>
+                                            <button
+                                                onClick={closeModal}
+                                                className="px-6 py-3 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors font-medium"
+                                            >
+                                                Cancel
+                                            </button>
+                                        </div>
+                                    </div>)}
                             </div>
                         </div>
                     </div>

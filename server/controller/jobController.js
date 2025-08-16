@@ -289,6 +289,9 @@ export const cancelProposal = async (req, res) => {
         if (!proposal) {
             return res.status(404).json({ message: "Proposal not found" });
         }
+        if(proposal.freelancer.toString() !== req.user._id.toString()){
+            return res.status(403).json({ message: "You are not authorized to cancel this proposal" });
+        }
         proposal.status = 'cancelled';
         await proposal.save();
         res.status(200).json({ message: "Proposal cancelled successfully", proposal });
@@ -300,7 +303,7 @@ export const cancelProposal = async (req, res) => {
 export const getReceivedProposals = async (req, res) => {
     const userId = req.user._id;
     try {
-        const proposals = await Proposal.find({ client: userId }).populate("freelancer", "name profilePicture rating averageRating location").populate("job", "title description budget deadline").sort({ createdAt: -1 });
+        const proposals = await Proposal.find({ client: userId }).populate("freelancer", "name profilePicture rating averageRating location contactInfo").populate("job", "title description budget deadline").sort({ createdAt: -1 });
         res.status(200).json(proposals);
     }catch(error){
         res.status(500).json({ message: "Internal server error" });
