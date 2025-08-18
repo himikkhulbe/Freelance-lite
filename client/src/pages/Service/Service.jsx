@@ -5,6 +5,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import formatDate from '../../Utils/formatDate';
 import RenderStars from "../../components/Common/RenderStars";
 import { useNavigate } from 'react-router-dom';
+import OrderModal from './components/OrderModal';
 import {
   Clock,
   MessageCircle,
@@ -64,49 +65,6 @@ const Service = () => {
     fetchService();
   }, [id]);
 
-  const OrderModal = () => (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg max-w-md w-full p-6">
-        <h3 className="text-lg font-semibold mb-4">Order This Service</h3>
-        <div className="space-y-4">
-          <div className="border rounded-lg p-4">
-            <h4 className="font-medium mb-2">{service?.service?.title}</h4>
-            <div className="flex justify-between text-sm text-gray-600">
-              <span>Delivery: {service?.service?.deliveryTime} days</span>
-              <span>Revisions: {service?.service?.revisions}</span>
-            </div>
-            <div className="flex justify-between items-center mt-2">
-              <span className="text-lg font-bold">₹{service?.service?.price}</span>
-            </div>
-          </div>
-
-          <textarea
-            placeholder="Describe your requirements (optional)"
-            rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
-          <div className="flex space-x-3">
-            <button
-              onClick={() => setShowOrderModal(false)}
-              className="flex-1 px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={() => {
-                setShowOrderModal(false);
-                alert('Order placed successfully! (Demo)');
-              }}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              Place Order
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
 
   if (loading) {
     return (
@@ -446,7 +404,9 @@ const Service = () => {
       </div>
 
       {/* Order Modal */}
-      {showOrderModal && <OrderModal />}
+      {showOrderModal && <OrderModal 
+      service={service?.service}
+      setShowOrderModal={setShowOrderModal} />}
     </div>
   );
 };

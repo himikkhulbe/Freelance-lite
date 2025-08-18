@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import User from "../models/userModel.js";
 import Service from "../models/serviceModels.js";
 import Rating from "../models/ratingModel.js";
+import Order from "../models/orderModel.js";
+
 
 
 export const uploadServices = async (req, res) => {
@@ -190,3 +192,34 @@ export const getAllServices = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
+
+export const UploadOrder = async (req, res) => {
+    const serviceId = req.params.id;
+    const userId = req.user._id;
+    const { requirement } = req.body;
+    try {
+        const service = await Service.findById(serviceId);
+        if (!service) {
+            return res.status(404).json({ message: "Service not found" });
+        }
+        if (service.user.toString() === userId.toString()) {
+            return res.status(403).json({ message: "You can't order your own service" });
+        }
+        const order = new Order({
+            service: serviceId,
+            client: userId,
+            freelancer: service.user,
+            requirement,
+            status: 'pending',
+            editing: 0,
+            startWork: 'pending',
+            completedWork: 'pending'
+        });
+        await order.save();
+        res.status(201).json({ message: "Order created successfully", order });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
