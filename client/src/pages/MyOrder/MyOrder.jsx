@@ -96,14 +96,14 @@ const MyProposals = () => {
         console.log("run")
         try {
             setLoading(true);
-            const response = await fetch(`https://freelance-lite.onrender.com/api/client/myproposals`, {
+            const response = await fetch(`https://freelance-lite.onrender.com/api/freelancer/myorders`, {
                 method: "GET",
                 credentials: "include"
             });
             if (response.ok) {
                 const data = await response.json();
                 setProposals(data);
-                console.log('Job fetched from API:', data);
+                console.log('order Fetched From Api:', data);
             } else {
                 throw new Error('API not available');
             }
@@ -246,8 +246,8 @@ const MyProposals = () => {
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">My Proposals</h1>
-                            <p className="text-gray-600 mt-1">Track and manage all your submitted proposals</p>
+                            <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
+                            <p className="text-gray-600 mt-1">Track and manage all your Orders</p>
                         </div>
                         <div className="text-right">
                             <p className="text-sm text-gray-500">Total Active</p>
@@ -341,11 +341,11 @@ const MyProposals = () => {
                 {filteredProposals.length === 0 && (
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
                         <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-                        <h3 className="text-xl font-medium text-gray-900 mb-2">No proposals found</h3>
+                        <h3 className="text-xl font-medium text-gray-900 mb-2">No Order found</h3>
                         <p className="text-gray-600">
                             {filter === 'all'
-                                ? "You haven't submitted any proposals yet."
-                                : `No ${filter} service found.`
+                                ? "You haven't submitted any Order yet."
+                                : `No ${filter} Order found.`
                             }
                         </p>
                     </div>
