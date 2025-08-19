@@ -16,8 +16,7 @@ const MyOrder = () => {
     const [selectedService, setSelectedService] = useState(null);
     const [loading, setLoading] = useState(true);
     const [editForm, setEditForm] = useState({
-        coverLetter: '',
-        bidAmount: 0
+        requirement: '',
     });
     const [cancelReason, setCancelReason] = useState('');
 
@@ -77,7 +76,7 @@ const MyOrder = () => {
         setSelectedService(order);
         if (type === 'edit') {
             setEditForm({
-                coverLetter: order.coverLetter,
+                requirement: order.requirement,
                 bidAmount: order.bidAmount
             });
         }
@@ -89,7 +88,7 @@ const MyOrder = () => {
         setModalType('');
         setSelectedService(null);
         setCancelReason('');
-        setEditForm({ coverLetter: '', bidAmount: 0 });
+        setEditForm({ requirement: '', bidAmount: 0 });
     };
 
     const fetchMyOrders = async () => {
@@ -455,20 +454,10 @@ const MyOrder = () => {
                                 {modalType === 'edit' && (
                                     <div className="space-y-6">
                                         <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Bid Amount (₹)</label>
-                                            <input
-                                                type="number"
-                                                value={editForm.bidAmount}
-                                                onChange={(e) => setEditForm({ ...editForm, bidAmount: parseInt(e.target.value) || 0 })}
-                                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                                placeholder="Enter your bid amount"
-                                            />
-                                        </div>
-                                        <div>
-                                            <label className="block text-sm font-medium text-gray-700 mb-2">Cover Letter</label>
+                                            <label className="block text-sm font-medium text-gray-700 mb-2">Requirement</label>
                                             <textarea
-                                                value={editForm.coverLetter}
-                                                onChange={(e) => setEditForm({ ...editForm, coverLetter: e.target.value })}
+                                                value={editForm.requirement}
+                                                onChange={(e) => setEditForm({ ...editForm, requirement: e.target.value })}
                                                 rows={6}
                                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                                 placeholder="Write your cover letter here..."

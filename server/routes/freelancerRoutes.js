@@ -1,6 +1,6 @@
 import express from "express";
 import { protect } from "../middlewares/authMiddleware.js";
-import {uploadServices, getMyServices, getServices, getservice, deleteService, updateService, getAllServices, UploadOrder, getOrders} from "../controller/serviceController.js";
+import {uploadServices, getMyServices, getServices, getservice, deleteService, updateService, getAllServices, UploadOrder, getOrders, editOrder, cancelOrder} from "../controller/serviceController.js";
 
 const router = express.Router();
 
@@ -13,4 +13,6 @@ router.delete("/service/:id", protect, deleteService); // Endpoint to delete a s
 router.get("/services", getAllServices); // Endpoint to get all services
 router.post("/service/:id/order", protect, UploadOrder);
 router.get("/myorders", protect, getOrders);
+router.put("/editorder/:id", protect, editOrder);
+router.put("/cancelorder/:id", protect, cancelOrder);
 export default router;
