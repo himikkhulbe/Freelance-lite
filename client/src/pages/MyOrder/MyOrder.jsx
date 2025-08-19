@@ -32,10 +32,11 @@ const MyOrder = () => {
     //     );
     // };
 
-    const filteredOrder = order.filter(order => {
-        if (filter === 'all') return true;
-        return order.status === filter;
-    });
+    const filteredOrder = (order || []).filter((o) => {
+  if (filter === 'all') return true;
+  return o.status === filter;
+});
+
 
     const formatDate = (dateString) => {
         return new Date(dateString).toLocaleDateString('en-US', {
@@ -133,7 +134,7 @@ const MyOrder = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('order edited:', data);
-                setOrder();
+                fetchMyOrders();
                 closeModal();
             } else {
                 const responseText = await response.text();
@@ -160,7 +161,7 @@ const MyOrder = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("order cancelled:", data);
-                setOrder();
+                fetchMyOrders();
                 closeModal();
             } else {
                 const responseText = await response.text();
@@ -188,7 +189,7 @@ const MyOrder = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Work started:", data);
-                setOrder();
+                fetchMyOrders();
                 closeModal();
             } else {
                 const responseText = await response.text();
@@ -216,7 +217,7 @@ const MyOrder = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Work completed:", data);
-                setOrder();
+            fetchMyOrders();
                 closeModal();
             }
         } catch (error) {
@@ -225,7 +226,7 @@ const MyOrder = () => {
     };
 
     const stats = {
-        total: order.length,
+        total: (order || []).length,
         pending: order.filter(p => p.status === 'pending').length,
         accepted: order.filter(p => p.status === 'accepted').length,
         rejected: order.filter(p => p.status === 'rejected').length,
