@@ -1,6 +1,6 @@
 import express from "express";
 import { protect } from "../middlewares/authMiddleware.js";
-import {uploadServices, getMyServices, getServices, getservice, deleteService, updateService, getAllServices, UploadOrder} from "../controller/serviceController.js";
+import {uploadServices, getMyServices, getServices, getservice, deleteService, updateService, getAllServices, UploadOrder, getOrders} from "../controller/serviceController.js";
 
 const router = express.Router();
 
@@ -12,5 +12,5 @@ router.put("/service/:id", protect, updateService); // Endpoint to update a spec
 router.delete("/service/:id", protect, deleteService); // Endpoint to delete a specific service by ID
 router.get("/services", getAllServices); // Endpoint to get all services
 router.post("/service/:id/order", protect, UploadOrder);
-
+router.get("/myorders", protect, getOrders);
 export default router;
