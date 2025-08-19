@@ -142,7 +142,7 @@ const OrderCard = ({ order, openModal, getStatusColor, getStatusIcon }) => {
                                 className="inline-flex items-center justify-center px-3 py-2 sm:px-4 sm:py-2 rounded-lg transition-colors text-xs sm:text-sm font-medium bg-yellow-500 text-white hover:bg-green-700"
                             >
                                 <Star className="w-4 h-4 mr-2" />
-                                Rate {order.client.name.split(" ")[0]}
+                                Rate {order.freelancer.name.split(" ")[0]}
                             </button>
                         }
                     </div>
