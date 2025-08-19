@@ -4,16 +4,16 @@ import {
     Eye, Filter, Edit3, Trash2, Phone, Mail, MapPin, Star, Briefcase,
     AlertTriangle, Send, X, Save, FileText, ExternalLink
 } from 'lucide-react';
-// import ProposalCard from "./components/ProposalCard"
+import OrderCard from "./components/OrderCard"
 import Loading from '../../components/Common/Loading';
 
-const MyProposals = () => {
-    const [proposals, setProposals] = useState([]);
+const MyOrder = () => {
+    const [order, setOrder] = useState([]);
 
     const [filter, setFilter] = useState('all');
     const [showModal, setShowModal] = useState(false);
     const [modalType, setModalType] = useState(''); // 'view', 'edit', 'cancel', 'job'
-    const [selectedProposal, setSelectedProposal] = useState(null);
+    const [selectedService, setSelectedService] = useState(null);
     const [loading, setLoading] = useState(true);
     const [editForm, setEditForm] = useState({
         coverLetter: '',
@@ -23,19 +23,19 @@ const MyProposals = () => {
 
     const statusOptions = ['all', 'pending', 'accepted', 'cancelled', 'rejected', 'processing', 'completed'];
 
-    // const updateProposalStatus = (proposalId, newStatus) => {
-    //     setProposals(prev =>
-    //         prev.map(proposal =>
-    //             proposal._id === proposalId
-    //                 ? { ...proposal, status: newStatus, updatedAt: new Date().toISOString() }
-    //                 : proposal
+    // const updateorderStatus = (orderId, newStatus) => {
+    //     setorders(prev =>
+    //         prev.map(order =>
+    //             order._id === orderId
+    //                 ? { ...order, status: newStatus, updatedAt: new Date().toISOString() }
+    //                 : order
     //         )
     //     );
     // };
 
-    const filteredProposals = proposals.filter(proposal => {
+    const filteredOrder = order.filter(order => {
         if (filter === 'all') return true;
-        return proposal.status === filter;
+        return order.status === filter;
     });
 
     const formatDate = (dateString) => {
@@ -72,13 +72,13 @@ const MyProposals = () => {
         }
     };
 
-    const openModal = (type, proposal) => {
+    const openModal = (type, order) => {
         setModalType(type);
-        setSelectedProposal(proposal);
+        setSelectedService(order);
         if (type === 'edit') {
             setEditForm({
-                coverLetter: proposal.coverLetter,
-                bidAmount: proposal.bidAmount
+                coverLetter: order.coverLetter,
+                bidAmount: order.bidAmount
             });
         }
         setShowModal(true);
@@ -87,7 +87,7 @@ const MyProposals = () => {
     const closeModal = () => {
         setShowModal(false);
         setModalType('');
-        setSelectedProposal(null);
+        setSelectedService(null);
         setCancelReason('');
         setEditForm({ coverLetter: '', bidAmount: 0 });
     };
@@ -102,7 +102,7 @@ const MyProposals = () => {
             });
             if (response.ok) {
                 const data = await response.json();
-                setProposals(data);
+                setOrder(data);
                 console.log('order Fetched From Api:', data);
             } else {
                 throw new Error('API not available');
@@ -121,7 +121,7 @@ const MyProposals = () => {
 
     const handleEdit = async () => {
         try {
-            const response = await fetch(`https://freelance-lite.onrender.com/api/client/editproposal/${selectedProposal._id}`, {
+            const response = await fetch(`https://freelance-lite.onrender.com/api/freelancer/editorder/${selectedService._id}`, {
                 method: "PUT",
                 credentials: "include",
                 headers: {
@@ -129,25 +129,25 @@ const MyProposals = () => {
                 },
                 body: JSON.stringify(editForm)
             });
-            console.log(selectedProposal._id)
+            console.log(selectedService._id)
             console.log(response);
             if (response.ok) {
                 const data = await response.json();
-                console.log('Proposal edited:', data);
-                fetchMyProposals();
+                console.log('order edited:', data);
+                setOrder();
                 closeModal();
             } else {
                 const responseText = await response.text();
                 console.log(responseText)
             }
         } catch (error) {
-            console.error('Error editing proposal:', error);
+            console.error('Error editing order:', error);
         }
     }
     const handleCancel = async () => {
         try {
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/cancelproposal/${selectedProposal._id}`,
+                `https://freelance-lite.onrender.com/api/freelancer/cancelorder/${selectedService._id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -160,15 +160,15 @@ const MyProposals = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Proposal cancelled:", data);
-                fetchMyProposals();
+                console.log("order cancelled:", data);
+                setOrder();
                 closeModal();
             } else {
                 const responseText = await response.text();
                 console.log(responseText);
             }
         } catch (error) {
-            console.error("Error cancelling proposal:", error);
+            console.error("Error cancelling order:", error);
         }
     };
 
@@ -176,7 +176,7 @@ const MyProposals = () => {
     const handleAgreeStartWork = async () => {
         try {
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/agreestartwork/${selectedProposal._id}`,
+                `https://freelance-lite.onrender.com/api/freelancer/agreestartwork/${selectedService._id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -189,7 +189,7 @@ const MyProposals = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Work started:", data);
-                fetchMyProposals();
+                setOrder();
                 closeModal();
             } else {
                 const responseText = await response.text();
@@ -204,7 +204,7 @@ const MyProposals = () => {
     const handleCompleteWork = async () => {
         try {
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/completework/${selectedProposal._id}`,
+                `https://freelance-lite.onrender.com/api/freelancer/completework/${selectedService._id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -217,7 +217,7 @@ const MyProposals = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Work completed:", data);
-                fetchMyProposals();
+                setOrder();
                 closeModal();
             }
         } catch (error) {
@@ -226,13 +226,13 @@ const MyProposals = () => {
     };
 
     const stats = {
-        total: proposals.length,
-        pending: proposals.filter(p => p.status === 'pending').length,
-        accepted: proposals.filter(p => p.status === 'accepted').length,
-        rejected: proposals.filter(p => p.status === 'rejected').length,
-        processing: proposals.filter(p => p.status === 'processing').length,
-        completed: proposals.filter(p => p.status === 'completed').length,
-        cancelled: proposals.filter(p => p.status === 'cancelled').length
+        total: order.length,
+        pending: order.filter(p => p.status === 'pending').length,
+        accepted: order.filter(p => p.status === 'accepted').length,
+        rejected: order.filter(p => p.status === 'rejected').length,
+        processing: order.filter(p => p.status === 'processing').length,
+        completed: order.filter(p => p.status === 'completed').length,
+        cancelled: order.filter(p => p.status === 'cancelled').length
     };
 
     if (loading) {
@@ -325,20 +325,20 @@ const MyProposals = () => {
                     </div>
                 </div>
 
-                {/* Proposals List */}
-                {/* <div className="space-y-4">
-                    {filteredProposals.map((proposal) => (
-                        <ProposalCard
-                            key={proposal._id}
-                            proposal={proposal}
+                {/* orders List */}
+                <div className="space-y-4">
+                    {filteredOrder.map((order) => (
+                        <OrderCard
+                            key={order._id}
+                            order={order}
                             openModal={openModal}
                             getStatusColor={getStatusColor}
                             getStatusIcon={getStatusIcon}
                         />
                     ))}
-                </div> */}
+                </div>
 
-                {filteredProposals.length === 0 && (
+                {filteredOrder.length === 0 && (
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
                         <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                         <h3 className="text-xl font-medium text-gray-900 mb-2">No Order found</h3>
@@ -352,15 +352,15 @@ const MyProposals = () => {
                 )}
 
                 {/* Modal */}
-                {showModal && selectedProposal && (
+                {showModal && selectedService && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                         <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                             <div className="p-6 border-b border-gray-200">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-xl font-bold text-gray-900">
-                                        {modalType === 'view' && 'Proposal Details'}
-                                        {modalType === 'edit' && 'Edit Proposal'}
-                                        {modalType === 'cancel' && 'Cancel Proposal'}
+                                        {modalType === 'view' && 'Order Details'}
+                                        {modalType === 'edit' && 'Edit Order'}
+                                        {modalType === 'cancel' && 'Cancel Order'}
                                         {modalType === 'job' && 'Job Details'}
                                         {modalType === 'agreeStartWork' && 'Agree & Start Work'}
                                         {modalType === 'markAsCompleted' && 'Mark as Completed'}
@@ -379,73 +379,76 @@ const MyProposals = () => {
                                     <div className="space-y-6">
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
-                                                <h3 className="font-semibold text-gray-900 mb-3">Proposal Information</h3>
+                                                <h3 className="font-semibold text-gray-900 mb-3">Order Information</h3>
                                                 <div className="space-y-3">
                                                     <div>
                                                         <label className="text-sm font-medium text-gray-500">Status</label>
                                                         <div className="mt-1">
-                                                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(selectedProposal.status)}`}>
-                                                                {getStatusIcon(selectedProposal.status)}
-                                                                <span className="ml-1">{selectedProposal.status.charAt(0).toUpperCase() + selectedProposal.status.slice(1)}</span>
+                                                            <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(selectedService.status)}`}>
+                                                                {getStatusIcon(selectedService.status)}
+                                                                <span className="ml-1">{selectedService.status.charAt(0).toUpperCase() + selectedService.status.slice(1)}</span>
                                                             </span>
                                                         </div>
                                                     </div>
                                                     <div>
-                                                        <label className="text-sm font-medium text-gray-500">Bid Amount</label>
-                                                        <p className="text-xl font-bold text-blue-600">₹{selectedProposal.bidAmount.toLocaleString()}</p>
+                                                        <label className="text-sm font-medium text-gray-500">Price:</label>
+                                                        <p className="text-xl font-bold text-blue-600">₹{selectedService.service.price.toLocaleString()}</p>
                                                     </div>
                                                     <div>
                                                         <label className="text-sm font-medium text-gray-500">Submitted</label>
-                                                        <p className="text-gray-900">{formatDate(selectedProposal.createdAt)}</p>
+                                                        <p className="text-gray-900">{formatDate(selectedService.createdAt)}</p>
                                                     </div>
-                                                    {selectedProposal.status !== 'pending' && (
+                                                    {selectedService.status !== 'pending' && (
                                                         <div>
                                                             <label className="text-sm font-medium text-gray-500">Last Updated</label>
-                                                            <p className="text-gray-900">{formatDate(selectedProposal.updatedAt)}</p>
+                                                            <p className="text-gray-900">{formatDate(selectedService.updatedAt)}</p>
                                                         </div>
                                                     )}
                                                 </div>
                                             </div>
 
                                             <div>
-                                                <h3 className="font-semibold text-gray-900 mb-3">Client Information</h3>
+                                                <h3 className="font-semibold text-gray-900 mb-3">Freelancer Information</h3>
                                                 <div className="space-y-3">
                                                     <div>
-                                                        <label className="text-sm font-medium text-gray-500">Client Name</label>
-                                                        <p className="text-gray-900">{selectedProposal.client.name}</p>
+                                                        <label className="text-sm font-medium text-gray-500">Freelancer Name</label>
+                                                        <p className="text-gray-900">{selectedService.freelancer.name}</p>
                                                     </div>
-                                                    {selectedProposal.status === 'accepted' && (
+                                                    {selectedService.status === 'accepted' && (
                                                         <>
-                                                        {selectedProposal.client.contactInfo.email && (
+                                                            {selectedService.freelancer.contactInfo.email && (
                                                                 <div>
                                                                     <label className="text-sm font-medium text-gray-500">Email</label>
-                                                                    <p className="text-gray-900">{selectedProposal.client.contactInfo.email}</p>
+                                                                    <p className="text-gray-900">{selectedService.freelancer.contactInfo.email}</p>
                                                                 </div>
                                                         )}
                                                         {
-                                                            selectedProposal.client.contactInfo.phone &&(
+                                                                selectedService.freelancer.contactInfo.phone &&(
                                                                     <div>
                                                                         <label className="text-sm font-medium text-gray-500">Phone</label>
-                                                                        <p className="text-gray-900">{selectedProposal.client.contactInfo.phone}</p>
+                                                                        <p className="text-gray-900">{selectedService.freelancer.contactInfo.phone}</p>
                                                                     </div>
                                                             )
                                                         }
                                                             <div>
                                                                 <label className="text-sm font-medium text-gray-500">Location</label>
-                                                                <p className="text-gray-900">{selectedProposal.client.location}</p>
+                                                                <p className="text-gray-900">{selectedService.freelancer.location}</p>
                                                             </div>
                                                         </>
                                                     )}
                                                 </div>
                                             </div>
                                         </div>
-
-                                        <div>
-                                            <h3 className="font-semibold text-gray-900 mb-3">Cover Letter</h3>
-                                            <div className="bg-gray-50 p-4 rounded-lg">
-                                                <p className="text-gray-900 leading-relaxed">{selectedProposal.coverLetter}</p>
-                                            </div>
-                                        </div>
+                                        {
+                                            selectedService?.requirement && (
+                                                <div>
+                                                    <h3 className="font-semibold text-gray-900 mb-3">Requirements</h3>
+                                                    <div className="bg-gray-50 p-4 rounded-lg">
+                                                        <p className="text-gray-900 leading-relaxed">{selectedService.requirement}</p>
+                                                    </div>
+                                                </div>
+                                            )
+                                        }
                                     </div>
                                 )}
 
@@ -471,7 +474,7 @@ const MyProposals = () => {
                                                 placeholder="Write your cover letter here..."
                                             />
                                         </div>
-                                        <p className="text-gray-600 text-sm">Edited : {selectedProposal.editing}/2</p>
+                                        <p className="text-gray-600 text-sm">Edited : {selectedService.editing}/2</p>
                                         <div className="flex space-x-3 pt-4">
                                             <button
                                                 onClick={handleEdit}
@@ -496,7 +499,7 @@ const MyProposals = () => {
                                             <AlertTriangle className="w-6 h-6 text-red-600" />
                                             <div>
                                                 <p className="text-sm text-red-700">
-                                                    This action cannot be undone. Are you sure you want to cancel this proposal?
+                                                    This action cannot be undone. Are you sure you want to cancel this order?
                                                 </p>
                                             </div>
                                         </div>
@@ -504,11 +507,11 @@ const MyProposals = () => {
                                         <div className="flex space-x-3 pt-4">
                                             <button
                                                 onClick={handleCancel}
-                                                disabled={selectedProposal.status === 'processing' || selectedProposal.status === 'completed'}
+                                                disabled={selectedService.status === 'processing' || selectedService.status === 'completed'}
                                                 className="flex-1 inline-flex items-center justify-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
                                                 <Trash2 className="w-5 h-5 mr-2" />
-                                                Cancel Proposal
+                                                Cancel order
                                             </button>
                                             <button
                                                 onClick={closeModal}
@@ -528,15 +531,15 @@ const MyProposals = () => {
                                                 <div className="space-y-3">
                                                     <div>
                                                         <label className="text-sm font-medium text-gray-500">Job Title</label>
-                                                        <p className="text-lg font-semibold text-gray-900">{selectedProposal.job.title}</p>
+                                                        <p className="text-lg font-semibold text-gray-900">{selectedService.job.title}</p>
                                                     </div>
                                                     <div>
                                                         <label className="text-sm font-medium text-gray-500">Budget</label>
-                                                        <p className="text-xl font-bold text-green-600">₹{selectedProposal.job.budget.toLocaleString()}</p>
+                                                        <p className="text-xl font-bold text-green-600">₹{selectedService.job.budget.toLocaleString()}</p>
                                                     </div>
                                                     <div>
                                                         <label className="text-sm font-medium text-gray-500">Deadline</label>
-                                                        <p className="text-gray-900">{formatDate(selectedProposal.job.deadline)}</p>
+                                                        <p className="text-gray-900">{formatDate(selectedService.job.deadline)}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -545,12 +548,12 @@ const MyProposals = () => {
                                                 <h3 className="font-semibold text-gray-900 mb-3">Posted By</h3>
                                                 <div className="space-y-3">
                                                     <div>
-                                                        <label className="text-sm font-medium text-gray-500">Client</label>
-                                                        <p className="text-gray-900">{selectedProposal.client.name}</p>
+                                                        <label className="text-sm font-medium text-gray-500">freelancer</label>
+                                                        <p className="text-gray-900">{selectedService.freelancer.name}</p>
                                                     </div>
                                                     <div>
                                                         <label className="text-sm font-medium text-gray-500">Location</label>
-                                                        <p className="text-gray-900">{selectedProposal.client.location}</p>
+                                                        <p className="text-gray-900">{selectedService.freelancer.location}</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -559,7 +562,7 @@ const MyProposals = () => {
                                         <div>
                                             <h3 className="font-semibold text-gray-900 mb-3">Job Description</h3>
                                             <div className="bg-gray-50 p-4 rounded-lg">
-                                                <p className="text-gray-900 leading-relaxed">{selectedProposal.job.description}</p>
+                                                <p className="text-gray-900 leading-relaxed">{selectedService.job.description}</p>
                                             </div>
                                         </div>
 
@@ -635,4 +638,4 @@ const MyProposals = () => {
     );
 };
 
-export default MyProposals;
+export default MyOrder;

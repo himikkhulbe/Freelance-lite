@@ -233,3 +233,49 @@ export const getOrders = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
+export const editOrder = async (req, res) => {
+    const orderId = req.params.id;
+    const userId = req.user._id;
+    const { requirement } = req.body;
+    try {
+        if(!mongoose.Types.ObjectId.isValid(orderId)){
+            return res.status(400).json({ message: "Invalid Order Id" });
+        }
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        if (order.client.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not authorized to edit this order" });
+        }
+        if(order.editing >= 2){
+            return res.status(403).json({ message: "You have reached the maximum number of edits" });
+        }
+        const editedOrder = await Order.findByIdAndUpdate(orderId, { requirement, editing: order.editing + 1 }, { new: true });
+        res.status(200).json({ message: "Order edited successfully", editedOrder });
+    }catch(error){
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
+export const cancelOrder = async (req, res) => {
+    const orderId = req.params.id;
+    const userId = req.user._id;
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        if (order.client.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not authorized to cancel this order" });
+        }
+        order.status = 'cancelled';
+        await order.save();
+        res.status(200).json({ message: "Order cancelled successfully", order });
+    
+    }catch(error){
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
