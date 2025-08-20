@@ -24,6 +24,7 @@ import {
     Eye
 } from 'lucide-react';
 import JobCard from "../../components/Common/JobCard.jsx";
+import JobsPopup from '../../components/Profile/components/Popup/JobsPopup.jsx';
 
 const Job = () => {
     const navigate = useNavigate();
@@ -32,6 +33,7 @@ const Job = () => {
     const [error, setError] = useState(null);
     const [activeTab, setActiveTab] = useState('overview');
     const [showProposalModal, setShowProposalModal] = useState(false);
+    const [showJobPopup, setShowJobPopup] = useState(false)
     const { id } = useParams();
     const { user } = useAuth();
 
@@ -48,6 +50,7 @@ const Job = () => {
                 credentials: "include"
             });
             if (response.ok) {
+                setShowJobPopup(false);
                 const data = await response.json();
                 setJob(data);
                 console.log('Job fetched from API:', data);
@@ -66,7 +69,14 @@ const Job = () => {
         fetchJob();
     }, [id]);
 
-
+    useEffect(() => {
+        if (!showJobPopup && !showProposalModal) {
+            document.body.style.overflow = 'auto';
+        } else {
+            document.body.style.overflow = 'hidden';
+        }
+        return () => (document.body.style.overflow = 'auto');
+    }, [showJobPopup, showProposalModal]);
 
 
 
@@ -99,6 +109,7 @@ const Job = () => {
 
     return (
         <div className="min-h-screen mt-[65px] bg-gray-50">
+            {showJobPopup && <JobsPopup Component={JobCard} data={job?.jobs} close={setShowJobPopup} heading={`More from ${job?.job?.client?.name.split(" ")[0]}`}/>}
             {/* Header */}
             <div className="bg-white shadow-sm border-b">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -421,7 +432,7 @@ const Job = () => {
                     {/* Right Column - Related Jobs */}
                     <div className="lg:w-[400px]">
                         <div className="bg-white border border-gray-200 rounded-lg p-6">
-                            <h3 className="font-semibold mb-4">Similar Jobs</h3>
+                            <h3 className="font-semibold mb-4">More from {job?.job?.client?.name.split(" ")[0]}</h3>
                             <div className="space-y-4">
                                 {/* Mock related jobs - you can replace with actual data */}
                                 {
@@ -438,7 +449,7 @@ const Job = () => {
                                         )
                                 }{
                                     job?.jobs?.length > 2 &&
-                                    <button className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center w-full gap-[7px] text-sm text-zinc-600 group ">
+                                    <button onClick={()=>setShowJobPopup(true)} className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center w-full gap-[7px] text-sm text-zinc-600 group ">
                                         <Eye className="text-gray-600 w-4 h-4 group-hover:text-blue-600" />
                                         <span className='group-hover:text-blue-600'>
                                             View All
