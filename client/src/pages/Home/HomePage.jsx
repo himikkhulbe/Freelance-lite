@@ -50,16 +50,6 @@ export default function Home() {
             icon: <User className="text-blue-600" size={24} />,
             title: "Profile Management",
             description: "Update profiles and showcase your work"
-        },
-        {
-            icon: <Shield className="text-blue-600" size={24} />,
-            title: "Secure Payments",
-            description: "Protected transactions with escrow services"
-        },
-        {
-            icon: <MessageCircle className="text-blue-600" size={24} />,
-            title: "Communication",
-            description: "Built-in messaging system for collaboration"
         }
     ];
 
@@ -165,18 +155,18 @@ export default function Home() {
                                             <div className="text-sm text-gray-600">Completed Projects</div>
                                         </div>
                                         <div className="bg-blue-50 p-4 rounded-lg">
-                                            <div className="text-2xl font-bold text-blue-600">4.9</div>
+                                            <div className="text-2xl font-bold text-blue-600">{user?.user?.averageRating.toFixed(1)}</div>
                                             <div className="text-sm text-gray-600">Rating</div>
                                         </div>
                                         <div className="bg-blue-50 p-4 rounded-lg">
-                                            <div className="text-2xl font-bold text-blue-600">3</div>
+                                            <div className="text-2xl font-bold text-blue-600">{user?.services.length || 0}</div>
                                             <div className="text-sm text-gray-600">Services</div>
                                         </div>
                                     </>
                                 ) : (
                                     <>
                                         <div className="bg-blue-50 p-4 rounded-lg">
-                                            <div className="text-2xl font-bold text-blue-600">3</div>
+                                            <div className="text-2xl font-bold text-blue-600">{user?.jobs.length || 0}</div>
                                             <div className="text-sm text-gray-600">Active Jobs</div>
                                         </div>
                                         <div className="bg-blue-50 p-4 rounded-lg">
@@ -184,7 +174,7 @@ export default function Home() {
                                             <div className="text-sm text-gray-600">Completed Projects</div>
                                         </div>
                                         <div className="bg-blue-50 p-4 rounded-lg">
-                                            <div className="text-2xl font-bold text-blue-600">4.8</div>
+                                            <div className="text-2xl font-bold text-blue-600">{user?.user?.averageRating.toFixed(1)}</div>
                                             <div className="text-sm text-gray-600">Rating</div>
                                         </div>
                                         <div className="bg-blue-50 p-4 rounded-lg">
@@ -222,21 +212,6 @@ export default function Home() {
                                     Hire Talent
                                 </button>
                             </div>
-
-                            {/* Search Bar */}
-                            <div className="max-w-2xl mx-auto">
-                                <div className="relative">
-                                    <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-                                    <input
-                                        type="text"
-                                        placeholder="Search for services or jobs..."
-                                        className="w-full border border-gray-300 rounded-md py-3 pl-12 pr-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent"
-                                    />
-                                    <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors">
-                                        Search
-                                    </button>
-                                </div>
-                            </div>
                         </>
                     )}
                 </div>
@@ -270,7 +245,7 @@ export default function Home() {
                         </p>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                         {features.map((feature, index) => (
                             <div key={index} className="text-center p-6 rounded-lg border hover:shadow-lg transition-shadow">
                                 <div className="flex justify-center mb-4">{feature.icon}</div>
@@ -315,7 +290,7 @@ export default function Home() {
                         </h2>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div className="grid grid-cols-1 justify-items-center md:grid-cols-2 gap-12">
                         {/* For Clients */}
                         <div>
                             <h3 className="text-2xl font-bold text-blue-600 mb-6">For Clients</h3>
@@ -419,7 +394,7 @@ export default function Home() {
                                 Sign Up Now
                             </button>
                             <button className="border border-white text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-blue-700 transition-colors">
-                                Learn More
+                                Know More
                             </button>
                         </div>
                     </div>

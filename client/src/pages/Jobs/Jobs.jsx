@@ -148,7 +148,7 @@ const Jobs = () => {
       <div className="xl:px-32 md:px-5 min-h-screen w-full flex gap-10 bg-gray-100">
         {/* Sidebar */}     
         <Filters {...filterProps} />
-
+        <div className="w-full fixed h-[85px] top-0 z-[9] bg-gray-100"></div>
         <div className="w-full relative">
           
           {/* Search Bar */}

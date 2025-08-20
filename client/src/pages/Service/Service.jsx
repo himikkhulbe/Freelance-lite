@@ -21,6 +21,8 @@ import {
   Eye
 } from 'lucide-react';
 import RatingCard from '../../components/Profile/components/RatingSection/components/RatingCard/RatingCard';
+import JobsPopup from '../../components/Profile/components/Popup/JobsPopup';
+import RatingPopup from '../../components/Profile/components/Popup/RatingPopup';
 
 const Service = () => {
   const Navigate = useNavigate();
@@ -29,6 +31,8 @@ const Service = () => {
   const [error, setError] = useState(null);
   const [activeTab, setActiveTab] = useState('overview');
   const [showOrderModal, setShowOrderModal] = useState(false);
+  const [showServicePopup, setShowServicePopup] = useState(false);
+  const [showRatingPopup, setShowRatingPopup] = useState(false);
   const { id } = useParams();
   const { user } = useAuth();
 
@@ -47,6 +51,8 @@ const Service = () => {
         credentials: "include"
       });
       if (response.ok) {
+        setShowServicePopup(false)
+        setShowRatingPopup(false)
         const data = await response.json();
         setService(data);
         console.log('Service fetched from API:', data);
@@ -95,6 +101,9 @@ const Service = () => {
 
   return (
     <div className="min-h-screen mt-[65px] bg-gray-50">
+      {showServicePopup && <JobsPopup Component={ServiceCard} heading={`More from ${service?.service?.user.name}`} data={service?.services} close={setShowServicePopup} /> }
+      {showRatingPopup && <RatingPopup ratings={service?.ratings} close={setShowRatingPopup} />}
+      
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -298,7 +307,7 @@ const Service = () => {
                       )
                   }{
                     service?.ratings?.length > 3 &&
-                  <button className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center w-full gap-[7px] text-sm text-zinc-600 group ">
+                  <button onClick={()=>setShowRatingPopup(true)} className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center w-full gap-[7px] text-sm text-zinc-600 group ">
                     <Eye className="text-gray-600 w-4 h-4 group-hover:text-blue-600" />
                     <span className='group-hover:text-blue-600'>
                       View All
@@ -391,7 +400,7 @@ const Service = () => {
                   />
                 ))}
                 {service?.services?.length > 2 &&
-                  <button className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center w-full gap-[7px] text-sm text-zinc-600 group ">
+                  <button onClick={() => setShowServicePopup(true)} className="bg-gray-200 flex px-[10px] h-[42px] py-[5px] rounded-md justify-center items-center w-full gap-[7px] text-sm text-zinc-600 group ">
                   <Eye className="text-gray-600 w-4 h-4 group-hover:text-blue-600" />
                   <span className='group-hover:text-blue-600'>
                     View All

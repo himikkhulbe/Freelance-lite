@@ -2,7 +2,7 @@ import React from 'react'
 import RatingCard from '../RatingSection/components/RatingCard/RatingCard'
 import { X } from 'lucide-react'
 
-function RatingPopup({ user, close }) {
+function RatingPopup({ ratings, close }) {
     return (
         <div className='fixed inset-0 bg-black/30 backdrop-blur-sm top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] h-full w-full flex md:items-center items-start justify-center z-[100]'>
             <div className='fixed top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] md:w-[90%] w-[100%] max-w-[800px] md:h-[80%] h-full bg-white md:rounded-lg shadow-lg p-[20px] z-50 '>
@@ -14,10 +14,10 @@ function RatingPopup({ user, close }) {
                 </div>
                 <div className="w-full h-[calc(100%_-_70px)] px-[30px] border-[0.5px] border-slate-500 bg-slate-50 rounded-lg overflow-auto">
                     <div className="mt-[20px]">
-                        {user?.ratings?.length === 0 ? (
+                        {ratings?.length === 0 ? (
                             <p className="text-gray-500 text-sm font-semibold">No rating found</p>
                         ) : (
-                            user?.ratings?.map((rating) => (
+                            ratings?.map((rating) => (
                                 <RatingCard
                                     key={rating._id}
                                     data={rating}

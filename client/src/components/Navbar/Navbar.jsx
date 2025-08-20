@@ -111,7 +111,7 @@ const FreelanceNavbar = () => {
                 <div className="bg-gradient-to-r from-blue-600 to-blue-800 p-2 rounded-lg">
                   <Briefcase className="w-6 h-6 text-white" />
                 </div>
-                <span className="text-xl hidden sm:block font-bold text-gray-900">FreelanceHub</span>
+                <span className="text-xl hidden sm:block font-bold text-gray-900">FREELANCE <span className='text-[#2463EB]'>LITE</span></span>
               </a>
             </div>
 
@@ -190,7 +190,7 @@ const FreelanceNavbar = () => {
                           user?.user?.role === 'freelancer' ?
                             (
                               <>
-                                <a href="/orderrecieved" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                <a href="/orderreceived" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                   <Handshake className="w-4 h-4 mr-3" />
                                   Order Received
                                 </a>

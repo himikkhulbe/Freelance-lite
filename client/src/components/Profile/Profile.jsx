@@ -8,7 +8,7 @@ import DetailsSection from "./components/DetailsSection/DetailsSection.jsx";
 import RatingPopup from "./components/Popup/RatingPopup.jsx";
 import ProfileEditPopup from "./components/Popup/ProfileEditPopup.jsx";
 import JobsPopup from "./components/Popup/JobsPopup.jsx";
-import JobsCard from "../Common/JobCard.jsx";
+import JobCard from "../Common/JobCard.jsx";
 import ServiceCard from "../Common/ServiceCard.jsx";
 import { useNavigate } from "react-router-dom";
 import formatDate from "../../Utils/formatDate.js";
@@ -70,9 +70,9 @@ function Profile() {
     return (
         <div className="min-h-screen flex flex-col pt-[85px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
             {/* Profile Section */}
-            {showRatingModal && <RatingPopup user={profileData} close={setShowRatingModal} />}
+            {showRatingModal && <RatingPopup ratings={profileData?.ratings} close={setShowRatingModal} />}
             {showProfileEditModal && <ProfileEditPopup loggedInUser={profileData} close={setShowProfileEditModal} />}
-            {showJobsPopup && <JobsPopup Component={JobsCard} loggedInUser={user} data={profileData?.jobs} close={setShowJobsPopup} heading="Jobs Offered" />}
+            {showJobsPopup && <JobsPopup Component={JobCard} loggedInUser={user} data={profileData?.jobs} close={setShowJobsPopup} heading="Jobs Offered" />}
             {showServicePopup && <JobsPopup Component={ServiceCard} loggedInUser={user} data={profileData?.services} close={setShowServicePopup} heading="Services Offered" />}
             <ProfileMain user={profileData} loggedInUser={user} openEdit={setShowProfileEditModal} />
             {/* bottom Section */}
@@ -134,7 +134,7 @@ function Profile() {
                                         <p className="text-gray-500 text-sm font-semibold mb-5">No jobs found</p>
                                     ) : (
                                         profileData?.jobs?.slice(0, 2).map((item) => (
-                                            <JobsCard
+                                            <JobCard
                                                 key={item._id}
                                                 data={item}
                                                 loggedInUser={user?.user}

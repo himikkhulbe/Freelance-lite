@@ -251,7 +251,7 @@ const MyOrder = () => {
                         </div>
                         <div className="text-right">
                             <p className="text-sm text-gray-500">Total Active</p>
-                            <p className="text-2xl font-bold text-blue-600">{stats.total}</p>
+                            <p className="text-2xl font-bold text-blue-600">{stats.total-stats.pending-stats.rejected-stats.completed-stats.cancelled}</p>
                         </div>
                     </div>
 
@@ -414,7 +414,7 @@ const MyOrder = () => {
                                                         <label className="text-sm font-medium text-gray-500">Freelancer Name</label>
                                                         <p className="text-gray-900">{selectedService.freelancer.name}</p>
                                                     </div>
-                                                    {selectedService.status === 'accepted' && (
+                                                    {selectedService.status === 'accepted' || selectedService.status === 'processing' || selectedService.status === 'completed' && (
                                                         <>
                                                             {selectedService.freelancer.contactInfo.email && (
                                                                 <div>
