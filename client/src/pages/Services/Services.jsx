@@ -35,7 +35,6 @@ const Services = () => {
   const [filteredServices, setFilteredServices] = useState([]);
   const [loading, setLoading] = useState(true);
 
-
   useEffect(() => {
     (async () => {
       try {
@@ -142,44 +141,44 @@ const Services = () => {
   };
 
   if (loading) {
-    return (<Loading />)
+    return <Loading />;
   }
-
 
   return (
     <div className="min-h-screen w-full flex flex-col pt-[85px] items-center justify-start bg-gray-100 gap-[30px] pb-[50px]">
       <div className=" xl:px-32 md:px-5 min-h-screen w-full flex gap-10 bg-gray-100">
         {/* Sidebar */}
         <Filters {...filterProps} />
-
+        <div className="w-full fixed h-[85px] top-0 z-[9] bg-gray-100"></div>
         <div className="w-full relative">
-
           {/* Search Bar */}
           <div className="w-full sticky top-[85px] ">
-          <SearchBar
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            setShowMobileFilters={setShowMobileFilters}
-          />
+            <SearchBar
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              setShowMobileFilters={setShowMobileFilters}
+            />
           </div>
 
           {/* Mobile Filters */}
           <Mobilefilter {...mobileFilterProps} />
           {/* Service Cards */}
           <div className="mt-5 rounded min-h-[70vh] overflow-y-auto">
-          {filteredServices.length > 0 ? (
-            filteredServices.map((job) => {
-              return (
-                <ServiceCard
-                  key={job._id}
-                  data={job}
-                  loggedInUser={user?.user}
-                />
-              );
-            })
-          ) : (
-            <h1 className="text-center text-zinc-500 font-medium">No Services Found</h1>
-          )}
+            {filteredServices.length > 0 ? (
+              filteredServices.map((job) => {
+                return (
+                  <ServiceCard
+                    key={job._id}
+                    data={job}
+                    loggedInUser={user?.user}
+                  />
+                );
+              })
+            ) : (
+              <h1 className="text-center text-zinc-500 font-medium">
+                No Services Found
+              </h1>
+            )}
           </div>
         </div>
       </div>
