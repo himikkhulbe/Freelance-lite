@@ -251,7 +251,7 @@ const MyOrder = () => {
                         </div>
                         <div className="text-right">
                             <p className="text-sm text-gray-500">Total Active</p>
-                            <p className="text-2xl font-bold text-blue-600">{stats.total}</p>
+                            <p className="text-2xl font-bold text-blue-600">{stats.total-stats.pending-stats.rejected-stats.completed-stats.cancelled}</p>
                         </div>
                     </div>
 
