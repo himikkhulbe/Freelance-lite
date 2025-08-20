@@ -235,7 +235,9 @@ function ProfileEditPopup({ loggedInUser, close }) {
                         </div>
 
                         {/* Skills Section */}
-                        <div className="space-y-4">
+                        {loggedInUser?.user?.role == "Freelancer" && 
+                        (
+                             <div className="space-y-4">
                             <h3 className="text-lg font-semibold text-gray-800 border-b border-blue-100 pb-2">
                                 Skills
                             </h3>
@@ -275,6 +277,9 @@ function ProfileEditPopup({ loggedInUser, close }) {
                                 </div>
                             )}
                         </div>
+                        )
+                        }
+                       
 
                         {/* Social Media Links */}
                         <div className="space-y-4">
