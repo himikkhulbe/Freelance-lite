@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
-const ProposalModal = ({setShowProposalModal, job, fetchJob}) => {
+const ProposalModal = ({setShowProposalModal, job, fetchJob=null}) => {
     const [proposalData, setProposalData] = useState({
         coverLetter: '',
         bidAmount: ''
@@ -47,10 +47,10 @@ const ProposalModal = ({setShowProposalModal, job, fetchJob}) => {
                 <h3 className="text-lg font-semibold mb-4">Submit Proposal</h3>
                 <div className="space-y-4">
                     <div className="border rounded-lg p-4 bg-gray-50">
-                        <h4 className="font-medium mb-2">{job?.job?.title}</h4>
+                        <h4 className="font-medium mb-2">{job?.title}</h4>
                         <div className="flex justify-between text-sm text-gray-600">
-                            <span>Budget: ₹{job?.job?.budget}</span>
-                            <span>Duration: {job?.job?.duration}</span>
+                            <span>Budget: ₹{job?.budget}</span>
+                            <span>Duration: {job?.duration}</span>
                         </div>
                     </div>
 
