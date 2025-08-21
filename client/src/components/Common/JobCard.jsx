@@ -2,11 +2,13 @@ import { useState, useEffect } from 'react';
 import { Edit, IndianRupee, Clock, Trash2, Eye } from 'lucide-react'
 import DeleteJobPopup from './DeleteJobPopup.jsx';
 import { useNavigate } from 'react-router-dom';
+import ProposalModal from "../../pages/Job/component/ProposalModal.jsx"
 
 function JobsCard({ data, loggedInUser, size=false}) {
     const navigate = useNavigate();
     console.log("Job data:", data);
     console.log("Logged-in user data:", loggedInUser);
+    const [showProposalModal, setShowProposalModal] = useState(false);
 
     const editJob = () => {
         console.log("Edit service clicked");
@@ -32,6 +34,7 @@ function JobsCard({ data, loggedInUser, size=false}) {
             key={data._id}
             className="p-5 mb-5 border border-gray-200 shadow-lg rounded-md flex flex-col gap-3 overflow-x-hidden bg-white "
         >
+            {showProposalModal && <ProposalModal setShowProposalModal ={setShowProposalModal} job={data} />}
             <DeleteJobPopup
                 jobId={data?._id}
                 isOpen={isOpen}
@@ -84,7 +87,9 @@ function JobsCard({ data, loggedInUser, size=false}) {
             </div>
             {loggedInUser?._id !== data?.client?._id &&
                 <div className="flex gap-4 pt-2 flex-wrap ">
-                    <button className={`px-14 py-2 bg-blue-700 ${size ? "sm:w-fit lg:w-full" : "sm:w-fit"} w-full text-white text-lg font-light rounded-lg text-nowrap `}>
+                    <button onClick={()=>{
+                        setShowProposalModal(true);
+                    }} className={`px-14 py-2 bg-blue-700 ${size ? "sm:w-fit lg:w-full" : "sm:w-fit"} w-full text-white text-lg font-light rounded-lg text-nowrap `}>
                         Apply Now
                     </button>
                     <button onClick={() => viewJob()} className={`px-14 py-2 border text-gray-500 rounded-lg ${size ? "sm:w-fit lg:w-full" : "sm:w-fit"} w-full`}>
