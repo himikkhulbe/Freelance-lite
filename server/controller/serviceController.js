@@ -98,14 +98,14 @@ export const getservice = async (req, res) => {
             return res.status(404).json({ message: "Invalid Service Id" });
         }
         const ratings = await Rating.find({ serviceId: serviceId })
-                .populate("raterId", "name profilePicture username isVerified").populate("serviceId", "title")
-                    .sort({ createdAt: -1 });
+            .populate("raterId", "name profilePicture username isVerified").populate("serviceId", "title")
+            .sort({ createdAt: -1 });
         const service = await Service.findById(serviceId).populate("user", "name email profilePicture username isVerified averageRating reviewCount location createdAt Languages").sort({ createdAt: -1 });
         if (!service) {
             return res.status(404).json({ message: "Service not found" });
         }
         const services = await Service.find({ user: service.user._id.toString(), _id: { $ne: serviceId } }).populate("user", "_id").sort({ createdAt: -1 });
-        res.status(200).json({service, ratings, services});
+        res.status(200).json({ service, ratings, services });
     } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }
@@ -239,7 +239,7 @@ export const editOrder = async (req, res) => {
     const userId = req.user._id;
     const { requirement } = req.body;
     try {
-        if(!mongoose.Types.ObjectId.isValid(orderId)){
+        if (!mongoose.Types.ObjectId.isValid(orderId)) {
             return res.status(400).json({ message: "Invalid Order Id" });
         }
         const order = await Order.findById(orderId);
@@ -249,12 +249,12 @@ export const editOrder = async (req, res) => {
         if (order.client.toString() !== userId.toString()) {
             return res.status(403).json({ message: "You are not authorized to edit this order" });
         }
-        if(order.editing >= 2){
+        if (order.editing >= 2) {
             return res.status(403).json({ message: "You have reached the maximum number of edits" });
         }
         const editedOrder = await Order.findByIdAndUpdate(orderId, { requirement, editing: order.editing + 1 }, { new: true });
         res.status(200).json({ message: "Order edited successfully", editedOrder });
-    }catch(error){
+    } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }
 }
@@ -274,8 +274,8 @@ export const cancelOrder = async (req, res) => {
         order.status = 'cancelled';
         await order.save();
         res.status(200).json({ message: "Order cancelled successfully", order });
-    
-    }catch(error){
+
+    } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }
 }
@@ -291,13 +291,13 @@ export const agreeStartWork = async (req, res) => {
         }
         if (order.client.toString() !== userId.toString()) {
             return res.status(403).json({ message: "You are not authorized to start this order" });
-        }   
+        }
         order.startWork = 'accepted';
         order.status = 'processing';
         await order.save();
         res.status(200).json({ message: "Order accepted successfully", order });
-    }catch(error){
-        res.status(500).json({ message: "Internal server error" }); 
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
     }
 }
 
@@ -316,7 +316,96 @@ export const markAsCompleted = async (req, res) => {
         order.status = 'completed';
         await order.save();
         res.status(200).json({ message: "Order completed successfully", order });
-    }catch(error){
+    } catch (error) {
         res.status(500).json({ message: "Internal server error" });
     }
+}
+
+
+export const getReceivedOrders = async (req, res) => {
+    const userId = req.user._id;
+    try {
+        const orders = await Order.find({ freelancer: userId }).populate("client", "name profilePicture rating averageRating location contactInfo").populate("service", "title description price deliveryTime revisions"
+        ).sort({ createdAt: -1 });
+        res.status(200).json(orders);
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+
+
+export const acceptOrder = async (req, res) => {
+    const orderId = req.params.id;
+    const userId = req.user._id;
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        if (order.freelancer.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not authorized to accept this order" });
+        }
+        order.status = 'accepted';
+        await order.save();
+        res.status(200).json({ message: "Order accepted successfully", order });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const rejectOrder = async (req, res) => {
+    const orderId = req.params.id;
+    const userId = req.user._id;
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        if (order.freelancer.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not authorized to reject this order" });
+        }
+        order.status = 'rejected';
+        await order.save();
+        res.status(200).json({ message: "Order rejected successfully", order });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const approveStartWork = async (req, res) => {
+    const orderId = req.params.id;
+    const userId = req.user._id;
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        if (order.freelancer.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not authorized to approve this order" });
+        }
+        order.startWork = 'start';
+        await order.save();
+        res.status(200).json({ message: "Order approved successfully", order });
+    } catch (error) {
+        res.status(500).json({ message: "Internal server error" });
+    }
+}
+
+export const completeWorkRequest = async (req, res) => {
+    const orderId = req.params.id;
+    const userId = req.user._id;
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        if (order.freelancer.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not authorized to complete this order" });
+        }
+        order.completedWork = 'request';
+        await order.save();
+        }catch(error){
+            res.status(500).json({ message: "Internal server error" });
+        }
 }
