@@ -279,3 +279,44 @@ export const cancelOrder = async (req, res) => {
         res.status(500).json({ message: "Internal server error" });
     }
 }
+
+
+export const agreeStartWork = async (req, res) => {
+    const orderId = req.params.id;
+    const userId = req.user._id;
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        if (order.client.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not authorized to start this order" });
+        }   
+        order.startWork = 'accepted';
+        order.status = 'processing';
+        await order.save();
+        res.status(200).json({ message: "Order accepted successfully", order });
+    }catch(error){
+        res.status(500).json({ message: "Internal server error" }); 
+    }
+}
+
+export const markAsCompleted = async (req, res) => {
+    const orderId = req.params.id;
+    const userId = req.user._id;
+    try {
+        const order = await Order.findById(orderId);
+        if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+        }
+        if (order.client.toString() !== userId.toString()) {
+            return res.status(403).json({ message: "You are not authorized to complete this order" });
+        }
+        order.completedWork = 'completed';
+        order.status = 'completed';
+        await order.save();
+        res.status(200).json({ message: "Order completed successfully", order });
+    }catch(error){
+        res.status(500).json({ message: "Internal server error" });
+    }
+}

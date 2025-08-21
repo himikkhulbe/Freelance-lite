@@ -1,6 +1,6 @@
 import express from "express";
 import { protect } from "../middlewares/authMiddleware.js";
-import {uploadServices, getMyServices, getServices, getservice, deleteService, updateService, getAllServices, UploadOrder, getOrders, editOrder, cancelOrder} from "../controller/serviceController.js";
+import {uploadServices, getMyServices, getServices, getservice, deleteService, updateService, getAllServices, UploadOrder, getOrders, editOrder, cancelOrder, agreeStartWork, markAsCompleted} from "../controller/serviceController.js";
 
 const router = express.Router();
 
@@ -15,4 +15,7 @@ router.post("/service/:id/order", protect, UploadOrder);
 router.get("/myorders", protect, getOrders);
 router.put("/editorder/:id", protect, editOrder);
 router.put("/cancelorder/:id", protect, cancelOrder);
+router.put("/agreestartwork/:id", protect, agreeStartWork);
+router.put("/completework/:id", protect, markAsCompleted);
+
 export default router;
