@@ -3,11 +3,13 @@ import { Edit, IndianRupee, Clock, Star, Eye, Trash2 } from 'lucide-react';
 import DeleteServicePopup from './DeleteServicePopup.jsx';
 import { useNavigate } from 'react-router-dom';
 import RenderStars from "./RenderStars.jsx"
+import OrderModal from "../../pages/Service/components/OrderModal.jsx"
 
 function ServiceCard({ data, loggedInUser, size = false }) {
     console.log("Service data:", data);
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
+    const [showOrderModal, setShowOrderModal] = useState(false);
     useEffect(() => {
         if (!isOpen) {
             document.body.style.overflow = 'auto';
@@ -31,6 +33,8 @@ function ServiceCard({ data, loggedInUser, size = false }) {
             key={data?._id}
             className="p-5 mb-5 border border-gray-200 shadow-lg rounded-md flex flex-col gap-3 overflow-x-hidden bg-white"
         >
+            {showOrderModal && <OrderModal setShowOrderModal={setShowOrderModal} service={data}/>}
+            
             <DeleteServicePopup
                 serviceId={data?._id}
                 isOpen={isOpen}
@@ -87,7 +91,9 @@ function ServiceCard({ data, loggedInUser, size = false }) {
                 {/* order now and view details button only show when the loggedin user is not the owner of the service */}
             {loggedInUser?._id !== data?.user?._id && (
                 <div className="flex gap-4 pt-2 flex-wrap">
-                    <button className={`px-14 py-2 bg-blue-700 ${size ? "sm:w-fit lg:w-full" : "sm:w-fit"} w-full text-white text-lg font-light rounded-lg text-nowrap`}>
+                    <button onClick={()=>{
+                        setShowOrderModal(true);
+                    }} className={`px-14 py-2 bg-blue-700 ${size ? "sm:w-fit lg:w-full" : "sm:w-fit"} w-full text-white text-lg font-light rounded-lg text-nowrap`}>
                         Order Now
                     </button>
                     <button onClick={openService} className={`px-14 py-2 border text-gray-500 rounded-lg ${size ? "sm:w-fit lg:w-full" : "sm:w-fit"} w-full`}>
