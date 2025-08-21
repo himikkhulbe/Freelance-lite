@@ -65,7 +65,7 @@ const Services = () => {
           service.description
             .toLowerCase()
             .includes(searchTerm.toLowerCase()) ||
-          service.skills.some((skill) =>
+          service.skills?.some((skill) =>
             skill.toLowerCase().includes(searchTerm.toLowerCase())
           )
       );
