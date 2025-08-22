@@ -14,7 +14,8 @@ import clientRoutes from "./routes/clientRoutes.js";
 dotenv.config();
 
 const app = express();
-app.use(cors({ origin: "http://localhost:5173", credentials: true }));
+app.use(cors({ origin: ["http://localhost:5173",
+    "freelancer-lite.vercel.app"], credentials: true }));
 
 app.use(cookieParser());
 // Allow credentials and allow requests from your frontend's origin
