@@ -362,7 +362,7 @@ const Job = () => {
                                                             </div>
                                                         </div>
                                                         <div className="text-sm text-gray-500 mb-2">
-                                                            Submitted on {formatDate(proposal.submittedAt)}
+                                                            Submitted on {formatDate(proposal.createdAt)}
                                                         </div>
                                                         <p className="text-gray-700">{proposal.coverLetter}</p>
                                                     </div>
