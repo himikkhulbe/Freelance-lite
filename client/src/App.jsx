@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
-import Login from "./pages/Auth/components/Login/LoginForm.jsx"; 
+import Login from "./pages/Auth/components/Login/Login.jsx"; 
 import Signup from "./pages/Auth/components/Signup/Signup.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 import PrivateRoute from "/src/components/PrivateRoute.jsx";
