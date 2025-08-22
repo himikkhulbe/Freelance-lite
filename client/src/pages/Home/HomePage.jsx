@@ -273,8 +273,8 @@ export default function Home() {
                                 className="bg-white p-6 rounded-lg border hover:shadow-lg transition-shadow cursor-pointer"
                             >
                                 <div className="flex justify-center mb-4">{service.icon}</div>
-                                <h3 className="text-xl font-semibold text-gray-900 mb-2">{service.title}</h3>
-                                <p className="text-gray-600">{service.jobs}</p>
+                                <h3 className="text-xl text-center font-semibold text-gray-900 mb-2">{service.title}</h3>
+                                <p className="text-gray-600 text-center">{service.jobs}</p>
                             </div>
                         ))}
                     </div>

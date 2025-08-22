@@ -192,7 +192,7 @@ const Signup = () => {
         setError(errorData?.message || 'Registration failed. Please try again.');
       }
     } catch (err) {
-      setError('Network error. Please check your connection and try again.');
+      setError(`Network error. Please check your connection and try again.${err.message}`);
     } finally {
       setIsLoading(false);
     }

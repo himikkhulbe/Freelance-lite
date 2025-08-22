@@ -325,7 +325,7 @@ export const markAsCompleted = async (req, res) => {
 export const getReceivedOrders = async (req, res) => {
     const userId = req.user._id;
     try {
-        const orders = await Order.find({ freelancer: userId }).populate("client", "name profilePicture rating averageRating location contactInfo").populate("service", "title description price deliveryTime revisions"
+        const orders = await Order.find({ freelancer: userId }).populate("client", "name profilePicture averageRating location contactInfo").populate("service", "title description price deliveryTime revisions"
         ).sort({ createdAt: -1 });
         res.status(200).json(orders);
     } catch (error) {

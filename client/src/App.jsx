@@ -1,17 +1,27 @@
 import React from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
-import Login from "../src/pages/Auth/components/Login/Login.jsx";
-import Signup from "../src/pages/Auth/components/Signup/Signup.jsx";
-import Profile from "../src/components/Profile/Profile.jsx";
+import Login from './pages/Auth/components/Login/Login.jsx'
+import Signup from "./pages/Auth/components/Signup/Signup.jsx";
+import Profile from "./components/Profile/Profile.jsx";
 import PrivateRoute from "/src/components/PrivateRoute.jsx";
 import { useAuth } from "./contexts/AuthContext.jsx";
-import Navbar from "../src/components/Navbar/Navbar.jsx";
-import AddService from "../src/components/AddService/AddService.jsx";
-import Jobs from "../src/pages/Jobs/Jobs.jsx";
+import Navbar from "./components/Navbar/Navbar.jsx";
+import AddService from "./components/AddService/AddService.jsx";
+import Jobs from "./pages/Jobs/Jobs.jsx";
 import Services from "./pages/Services/Services.jsx";
 import Service from "./pages/Service/Service.jsx";
 import AddJob from "./components/AddJob/AddJob.jsx";
 import Job from "./pages/Job/Job.jsx";
+import Home from "./pages/Home/HomePage.jsx";
+// import OrderReceived from "./pages/OrderReceived/OrderReceived.jsx";
+import MyProposals from "./pages/MyProposals/MyProposals.jsx";
+import ProposalReceived from "./pages/ProposalReceived/ProposalReceived.jsx"
+import OrderReceived from "./pages/OrderReceived/OrderReceived.jsx"
+import MyOrder from "./pages/MyOrder/MyOrder.jsx"
+
+
+
+
 
 
 function SignupGuarded() {
@@ -32,9 +42,9 @@ function LoginGuarded() {
     return <Login />;
 }
 
+
+
 function App() {
-    const { user } = useAuth();
-    console.log("User in App:", user);
     return (
         <>
             <Navbar />
@@ -44,13 +54,18 @@ function App() {
                 <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
                 <Route path="/profile/:id" element={<Profile />} />
                 <Route path="/service/:id" element={<Service />} />
-                <Route path="/job" element={<Job />} />
+                <Route path="/job/:id" element={<Job />} />
                 <Route path="/addService" element={<AddService />} />
                 <Route path="/addJob" element={<AddJob />} />
                 <Route path="/jobs" element={<Jobs />} />
                 <Route path="/services" element={<Services />} />
                 <Route path="/updateService/:id" element={<AddService />} />
                 <Route path="/updateJob/:id" element={<AddJob />} />
+                <Route path="/" element={<Home />} />
+                <Route path="/myproposals" element={<MyProposals />} />
+                <Route path="/proposalsreceived" element={<ProposalReceived />} />
+                <Route path="/orderreceived" element={<OrderReceived />} />
+                <Route path="/myorder" element={<MyOrder />} />
             </Routes>
             {/* <Profile /> */}
         </>
