@@ -69,10 +69,6 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      // Simulate API call for demo purposes
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
-      // Replace with your actual API call
       const res = await fetch('https://freelance-lite.onrender.com/api/user/login', {
         method: 'POST',
         credentials: 'include',
