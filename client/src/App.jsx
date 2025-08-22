@@ -1,7 +1,5 @@
 import React from "react";
 import { Routes, Route, Link, Navigate } from "react-router-dom";
-import Login from "./pages/Auth/components/Login/Login.jsx"; 
-import Signup from "./pages/Auth/components/Signup/Signup.jsx";
 import Profile from "./components/Profile/Profile.jsx";
 import PrivateRoute from "/src/components/PrivateRoute.jsx";
 import { useAuth } from "./contexts/AuthContext.jsx";
@@ -18,6 +16,8 @@ import MyProposals from "./pages/MyProposals/MyProposals.jsx";
 import ProposalReceived from "./pages/ProposalReceived/ProposalReceived.jsx"
 import OrderReceived from "./pages/OrderReceived/OrderReceived.jsx"
 import MyOrder from "./pages/MyOrder/MyOrder.jsx"
+import Signup from "./pages/Auth/components/signup/Signup.jsx";
+import Login from "./pages/Auth/components/login/Login.jsx"; 
 
 
 
