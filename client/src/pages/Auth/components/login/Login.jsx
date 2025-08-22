@@ -94,7 +94,7 @@ const Login = () => {
           setUser(data);
         }
         console.log('User data:', data?.user);
-        navigate('/profile');
+        // navigate('/profile');
       } else {
         setError(data?.message || 'Login failed. Please check your credentials.');
       }
