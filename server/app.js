@@ -15,7 +15,7 @@ dotenv.config();
 
 const app = express();
 app.use(cors({ origin: ["http://localhost:5173",
-    "freelancer-lite.vercel.app"], credentials: true }));
+    "freelance-lite.vercel.app"], credentials: true }));
 
 app.use(cookieParser());
 // Allow credentials and allow requests from your frontend's origin
