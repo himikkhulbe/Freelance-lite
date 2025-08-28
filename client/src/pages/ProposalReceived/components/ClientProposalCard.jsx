@@ -39,7 +39,7 @@ const ClientProposalCard = ({ proposal, openModal, getStatusColor, getStatusIcon
                                 )}
                             </div>
                             <div>
-                                <p className="font-semibold text-gray-900 text-sm sm:text-base">{proposal.freelancer.name}</p>
+                                <p onClick={() => navigate(`/profile/${proposal.freelancer._id}`)} className="font-semibold text-gray-900 text-sm sm:text-base cursor-pointer">{proposal.freelancer.name}</p>
                                 <div className="flex items-center text-xs sm:text-sm text-gray-500">
                                     <MapPin className="w-3 h-3 mr-1" />
                                     {proposal.freelancer.location}

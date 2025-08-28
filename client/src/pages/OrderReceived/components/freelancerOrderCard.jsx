@@ -39,7 +39,7 @@ const FreelancerOrderCard = ({ order, openModal, getStatusColor, getStatusIcon }
                                 )}
                             </div>
                             <div>
-                                <p className="font-semibold text-gray-900 text-sm sm:text-base">{order.client.name}</p>
+                                <p onClick={() => navigate(`/profile/${order.client._id}`)} className="font-semibold text-gray-900 text-sm sm:text-base cursor-pointer">{order.client.name}</p>
                                 <div className="flex items-center text-xs sm:text-sm text-gray-500">
                                     <MapPin className="w-3 h-3 mr-1" />
                                     {order.client.location}
