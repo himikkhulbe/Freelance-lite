@@ -23,16 +23,17 @@ import {
     FileText,
     ExternalLink,
 } from "lucide-react";
-// import ClientProposalCard from "./components/ClientProposalCard";
+// import ClientOrderCard from "./components/ClientOrderCard";
 import Loading from "../../components/Common/Loading";
+import FreelancerOrderCard from "./components/freelancerOrderCard";
 
-const MyProposals = () => {
-    const [proposals, setProposals] = useState([]);
+const MyOrders = () => {
+    const [order, setOrder] = useState([]);
 
     const [filter, setFilter] = useState("all");
     const [showModal, setShowModal] = useState(false);
     const [modalType, setModalType] = useState(""); // 'view', 'edit', 'cancel', 'job'
-    const [selectedProposal, setSelectedProposal] = useState(null);
+    const [selectedOrder, setSelectedOrder] = useState(null);
     const [loading, setLoading] = useState(true);
     const [editForm, setEditForm] = useState({
         coverLetter: "",
@@ -50,29 +51,29 @@ const MyProposals = () => {
         "completed",
     ];
 
-    // const updateProposalStatus = (proposalId, newStatus) => {
-    //     setProposals(prev =>
-    //         prev.map(proposal =>
-    //             proposal._id === proposalId
-    //                 ? { ...proposal, status: newStatus, updatedAt: new Date().toISOString() }
-    //                 : proposal
+    // const updateOrderStatus = (OrderId, newStatus) => {
+    //     setOrders(prev =>
+    //         prev.map(Order =>
+    //             Order._id === OrderId
+    //                 ? { ...Order, status: newStatus, updatedAt: new Date().toISOString() }
+    //                 : Order
     //         )
     //     );
     // };
 
 
-        useEffect(() => {
-            if (!showModal) {
-                document.body.style.overflow = 'auto';
-            } else {
-                document.body.style.overflow = 'hidden';
-            }
-            return () => (document.body.style.overflow = 'auto');
-        }, [showModal]);
+    useEffect(() => {
+        if (!showModal) {
+            document.body.style.overflow = 'auto';
+        } else {
+            document.body.style.overflow = 'hidden';
+        }
+        return () => (document.body.style.overflow = 'auto');
+    }, [showModal]);
 
-    const filteredProposals = proposals.filter((proposal) => {
-        if (filter === "all") return true;
-        return proposal.status === filter;
+    const filteredOrder = (order || []).filter((o) => {
+        if (filter === 'all') return true;
+        return o.status === filter;
     });
 
     const formatDate = (dateString) => {
@@ -123,13 +124,13 @@ const MyProposals = () => {
         }
     };
 
-    const openModal = (type, proposal) => {
+    const openModal = (type, Order) => {
         setModalType(type);
-        setSelectedProposal(proposal);
+        setSelectedOrder(Order);
         if (type === "edit") {
             setEditForm({
-                coverLetter: proposal.coverLetter,
-                bidAmount: proposal.bidAmount,
+                coverLetter: Order.coverLetter,
+                bidAmount: Order.bidAmount,
             });
         }
         setShowModal(true);
@@ -138,17 +139,17 @@ const MyProposals = () => {
     const closeModal = () => {
         setShowModal(false);
         setModalType("");
-        setSelectedProposal(null);
+        setSelectedOrder(null);
         setCancelReason("");
         setEditForm({ coverLetter: "", bidAmount: 0 });
     };
 
-    const fetchReceivedProposals = async () => {
+    const fetchReceivedOrder = async () => {
         console.log("run");
         try {
             setLoading(true);
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/receivedproposals`,
+                `https://freelance-lite.onrender.com/api/freelancer/receivedorders`,
                 {
                     method: "GET",
                     credentials: "include",
@@ -156,7 +157,7 @@ const MyProposals = () => {
             );
             if (response.ok) {
                 const data = await response.json();
-                setProposals(data);
+                setOrder(data);
                 console.log("Job fetched from API:", data);
             } else {
                 throw new Error("API not available");
@@ -169,13 +170,13 @@ const MyProposals = () => {
     };
 
     useEffect(() => {
-        fetchReceivedProposals();
+        fetchReceivedOrder();
     }, []); // <- empty dependency array
 
-    const handleAccept = async () =>{
+    const handleAccept = async () => {
         try {
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/acceptproposal/${selectedProposal._id}`,
+                `https://freelance-lite.onrender.com/api/freelancer/acceptorder/${selectedOrder._id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -187,23 +188,23 @@ const MyProposals = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Proposal accepted:", data);
-                fetchReceivedProposals();
+                console.log("Order accepted:", data);
+                fetchReceivedOrder();
                 closeModal();
             } else {
                 const responseText = await response.text();
                 console.log(responseText);
             }
         } catch (error) {
-            console.error("Error accepting proposal:", error);
+            console.error("Error accepting Order:", error);
         }
     }
 
 
-    const rejectProposal = async () => {
+    const rejectOrder = async () => {
         try {
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/rejectproposal/${selectedProposal._id}`,
+                `https://freelance-lite.onrender.com/api/freelancer/rejectorder/${selectedOrder._id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -216,22 +217,22 @@ const MyProposals = () => {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log("Proposal cancelled:", data);
-                fetchReceivedProposals();
+                console.log("Order cancelled:", data);
+                fetchReceivedOrder();
                 closeModal();
             } else {
                 const responseText = await response.text();
                 console.log(responseText);
             }
         } catch (error) {
-            console.error("Error cancelling proposal:", error);
+            console.error("Error cancelling Order:", error);
         }
     };
 
     const handleApproveStartWork = async () => {
         try {
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/approvestartwork/${selectedProposal._id}`,
+                `https://freelance-lite.onrender.com/api/freelancer/approvestartwork/${selectedOrder._id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -244,7 +245,7 @@ const MyProposals = () => {
             if (response.ok) {
                 const data = await response.json();
                 console.log("Work started:", data);
-                fetchReceivedProposals();
+                fetchReceivedOrder();
                 closeModal();
             } else {
                 const responseText = await response.text();
@@ -256,9 +257,10 @@ const MyProposals = () => {
     };
 
     const handleCompleteWork = async () => {
+        console.log("clicked");
         try {
             const response = await fetch(
-                `https://freelance-lite.onrender.com/api/client/completeworkrequest/${selectedProposal._id}`,
+                `https://freelance-lite.onrender.com/api/freelancer/completeworkrequest/${selectedOrder._id}`,
                 {
                     method: "PUT",
                     credentials: "include",
@@ -267,12 +269,16 @@ const MyProposals = () => {
                     },
                 }
             );
+            console.log(response);
 
             if (response.ok) {
                 const data = await response.json();
                 console.log("Work completed:", data);
-                fetchReceivedProposals();
+                fetchReceivedOrder();
                 closeModal();
+            }else{
+                const responseText = await response.text();
+                console.log(responseText);
             }
         } catch (error) {
             console.error("Error completing work:", error);
@@ -280,13 +286,13 @@ const MyProposals = () => {
     };
 
     const stats = {
-        total: proposals.length,
-        pending: proposals.filter((p) => p.status === "pending").length,
-        accepted: proposals.filter((p) => p.status === "accepted").length,
-        rejected: proposals.filter((p) => p.status === "rejected").length,
-        processing: proposals.filter((p) => p.status === "processing").length,
-        completed: proposals.filter((p) => p.status === "completed").length,
-        cancelled: proposals.filter((p) => p.status === "cancelled").length,
+        total: order.length,
+        pending: order.filter((p) => p.status === "pending").length,
+        accepted: order.filter((p) => p.status === "accepted").length,
+        rejected: order.filter((p) => p.status === "rejected").length,
+        processing: order.filter((p) => p.status === "processing").length,
+        completed: order.filter((p) => p.status === "completed").length,
+        cancelled: order.filter((p) => p.status === "cancelled").length,
     };
 
     if (loading) {
@@ -300,14 +306,14 @@ const MyProposals = () => {
                 <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
                     <div className="flex items-center justify-between mb-4">
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900">My Proposals</h1>
+                            <h1 className="text-3xl font-bold text-gray-900">My Orders</h1>
                             <p className="text-gray-600 mt-1">
-                                Track and manage all your submitted proposals
+                                Track and manage all your submitted Orders
                             </p>
                         </div>
                         <div className="text-right">
                             <p className="text-sm text-gray-500">Total Active</p>
-                            <p className="text-2xl font-bold text-blue-600">{stats.total-stats.pending-stats.rejected-stats.completed-stats.cancelled}</p>
+                            <p className="text-2xl font-bold text-blue-600">{stats.total - stats.pending - stats.rejected - stats.completed - stats.cancelled}</p>
                         </div>
                     </div>
 
@@ -403,44 +409,43 @@ const MyProposals = () => {
                     </div>
                 </div>
 
-                {/* Proposals List */}
-                {/* <div className="space-y-4">
-                    {filteredProposals.map((proposal) => (
-                        <ClientProposalCard
-                            key={proposal._id}
-                            proposal={proposal}
+                {/* Orders List */}
+                <div className="space-y-4">
+                    {filteredOrder.map((order) => (
+                        <FreelancerOrderCard
+                            key={order._id}
+                            order={order}
                             openModal={openModal}
                             getStatusColor={getStatusColor}
                             getStatusIcon={getStatusIcon}
                         />
                     ))}
-                </div> */}
+                </div>
 
-                {filteredProposals.length === 0 && (
+                {filteredOrder.length === 0 && (
                     <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-12 text-center">
                         <MessageSquare className="w-16 h-16 text-gray-300 mx-auto mb-4" />
                         <h3 className="text-xl font-medium text-gray-900 mb-2">
-                            No proposals found
+                            No Order found
                         </h3>
                         <p className="text-gray-600">
                             {filter === "all"
-                                ? "You haven't submitted any proposals yet."
-                                : `No ${filter} proposals found.`}
+                                ? "You haven't Received any order yet."
+                                : `No ${filter} Order found.`}
                         </p>
                     </div>
                 )}
 
                 {/* Modal */}
-                {showModal && selectedProposal && (
+                {showModal && selectedOrder && (
                     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
                         <div className="bg-white rounded-lg max-w-4xl w-full max-h-[90vh] overflow-y-auto">
                             <div className="p-6 border-b border-gray-200">
                                 <div className="flex items-center justify-between">
                                     <h2 className="text-xl font-bold text-gray-900">
-                                        {modalType === "view" && "Proposal Details"}
-                                        {modalType === "reject" && "Reject Proposal"}
-                                        {modalType === "accept" && "Accept Proposal"}
-                                        {modalType === "job" && "Job Details"}
+                                        {modalType === "view" && "Order Details"}
+                                        {modalType === "reject" && "Reject Order"}
+                                        {modalType === "accept" && "Accept Order"}
                                         {modalType === "approveStart" && "Approve & Start Work"}
                                         {modalType === "markCompleted" && "Mark as Completed"}
                                     </h2>
@@ -459,7 +464,7 @@ const MyProposals = () => {
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                             <div>
                                                 <h3 className="font-semibold text-gray-900 mb-3">
-                                                    Proposal Information
+                                                    Order Information
                                                 </h3>
                                                 <div className="space-y-3">
                                                     <div>
@@ -469,25 +474,25 @@ const MyProposals = () => {
                                                         <div className="mt-1">
                                                             <span
                                                                 className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(
-                                                                    selectedProposal.status
+                                                                    selectedOrder.status
                                                                 )}`}
                                                             >
-                                                                {getStatusIcon(selectedProposal.status)}
+                                                                {getStatusIcon(selectedOrder.status)}
                                                                 <span className="ml-1">
-                                                                    {selectedProposal.status
+                                                                    {selectedOrder.status
                                                                         .charAt(0)
                                                                         .toUpperCase() +
-                                                                        selectedProposal.status.slice(1)}
+                                                                        selectedOrder.status.slice(1)}
                                                                 </span>
                                                             </span>
                                                         </div>
                                                     </div>
                                                     <div>
                                                         <label className="text-sm font-medium text-gray-500">
-                                                            Bid Amount
+                                                            Price
                                                         </label>
                                                         <p className="text-xl font-bold text-blue-600">
-                                                            ₹{selectedProposal.bidAmount.toLocaleString()}
+                                                            ₹{selectedOrder.service.price.toLocaleString()}
                                                         </p>
                                                     </div>
                                                     <div>
@@ -495,16 +500,16 @@ const MyProposals = () => {
                                                             Submitted
                                                         </label>
                                                         <p className="text-gray-900">
-                                                            {formatDate(selectedProposal.createdAt)}
+                                                            {formatDate(selectedOrder.createdAt)}
                                                         </p>
                                                     </div>
-                                                    {selectedProposal.status !== "pending" && (
+                                                    {selectedOrder.status !== "pending" && (
                                                         <div>
                                                             <label className="text-sm font-medium text-gray-500">
                                                                 Last Updated
                                                             </label>
                                                             <p className="text-gray-900">
-                                                                {formatDate(selectedProposal.updatedAt)}
+                                                                {formatDate(selectedOrder.updatedAt)}
                                                             </p>
                                                         </div>
                                                     )}
@@ -521,17 +526,17 @@ const MyProposals = () => {
                                                             Client Name
                                                         </label>
                                                         <p className="text-gray-900">
-                                                            {selectedProposal.freelancer.name}
+                                                            {selectedOrder.client.name}
                                                         </p>
                                                     </div>
-                                                    {selectedProposal.status === "accepted" && (
+                                                    {(selectedOrder.status === "completed" || selectedOrder.status === "processing" || selectedOrder.status === "accepted") &&(
                                                         <>
                                                             <div>
                                                                 <label className="text-sm font-medium text-gray-500">
                                                                     Email
                                                                 </label>
                                                                 <p className="text-gray-900">
-                                                                    {selectedProposal.freelancer.contactInfo.email}
+                                                                    {selectedOrder.client.contactInfo.email}
                                                                 </p>
                                                             </div>
                                                             <div>
@@ -539,7 +544,7 @@ const MyProposals = () => {
                                                                     Phone
                                                                 </label>
                                                                 <p className="text-gray-900">
-                                                                    {selectedProposal.freelancer.contactInfo.phone}
+                                                                    {selectedOrder.client.contactInfo.phone}
                                                                 </p>
                                                             </div>
                                                             <div>
@@ -547,7 +552,7 @@ const MyProposals = () => {
                                                                     Location
                                                                 </label>
                                                                 <p className="text-gray-900">
-                                                                    {selectedProposal.freelancer.location}
+                                                                    {selectedOrder.client.location}
                                                                 </p>
                                                             </div>
                                                         </>
@@ -558,96 +563,13 @@ const MyProposals = () => {
 
                                         <div>
                                             <h3 className="font-semibold text-gray-900 mb-3">
-                                                Cover Letter
+                                                Requirements
                                             </h3>
                                             <div className="bg-gray-50 p-4 rounded-lg">
                                                 <p className="text-gray-900 leading-relaxed">
-                                                    {selectedProposal.coverLetter}
+                                                    {selectedOrder.requirement || "No Requirements"}
                                                 </p>
                                             </div>
-                                        </div>
-                                    </div>
-                                )}
-
-
-                                {modalType === "job" && (
-                                    <div className="space-y-6">
-                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                            <div>
-                                                <h3 className="font-semibold text-gray-900 mb-3">
-                                                    Job Information
-                                                </h3>
-                                                <div className="space-y-3">
-                                                    <div>
-                                                        <label className="text-sm font-medium text-gray-500">
-                                                            Job Title
-                                                        </label>
-                                                        <p className="text-lg font-semibold text-gray-900">
-                                                            {selectedProposal.job.title}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <label className="text-sm font-medium text-gray-500">
-                                                            Budget
-                                                        </label>
-                                                        <p className="text-xl font-bold text-green-600">
-                                                            ₹{selectedProposal.job.budget.toLocaleString()}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <label className="text-sm font-medium text-gray-500">
-                                                            Deadline
-                                                        </label>
-                                                        <p className="text-gray-900">
-                                                            {formatDate(selectedProposal.job.deadline)}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <div>
-                                                <h3 className="font-semibold text-gray-900 mb-3">
-                                                    Posted By
-                                                </h3>
-                                                <div className="space-y-3">
-                                                    <div>
-                                                        <label className="text-sm font-medium text-gray-500">
-                                                            Client
-                                                        </label>
-                                                        <p className="text-gray-900">
-                                                            {selectedProposal.client.name}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <label className="text-sm font-medium text-gray-500">
-                                                            Location
-                                                        </label>
-                                                        <p className="text-gray-900">
-                                                            {selectedProposal.client.location}
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div>
-                                            <h3 className="font-semibold text-gray-900 mb-3">
-                                                Job Description
-                                            </h3>
-                                            <div className="bg-gray-50 p-4 rounded-lg">
-                                                <p className="text-gray-900 leading-relaxed">
-                                                    {selectedProposal.job.description}
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div className="flex space-x-3 pt-4">
-                                            <button
-                                                onClick={closeModal}
-                                                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
-                                            >
-                                                Close
-                                            </button>
                                         </div>
                                     </div>
                                 )}
@@ -658,18 +580,18 @@ const MyProposals = () => {
                                             <AlertTriangle className="w-6 h-6 text-red-600" />
                                             <div>
                                                 <p className="text-sm text-red-700">
-                                                    This action cannot be undone. Are you sure you want to reject this proposal?
+                                                    This action cannot be undone. Are you sure you want to reject this Order?
                                                 </p>
                                             </div>
                                         </div>
 
                                         <div className="flex space-x-3 pt-4">
                                             <button
-                                                onClick={rejectProposal}
+                                                onClick={rejectOrder}
                                                 className="flex-1 inline-flex items-center justify-center px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                                             >
                                                 <Trash2 className="w-5 h-5 mr-2" />
-                                                Reject Proposal
+                                                Reject Order
                                             </button>
                                             <button
                                                 onClick={closeModal}
@@ -680,8 +602,8 @@ const MyProposals = () => {
                                         </div>
                                     </div>
                                 )}
-                                
-                                {modalType === 'accept' &&(
+
+                                {modalType === 'accept' && (
                                     <div className="space-y-6">
                                         <div className="flex items-center space-x-3 p-4 bg-green-50 border border-green-200 rounded-lg">
                                             <CheckCircle className="w-6 h-6 text-green-600" />
@@ -690,7 +612,7 @@ const MyProposals = () => {
                                                     Are You Sure!
                                                 </h3>
                                                 <p className="text-gray-900">
-                                                    You want to accept this proposal.
+                                                    You want to accept this Order.
                                                 </p>
                                             </div>
                                         </div>
@@ -782,4 +704,4 @@ const MyProposals = () => {
     );
 };
 
-export default MyProposals;
+export default MyOrders;

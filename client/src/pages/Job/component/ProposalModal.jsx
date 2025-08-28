@@ -6,7 +6,8 @@ const ProposalModal = ({setShowProposalModal, job, fetchJob=null}) => {
         coverLetter: '',
         bidAmount: ''
     });
-    const { id } = useParams();
+    let { id } = useParams();
+    id = id || job?._id;
 
     const handleProposalSubmit = async () => {
         if (!id) {
@@ -15,7 +16,7 @@ const ProposalModal = ({setShowProposalModal, job, fetchJob=null}) => {
         }
 
         try {
-            const response = await fetch(`https://freelance-lite.onrender.com/api/client/job/${id}/proposal`, {
+            const response = await fetch(`https://freelance-lite.onrender.com/api/client/job/${id||job?._id}/proposal`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -29,7 +30,7 @@ const ProposalModal = ({setShowProposalModal, job, fetchJob=null}) => {
             if (response.ok) {
                 setShowProposalModal(false);
                 setProposalData({ coverLetter: '', bidAmount: '' });
-                fetchJob(); // Refresh job data
+                {fetchJob && fetchJob()}// Refresh job data
             } else {
                 console.error('Failed to submit proposal:', data?.error || data);
                 alert(data?.error || 'Failed to submit proposal');

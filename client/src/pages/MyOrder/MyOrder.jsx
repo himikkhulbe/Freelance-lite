@@ -414,7 +414,7 @@ const MyOrder = () => {
                                                         <label className="text-sm font-medium text-gray-500">Freelancer Name</label>
                                                         <p className="text-gray-900">{selectedService.freelancer.name}</p>
                                                     </div>
-                                                    {selectedService.status === 'accepted' || selectedService.status === 'processing' || selectedService.status === 'completed' && (
+                                                    {(selectedService.status === 'accepted' || selectedService.status === 'processing' || selectedService.status === 'completed') && (
                                                         <>
                                                             {selectedService.freelancer.contactInfo.email && (
                                                                 <div>

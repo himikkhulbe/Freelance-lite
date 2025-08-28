@@ -524,7 +524,7 @@ const MyProposals = () => {
                                                             {selectedProposal.freelancer.name}
                                                         </p>
                                                     </div>
-                                                    {selectedProposal.status === "accepted" || selectedProposal.status === "processing" || selectedProposal.status === "completed" && (
+                                                    {(selectedProposal.status === "accepted" || selectedProposal.status === "processing" || selectedProposal.status === "completed") && (
                                                         <>
                                                             <div>
                                                                 <label className="text-sm font-medium text-gray-500">

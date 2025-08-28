@@ -414,7 +414,7 @@ const MyProposals = () => {
                                                         <label className="text-sm font-medium text-gray-500">Client Name</label>
                                                         <p className="text-gray-900">{selectedProposal.client.name}</p>
                                                     </div>
-                                                    {selectedProposal.status === 'accepted' || selectedProposal.status === 'processing' || selectedProposal.status === 'completed' && (
+                                                    {(selectedProposal.status === 'accepted' || selectedProposal.status === 'processing' || selectedProposal.status === 'completed') && (
                                                         <>
                                                         {selectedProposal.client.contactInfo.email && (
                                                                 <div>
