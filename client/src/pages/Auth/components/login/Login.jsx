@@ -110,7 +110,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen mt-[65px] bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center p-4">
+    <div className="min-h-screen mt-[25px] bg-gradient-to-br from-blue-50 via-white to-blue-100 flex items-center justify-center p-4 overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-4 -right-4 w-72 h-72 bg-blue-100 rounded-full opacity-50 blur-3xl"></div>
@@ -149,8 +149,8 @@ const Login = () => {
                 <CheckCircle className="w-4 h-4 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-800">Secure Payments</h3>
-                <p className="text-gray-600">Safe and secure transaction processing</p>
+                <h3 className="font-semibold text-gray-800">Direct Collaboration</h3>
+                <p className="text-gray-600">Work closely with freelancers and clients without middle layers</p>
               </div>
             </div>
             <div className="flex items-start space-x-4">
@@ -158,8 +158,8 @@ const Login = () => {
                 <CheckCircle className="w-4 h-4 text-blue-600" />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-800">24/7 Support</h3>
-                <p className="text-gray-600">Round-the-clock customer assistance</p>
+                <h3 className="font-semibold text-gray-800">Feedback & Ratings</h3>
+                <p className="text-gray-600">Review freelancers and build trust in the community</p>
               </div>
             </div>
           </div>
@@ -167,7 +167,7 @@ const Login = () => {
 
         {/* Right Side - Login Form */}
         <div className="w-full max-w-md mx-auto">
-          <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-8 space-y-6">
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 p-8 space-y-6 ">
             {/* Mobile Branding */}
             <div className="lg:hidden text-center mb-8">
               <div className="flex items-center justify-center space-x-2 mb-2">

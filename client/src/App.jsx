@@ -18,6 +18,8 @@ import OrderReceived from "./pages/OrderReceived/OrderReceived.jsx"
 import MyOrder from "./pages/MyOrder/MyOrder.jsx"
 import Signup from "./pages/Auth/components/signup/Signup.jsx";
 import Login from "./pages/Auth/components/login/Login.jsx"; 
+import About from "./components/Navbar/components/About.jsx";
+import Contact from "./components/Navbar/components/Contact.jsx";
 
 
 
@@ -66,6 +68,8 @@ function App() {
                 <Route path="/proposalsreceived" element={<ProposalReceived />} />
                 <Route path="/orderreceived" element={<OrderReceived />} />
                 <Route path="/myorder" element={<MyOrder />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
             </Routes>
             {/* <Profile /> */}
         </>
