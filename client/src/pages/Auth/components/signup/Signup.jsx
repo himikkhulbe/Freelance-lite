@@ -184,8 +184,8 @@ const Signup = () => {
       if (res.ok) {
         setSuccess('Account created successfully! Redirecting to login...');
         setTimeout(() => {
-          // navigate("/login");
-          alert('Redirecting to login page...');
+          // alert('Redirecting to login page...');
+          navigate("/login");
         }, 2000);
       } else {
         const errorData = await res.json();

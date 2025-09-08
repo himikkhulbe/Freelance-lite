@@ -164,6 +164,7 @@ const Job = () => {
                                             </div>
                                         </div>
                                     </div>
+                                            <div>{job?.job?.description}</div>
                                 </div>
                             </div>
                         </div>
@@ -277,12 +278,12 @@ const Job = () => {
                         <div className="bg-white rounded-lg border p-6">
                             {activeTab === 'overview' && (
                                 <div className="space-y-6">
-                                    <div>
+                                    {/* <div>
                                         <h3 className="text-lg font-semibold mb-4">Job Description</h3>
                                         <div className="prose max-w-none text-gray-700 whitespace-pre-line">
                                             {job?.job?.description}
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                     {/* Required Skills */}
                                     <div>
