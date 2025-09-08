@@ -208,7 +208,7 @@ const FreelanceNavbar = () => {
                                 </a>
                                 <a href="/myorder" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
                                   <Handshake className="w-4 h-4 mr-3" />
-                                  My Order
+                                  My Orders
                                 </a>
                               </>
 

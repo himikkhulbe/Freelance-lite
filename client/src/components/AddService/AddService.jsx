@@ -259,8 +259,8 @@ const handleUpdate = async () => {
     };
 
     return (
-        <div className="min-h-screen mt-[85px] bg-gray-50 py-4 px-4 sm:py-8">
-            <div className="max-w-4xl mx-auto">
+        <div className="min-h-screen mt-[65px] bg-gray-50 py-4 px-4 sm:py-8">
+            <div className="max-w-4xl mx-auto pt-[20px]">
                 {/* Header */}
                 <div className="bg-white rounded-t-lg shadow-sm border border-b-0 px-4 py-4 sm:px-6 sm:py-5">
                     <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Create New Service</h1>

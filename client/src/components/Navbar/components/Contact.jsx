@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import { Briefcase, Mail, Phone, MapPin, Clock, Send, MessageSquare, Users, Headphones } from 'lucide-react';
+import { Briefcase, Mail, Loader, Clock, Send, MessageSquare, Users, Headphones } from 'lucide-react';
+import { useAuth } from "../../../contexts/AuthContext";
 
 const Contact = () => {
+  const {loading} = useAuth();
   // Form state management
   const [formData, setFormData] = useState({
     name: '',
@@ -88,6 +90,17 @@ const Contact = () => {
       message: ''
     });
   };
+
+  if (loading) {
+            return (
+                <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                    <div className="text-center">
+                        <Loader className="w-8 h-8 animate-spin text-blue-600 mx-auto mb-4" />
+                        <p className="text-gray-600">Please Wait...</p>
+                    </div>
+                </div>
+            );
+        }
 
   return (
     <div className="min-h-screen bg-gray-50">

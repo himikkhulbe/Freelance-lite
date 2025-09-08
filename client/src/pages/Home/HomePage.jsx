@@ -104,7 +104,7 @@ export default function Home() {
     return (
         <div className="min-h-screen pt-[85px] bg-white">
             {/* Hero Section */}
-            <section className="py-16 px-4 sm:px-6 lg:px-8">
+            <section className="pt-16 pb-5 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-7xl mx-auto text-center">
                     {user?.user ? (
                         // Logged in user view
@@ -143,7 +143,7 @@ export default function Home() {
                             )}
 
                             {/* Quick Stats for logged in users */}
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-8">
+                            {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-2xl mx-auto mb-8">
                                 {user?.user?.role === 'freelancer' ? (
                                     <>
                                         <div className="bg-blue-50 p-4 rounded-lg">
@@ -183,7 +183,7 @@ export default function Home() {
                                         </div>
                                     </>
                                 )}
-                            </div>
+                            </div> */}
                         </div>
                     ) : (
                         // Non-logged in user view
