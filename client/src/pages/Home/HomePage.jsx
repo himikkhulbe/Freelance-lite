@@ -393,7 +393,7 @@ export default function Home() {
                             <button onClick={() => navigate('/signup')} className="bg-white text-blue-600 px-8 py-3 rounded-md text-lg font-medium hover:bg-gray-50 transition-colors">
                                 Sign Up Now
                             </button>
-                            <button className="border border-white text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-blue-700 transition-colors">
+                            <button onClick={()=>navigate("/about")} className="border border-white text-white px-8 py-3 rounded-md text-lg font-medium hover:bg-blue-700 transition-colors">
                                 Know More
                             </button>
                         </div>
