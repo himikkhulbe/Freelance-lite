@@ -231,6 +231,7 @@ const handleUpdate = async () => {
             if (response.ok) {
                 console.log("Service created:", result.service);
                 setShowSuccess(true);
+                navigate("/profile");
 
                 // Reset form
                 setFormData({

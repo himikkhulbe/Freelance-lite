@@ -182,6 +182,7 @@ useEffect(() => {
 
             if (response.ok) {
                 showToast('Job posted successfully!', 'success');
+                navigate("/profile")
                 // Reset form
                 setFormData({
                     title: '',
